@@ -10,7 +10,7 @@
 - [x] データベーススキーマ定義 (Itemsテーブル等) <!-- id: 4 -->
 
 ## Phase 2: デザインシステム構築 (Aesthetics First)
-- [ ] デザイン基礎定義 (Colors, Typography, Spacing in `index.css`) <!-- id: 5 -->
+- [x] デザイン基礎定義 (Colors, Typography, Spacing in `index.css`) <!-- id: 5 -->
 - [ ] UIコンポーネント実装: Button, Input, Select <!-- id: 6 -->
 - [ ] UIコンポーネント実装: Card, ItemIcon, Badge <!-- id: 7 -->
 - [ ] コンポーネントカタログページ (Storybook的な一覧ページ) 作成 <!-- id: 8 -->
