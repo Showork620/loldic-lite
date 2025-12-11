@@ -36,25 +36,50 @@ src/
 
 ### Table: `items`
 アイテムの基本情報を格納するテーブル。
-長い説明文も、取得パフォーマンスと管理の単純化のため同テーブルで管理する。
+
+| Column Name | Type | データソース | Description |
+|---|---|---|---|
+| id | uuid | Auto | Primary Key |
+| riot_id | text | **API** | Riot API上のID (例: "3031") |
+| name_ja | text | **API** | アイテム名 (日本語) |
+| is_available | boolean | **API** | ゲーム内有効アイテムか（購入可能 or 購入可能アイテムから派生） |
+| abilities | jsonb | **手動** | 能力リスト [{type, name, description}, ...] |
+| plaintext_ja | text | **API (初回のみ)** | 短い説明文（パッチ更新時は保持） |
+| price_total | int | **API** | 総価格 |
+| price_sell | int | **API** | 売却価格 |
+| image_path | text | **API** | Supabase Storageへのパス |
+| patch_status | text | **手動** | 最新パッチでの更新種別 (buff/nerf/rework/removed/new/revived/adjusted/unchanged) |
+| search_tags | text[] | **API (初回のみ)** | 検索用タグ ["attack-damage", "体力回復", "クリティカル"] |
+| role_categories | text[] | **手動** | ロール分類 ["メイジ用", "サポート用", "ファイター用", "タンク用", "ADC用", "アサシン用"] |
+| popular_champions | text[] | **手動** | よく使うチャンピオンID一覧 |
+| stats | jsonb | **API** | ステータス詳細 { "attack_damage": 60, ... } |
+| build_from | text[] | **API** | 素材元アイテムID一覧 |
+| build_into | text[] | **API** | 派生先アイテムID一覧 |
+| created_at | timestamp | Auto | 作成日時 |
+| updated_at | timestamp | 更新日時 |
+
+#### データ管理フロー
+- **初回登録時**: APIフィールドを自動登録、手動フィールドはnull
+- **パッチ更新時**: APIフィールドのみ更新、手動フィールド・plaintext_ja・search_tagsは保持
+- **手動入力**: abilities, popular_champions, role_categories, patch_statusは管理画面で入力・編集
+
+### Table: `item_patch_history`
+パッチごとのアイテム変更履歴を記録するテーブル。
 
 | Column Name | Type | Description |
 |---|---|---|
 | id | uuid | Primary Key |
-| riot_id | text | Riot API上のID (例: "3031") |
-| name_ja | text | アイテム名 (日本語) |
-| description_ja | text | 説明文 (HTML/Markdown) |
-| plaintext_ja | text | 短い説明文 |
-| price_total | int | 総価格 |
-| price_sell | int | 売却価格 |
-| is_legendary | boolean | レジェンダリーかどうか |
-| image_path | text | Supabase Storageへのパス |
-| tags | text[] | タグ (Mage, Tank等) |
-| stats | jsonb | ステータス詳細 { "attack_damage": 60, ... } |
-| build_from | text[] | 素材元アイテムID一覧 |
-| build_into | text[] | 派生先アイテムID一覧 |
+| item_id | uuid | 外部キー → items.id |
+| patch_version | text | パッチバージョン (例: "14.23") |
+| patch_date | date | パッチ適用日 |
+| change_type | text | 変更種別 (buff/nerf/rework/removed/new/revived/adjusted) |
+| change_summary | text | 変更内容の要約 (例: "攻撃力 +10, クールダウン -5秒") |
+| stats_before | jsonb | 変更前のステータス (nullable) |
+| stats_after | jsonb | 変更後のステータス (nullable) |
+| price_before | int | 変更前の価格 (nullable) |
+| price_after | int | 変更後の価格 (nullable) |
+| notes | text | 補足情報 (nullable) |
 | created_at | timestamp | 作成日時 |
-| updated_at | timestamp | 更新日時 |
 
 ### Storage: `item-images`
 - `public` バケット
