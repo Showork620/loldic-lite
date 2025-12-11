@@ -14,7 +14,7 @@
 - [x] UIコンポーネント実装: Button(完了), Input, Select, Combobox <!-- id: 6 -->
 - [ ] UIコンポーネント実装: Card (一旦スキップ) <!-- id: 7 -->
 - [x] UIコンポーネント実装: Icons (Generic & Category) <!-- id: 24 -->
-- [ ] UIコンポーネント実装: Badge <!-- id: 25 -->
+- [x] UIコンポーネント実装: Badge <!-- id: 25 -->
 - [ ] コンポーネントカタログページ (Storybook的な一覧ページ) 作成 <!-- id: 8 -->
 - [ ] レイアウトコンポーネント作成 (Header, Footer, MainLayout) <!-- id: 9 -->
 
