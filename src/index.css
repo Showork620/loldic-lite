@@ -2,33 +2,38 @@
   /* =========================================
      Hextech Color Palette
      ========================================= */
-  
+
   /* Primary: Hextech Crystal (Blue/Cyan) */
   --color-hextech-blue-900: #04293A;
   --color-hextech-blue-800: #06405A;
   --color-hextech-blue-700: #09597A;
   --color-hextech-blue-600: #0B7298;
   --color-hextech-blue-500: #0D8BB6;
-  --color-hextech-blue-400: #0FA5D4; /* Main Highlight */
+  --color-hextech-blue-400: #0FA5D4;
+  /* Main Highlight */
   --color-hextech-blue-300: #3DBFE5;
   --color-hextech-blue-200: #6ED8F0;
   --color-hextech-blue-100: #9FF1FB;
-  
+
   /* Secondary: Piltover Gold/Bronze */
   --color-gold-900: #3D2E14;
   --color-gold-800: #57421D;
   --color-gold-700: #715826;
   --color-gold-600: #8B6E2F;
   --color-gold-500: #A68438;
-  --color-gold-400: #C09B42; /* Main Metallic */
+  --color-gold-400: #C09B42;
+  /* Main Metallic */
   --color-gold-300: #DAB359;
   --color-gold-200: #EUCB80;
-  --color-gold-100: #F6E3A8; /* Highlight */
+  --color-gold-100: #F6E3A8;
+  /* Highlight */
 
   /* Backgrounds: Deep Void / Navy */
-  --color-navy-950: #010A13; /* App Background */
+  --color-navy-950: #010A13;
+  /* App Background */
   --color-navy-900: #031221;
-  --color-navy-800: #061A30; /* Card Background */
+  --color-navy-800: #061A30;
+  /* Card Background */
   --color-navy-700: #092240;
 
   /* State Colors */
@@ -38,16 +43,19 @@
   --color-info: #0FA5D4;
 
   /* Text Colors */
-  --color-text-primary: #F0E6D2; /* Off-white / Parchment */
-  --color-text-secondary: #A09B8C; /* Muted metal */
-  --color-text-highlight: #F6E3A8; /* Gold highlight */
+  --color-text-primary: #F0E6D2;
+  /* Off-white / Parchment */
+  --color-text-secondary: #A09B8C;
+  /* Muted metal */
+  --color-text-highlight: #F6E3A8;
+  /* Gold highlight */
   --color-text-link: #3DBFE5;
 
   /* =========================================
      Typography
      ========================================= */
   /* Impact / Headings - Assuming user might add custom font later, unsetting for now or using system fallbacks */
-  --font-family-heading: "Beaufort for LOL", "Times New Roman", serif; 
+  --font-family-heading: "Beaufort for LOL", "Times New Roman", serif;
   --font-family-body: "Inter", "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   --font-size-xs: 0.75rem;
@@ -72,7 +80,8 @@
   --space-10: 64px;
 
   --border-radius-sm: 2px;
-  --border-radius-md: 4px; /* Techy feel - sharp corners */
+  --border-radius-md: 4px;
+  /* Techy feel - sharp corners */
   --border-radius-lg: 8px;
 
   /* =========================================
@@ -81,7 +90,7 @@
   --shadow-low: 0 2px 4px rgba(0, 0, 0, 0.4);
   --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.5);
   --shadow-high: 0 8px 16px rgba(0, 0, 0, 0.6);
-  
+
   --glow-blue: 0 0 10px rgba(15, 165, 212, 0.5);
   --glow-gold: 0 0 10px rgba(192, 155, 66, 0.5);
 }
@@ -89,7 +98,9 @@
 /* =========================================
    Global Resets & Base Styles
    ========================================= */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -98,18 +109,23 @@ body {
   padding: 0;
   min-height: 100vh;
   min-width: 320px;
-  
+
   font-family: var(--font-family-body);
   background-color: var(--color-navy-950);
   color: var(--color-text-primary);
   line-height: 1.6;
-  
+
   /* Smooth fonts */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-family-heading);
   color: var(--color-text-highlight);
   font-weight: 700;
@@ -117,7 +133,7 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: var(--space-4);
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 a {
@@ -138,14 +154,33 @@ a:hover {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-navy-900); 
+  background: var(--color-navy-900);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-gold-700); 
+  background: var(--color-gold-700);
   border: 1px solid var(--color-navy-900);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gold-500); 
+  background: var(--color-gold-500);
+}
+
+/* =========================================
+   Utility Classes
+   ========================================= */
+.text-hextech-blue-400 {
+  color: var(--color-hextech-blue-400);
+}
+
+.text-gold-400 {
+  color: var(--color-gold-400);
+}
+
+.text-text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.text-danger {
+  color: var(--color-danger);
 }

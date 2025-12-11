@@ -3,10 +3,13 @@ import { Button } from './components/ui/Button';
 import { Input } from './components/ui/Input';
 import { Select } from './components/ui/Select';
 import { Combobox } from './components/ui/Combobox';
+import { Icon } from './components/ui/Icon';
+import { CategoryIcon, type IconCategory } from './components/ui/CategoryIcon';
 import './App.css';
 
 function App() {
   const [comboboxValue, setComboboxValue] = useState('');
+  const [activeCategory, setActiveCategory] = useState<IconCategory>('All');
 
   const selectOptions = [
     { value: 'option1', label: 'Option 1' },
@@ -23,6 +26,8 @@ function App() {
     { value: 'zed', label: 'Zed' },
   ];
 
+  const categories: IconCategory[] = ['Fighter', 'Marksman', 'Assassin', 'Mage', 'Tank', 'Support', 'All'];
+
   return (
     <div className="layout">
       <h1 className="title">Hextech Components</h1>
@@ -38,6 +43,37 @@ function App() {
         </div>
       </div>
 
+      {/* Icons */}
+      <div className="section">
+        <h2>Icons</h2>
+        <div className="row" style={{ alignItems: 'center', gap: '20px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+            <h3>Generic</h3>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <Icon name="Search" color="primary" />
+              <Icon name="User" color="gold" />
+              <Icon name="Settings" color="secondary" />
+              <Icon name="AlertCircle" color="danger" />
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+            <h3>Category Icons (Interactive)</h3>
+            <div style={{ display: 'flex', gap: '8px', padding: '10px', background: 'var(--color-navy-900)', borderRadius: '4px' }}>
+              {categories.map((cat) => (
+                <CategoryIcon
+                  key={cat}
+                  category={cat}
+                  isActive={activeCategory === cat}
+                  onClick={() => setActiveCategory(cat)}
+                />
+              ))}
+            </div>
+            <span>Selected: {activeCategory}</span>
+          </div>
+        </div>
+      </div>
+
       {/* Inputs */}
       <div className="section">
         <h2>Inputs</h2>
@@ -46,7 +82,11 @@ function App() {
             <Input label="Username" placeholder="Enter username" />
           </div>
           <div style={{ width: '300px' }}>
-            <Input label="With Icon" placeholder="Search..." leftIcon="🔍" />
+            <Input
+              label="With Icon"
+              placeholder="Search..."
+              leftIcon={<Icon name="Search" size={18} />}
+            />
           </div>
           <div style={{ width: '300px' }}>
             <Input label="Error State" error="Invalid input" defaultValue="Wrong value" />
