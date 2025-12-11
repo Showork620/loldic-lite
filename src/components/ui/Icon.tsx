@@ -11,6 +11,7 @@ import {
   Plus,
   Minus,
   Check,
+  Copy,
   ALargeSmall, // Text size or similar? Maybe Type?
   ChevronDown,
   ChevronUp,
@@ -38,6 +39,7 @@ const ICONS = {
   Plus,
   Minus,
   Check,
+  Copy,
   ALargeSmall,
   ChevronDown,
   ChevronUp,
