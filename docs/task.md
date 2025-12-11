@@ -19,7 +19,7 @@
 - [x] レイアウトコンポーネント作成 (Header, Footer, MainLayout) <!-- id: 9 -->
 
 ## Phase 3: 管理画面機能 (Admin)
-- [ ] ルーティング設定 (React Router) <!-- id: 10 -->
+- [x] ルーティング設定 (React Router) <!-- id: 10 -->
 - [ ] Riot API 取得用ユーティリティ実装 <!-- id: 11 -->
 - [ ] 画像処理ユーティリティ実装 (Canvas使用: Resize, WebP変換) <!-- id: 12 -->
 - [ ] Supabase Storage アップロード処理実装 <!-- id: 13 -->
