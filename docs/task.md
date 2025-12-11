@@ -15,7 +15,7 @@
 - [ ] UIコンポーネント実装: Card (一旦スキップ) <!-- id: 7 -->
 - [x] UIコンポーネント実装: Icons (Generic & Category) <!-- id: 24 -->
 - [x] UIコンポーネント実装: Badge <!-- id: 25 -->
-- [ ] コンポーネントカタログページ (Storybook的な一覧ページ) 作成 <!-- id: 8 -->
+- [x] コンポーネントカタログページ (Storybook的な一覧ページ) 作成 <!-- id: 8 -->
 - [ ] レイアウトコンポーネント作成 (Header, Footer, MainLayout) <!-- id: 9 -->
 
 ## Phase 3: 管理画面機能 (Admin)
