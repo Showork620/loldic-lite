@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Icon } from '../ui/Icon';
 import { Input } from '../ui/Input';
 import styles from './Sidebar.module.css';
+import { Link } from 'react-router-dom';
 
 interface SidebarProps {
   sections: Array<{ id: string; label: string }>;
@@ -81,21 +82,27 @@ export function Sidebar({ sections, searchQuery, onSearchChange }: SidebarProps)
 
           <nav className={styles.nav}>
             <ul className={styles.navList}>
-              {sections.map(section => (
-                <li key={section.id}>
-                  <a
-                    href={`#${section.id}`}
-                    onClick={(e) => handleNavClick(e, section.id)}
-                    className={`${styles.navLink} ${activeSection === section.id ? styles.active : ''}`}
-                  >
-                    {section.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </div>
-      </aside>
+
+
+              {/* Original sections navigation, still using Link for hash links */}
+              {
+                sections.map(section => (
+                  <li key={section.id}>
+                    {/* Replaced <a> with Link */}
+                    <Link
+                      to={`#${section.id}`} // Assuming Link can handle hash links for internal navigation
+                      onClick={(e) => handleNavClick(e as any, section.id)} // Cast e to any to match React.MouseEvent<HTMLAnchorElement>
+                      className={`${styles.navLink} ${activeSection === section.id ? styles.active : ''}`}
+                    >
+                      {section.label}
+                    </Link>
+                  </li>
+                ))
+              }
+            </ul >
+          </nav >
+        </div >
+      </aside >
     </>
   );
 }
