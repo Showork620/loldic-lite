@@ -21,7 +21,9 @@ import {
   CheckCircle,
   Info,
   Loader2,
-  Filter
+  Filter,
+  LayoutGrid, // For Catalog
+  Database // For Admin/Data
 } from 'lucide-react';
 import { type ComponentProps } from 'react';
 
@@ -49,7 +51,9 @@ const ICONS = {
   CheckCircle,
   Info,
   Loader2,
-  Filter
+  Filter,
+  LayoutGrid,
+  Database
 } as const;
 
 export type IconName = keyof typeof ICONS;

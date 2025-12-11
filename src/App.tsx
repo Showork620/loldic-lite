@@ -1,14 +1,16 @@
-import { MainLayout } from './components/layout/MainLayout';
+import { Routes, Route } from 'react-router-dom';
 import { ComponentCatalog } from './pages/ComponentCatalog';
-import './App.css';
+import { PublicPage } from './pages/PublicPage';
+import { AdminPage } from './pages/AdminPage';
 
 function App() {
   return (
-    <MainLayout>
-      <ComponentCatalog />
-    </MainLayout>
+    <Routes>
+      <Route path="/" element={<PublicPage />} />
+      <Route path="/admin" element={<AdminPage />} />
+      <Route path="/catalog" element={<ComponentCatalog />} />
+    </Routes>
   );
 }
 
 export default App;
-

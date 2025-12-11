@@ -3,10 +3,13 @@ import { Icon } from '../ui/Icon';
 import { Container } from './Container';
 import styles from './Header.module.css';
 
+import { Link, useLocation } from 'react-router-dom';
+
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const lastScrollY = useRef(0);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -41,14 +44,21 @@ export function Header() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const navItems = [
+    { label: 'Items', href: '/', isActive: location.pathname === '/' },
+    { label: 'Champions', href: '#', isActive: false, disabled: true },
+    { label: 'Runes', href: '#', isActive: false, disabled: true },
+    { label: 'Admin', href: '/admin', isActive: location.pathname.startsWith('/admin') },
+  ];
+
   return (
     <header className={`${styles.header} ${!isVisible ? styles.hidden : ''}`}>
       <Container className={styles.headerInner}>
         {/* Logo/Title */}
-        <a href="/" className={styles.logo}>
+        <Link to="/" className={styles.logo}>
           <Icon name="Home" size={32} color="primary" className={styles.logoIcon} />
           <h1 className={styles.logoText}>Hextech</h1>
-        </a>
+        </Link>
 
         {/* Mobile Toggle */}
         <button
@@ -62,21 +72,23 @@ export function Header() {
         {/* Navigation */}
         <nav className={`${styles.nav} ${isMenuOpen ? styles.open : ''}`}>
           <ul className={styles.navList}>
-            <li>
-              <a href="#catalog" className={`${styles.navLink} ${styles.active}`}>
-                Components
-              </a>
-            </li>
-            <li>
-              <a href="#admin" className={styles.navLink}>
-                Admin
-              </a>
-            </li>
-            <li>
-              <a href="#items" className={styles.navLink}>
-                Items
-              </a>
-            </li>
+            {navItems.map((item) => (
+              <li key={item.label}>
+                {item.disabled ? (
+                  <span className={`${styles.navLink} opacity-50 cursor-not-allowed`}>
+                    {item.label} <span className="text-xs text-hextech-gold-500 ml-1">(Soon)</span>
+                  </span>
+                ) : (
+                  <Link
+                    to={item.href}
+                    className={`${styles.navLink} ${item.isActive ? styles.active : ''}`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                )}
+              </li>
+            ))}
           </ul>
 
           {/* Actions */}

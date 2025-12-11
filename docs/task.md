@@ -19,7 +19,7 @@
 - [x] レイアウトコンポーネント作成 (Header, Footer, MainLayout) <!-- id: 9 -->
 
 ## Phase 3: 管理画面機能 (Admin)
-- [ ] ルーティング設定 (React Router) <!-- id: 10 -->
+- [x] ルーティング設定 (React Router) <!-- id: 10 -->
 - [ ] Riot API 取得用ユーティリティ実装 <!-- id: 11 -->
 - [ ] 画像処理ユーティリティ実装 (Canvas使用: Resize, WebP変換) <!-- id: 12 -->
 - [ ] Supabase Storage アップロード処理実装 <!-- id: 13 -->
@@ -41,3 +41,4 @@
 ## Backlog / Future Improvements
 - [ ] カテゴリアイコンの正式版SVG作成・差し替え (現在はプロキシを使用)
 - [ ] コンポーネントカタログで利用可能なアイコン一覧を明示する
+- [ ] 将来的にはルーンとチャンピオンの図鑑も作成予定
