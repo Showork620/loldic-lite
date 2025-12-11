@@ -1,8 +1,7 @@
 .container {
   display: flex;
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 24px;
+  width: 100%;
+  padding: 24px 0;
   gap: 32px;
   background: var(--color-navy-950);
   min-height: 100vh;
@@ -11,6 +10,7 @@
 .main {
   flex: 1;
   min-width: 0;
+  max-width: 100%;
   /* Flexboxの縮小を許可 */
 }
 
@@ -129,7 +129,7 @@
 @media (max-width: 1024px) {
   .container {
     flex-direction: column;
-    padding: 16px;
+    padding: 16px 0;
   }
 
   .header {

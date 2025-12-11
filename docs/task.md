@@ -16,7 +16,7 @@
 - [x] UIコンポーネント実装: Icons (Generic & Category) <!-- id: 24 -->
 - [x] UIコンポーネント実装: Badge <!-- id: 25 -->
 - [x] コンポーネントカタログページ (Storybook的な一覧ページ) 作成 <!-- id: 8 -->
-- [ ] レイアウトコンポーネント作成 (Header, Footer, MainLayout) <!-- id: 9 -->
+- [x] レイアウトコンポーネント作成 (Header, Footer, MainLayout) <!-- id: 9 -->
 
 ## Phase 3: 管理画面機能 (Admin)
 - [ ] ルーティング設定 (React Router) <!-- id: 10 -->
