@@ -5,6 +5,7 @@ import { Select } from './components/ui/Select';
 import { Combobox } from './components/ui/Combobox';
 import { Icon } from './components/ui/Icon';
 import { CategoryIcon, type IconCategory } from './components/ui/CategoryIcon';
+import { Badge } from './components/ui/Badge';
 import './App.css';
 
 function App() {
@@ -40,6 +41,38 @@ function App() {
           <Button variant="secondary">Secondary</Button>
           <Button variant="danger">Danger</Button>
           <Button variant="ghost">Ghost</Button>
+        </div>
+      </div>
+
+      {/* Badges */}
+      <div className="section">
+        <h2>Badges</h2>
+        <div className="row" style={{ alignItems: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <h3>Variants</h3>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <Badge variant="default">Default</Badge>
+              <Badge variant="primary">New</Badge>
+              <Badge variant="secondary">Legacy</Badge>
+              <Badge variant="danger">Removed</Badge>
+              <Badge variant="success">Buffed</Badge>
+              <Badge variant="outline">Outline</Badge>
+            </div>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <h3>Sizes</h3>
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+              <Badge size="sm">Small</Badge>
+              <Badge size="md">Medium</Badge>
+            </div>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <h3>With Icon</h3>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <Badge variant="primary"><span style={{ marginRight: '4px' }}>🛡️</span> Tank</Badge>
+              <Badge variant="danger"><span style={{ marginRight: '4px' }}>⚔️</span> Nerf</Badge>
+            </div>
+          </div>
         </div>
       </div>
 
