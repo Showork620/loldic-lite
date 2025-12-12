@@ -52,11 +52,11 @@ export async function fetchItemData(
 /**
  * アイテム画像のURLを生成
  * @param version パッチバージョン
- * @param imageName 画像ファイル名 (例: "1001.png")
+ * @param itemId アイテムID (例: "3001")
  * @returns 画像URL
  */
-export function getItemImageUrl(version: string, imageName: string): string {
-  return `${DDRAGON_BASE_URL}/cdn/${version}/img/item/${imageName}`;
+export function getItemImageUrl(version: string, itemId: string): string {
+  return `${DDRAGON_BASE_URL}/cdn/${version}/img/item/${itemId}.png`;
 }
 
 /**

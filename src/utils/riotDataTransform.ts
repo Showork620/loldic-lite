@@ -4,7 +4,7 @@
  */
 
 import type { ItemAbility } from '../types/item';
-import { TAGS_TRANSLATE, ADDITIONAL_TAGS, STATS_KEYWORD, ITEMS_ROLE } from '../constants/riotApi';
+import { TAGS_TRANSLATE, ADDITIONAL_TAGS, STATS_KEYWORD } from '../constants/riotApi';
 
 /**
  * descriptionから<passive>と<active>タグを抽出してアビリティ情報を生成
@@ -196,16 +196,15 @@ export function translateAndEnhanceTags(
 
 /**
  * Riot APIのアイテムデータをDB挿入用の形式に変換
+ * 定数データ（追加タグ、ロール分類）はDBから取得して反映
  * @param riotId Riot APIのアイテムID
  * @param riotItem Riot APIから取得したアイテムデータ
- * @param version パッチバージョン
  * @returns DB挿入用のアイテムデータ（NewItem形式の一部）
  */
-export function transformRiotItemToDbFormat(
+export async function transformRiotItemToDbItem(
   riotId: string,
-  riotItem: any,
-  version: string
-): {
+  riotItem: any
+): Promise<{
   riotId: string;
   nameJa: string;
   isAvailable: boolean;
@@ -221,34 +220,37 @@ export function transformRiotItemToDbFormat(
   stats: Record<string, string>;
   buildFrom: string[];
   buildInto: string[];
-} {
+}> {
+  // 動的インポート（循環依存を避けるため）
+  const { getAdditionalTagsByItem, getRolesByItem } = await import('./constantsData');
+
   // アビリティを抽出
   const abilities = extractAbilities(riotItem.description);
 
   // statsを抽出
   const stats = extractStatsFromDescription(riotItem.description);
 
-  // タグを翻訳・拡張（search_tagsとして使用）
-  const searchTags = translateAndEnhanceTags(
+  // タグを翻訳・拡張（API由来のタグ）
+  const apiTags = translateAndEnhanceTags(
     riotItem.tags || [],
     riotId,
     abilities,
     stats
   );
 
+  // DBから追加タグを取得
+  const { data: additionalTags } = await getAdditionalTagsByItem(riotId);
+
+  // searchTagsにマージ（重複を除去）
+  const searchTags = Array.from(new Set([...apiTags, ...additionalTags]));
+
+  // DBからロール分類を取得
+  const { data: roleCategories } = await getRolesByItem(riotId);
+
   // is_available判定: inStoreがtrueまたはfromやintoがある（派生元・派生先がある）場合はtrue
   const isAvailable = riotItem.inStore === true ||
     (riotItem.from && riotItem.from.length > 0) ||
     (riotItem.into && riotItem.into.length > 0);
-
-  // roleCategories判定: ITEMS_ROLEマッピングから該当するロールを抽出
-  const roleCategories: string[] = [];
-  const itemIdNum = parseInt(riotId, 10);
-  for (const [role, itemIds] of Object.entries(ITEMS_ROLE)) {
-    if ((itemIds as number[]).includes(itemIdNum)) {
-      roleCategories.push(role);
-    }
-  }
 
   return {
     riotId,
@@ -258,15 +260,19 @@ export function transformRiotItemToDbFormat(
     plaintextJa: riotItem.plaintext || '',
     priceTotal: riotItem.gold.total,
     priceSell: riotItem.gold.sell,
-    imagePath: `${version}/${riotItem.image.full}`, // バージョン情報を含めてパスを保存
+    imagePath: '', // itemSync.tsで設定される
     patchStatus: null, // 初回登録時はnull、手動で設定
     searchTags,
-    roleCategories: roleCategories.length > 0 ? roleCategories : null, // ロールがあれば配列、なければnull
+    roleCategories: roleCategories.length > 0 ? roleCategories : null,
     popularChampions: null, // 初回登録時はnull、手動で設定
     stats,
     buildFrom: riotItem.from || [],
     buildInto: riotItem.into || []
   };
 }
+
+// 後方互換性のため、旧関数名もエクスポート（非推奨）
+/** @deprecated Use transformRiotItemToDbItem instead */
+export const transformRiotItemToDbFormat = transformRiotItemToDbItem;
 
 
