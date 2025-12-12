@@ -5,6 +5,7 @@
 
 import { supabase } from '../lib/supabase';
 import type { NewItem } from '../db/schema';
+import { toSnakeCase } from './caseConverter';
 
 /**
  * アイテムデータをDBに保存（upsert）
@@ -15,11 +16,8 @@ export async function saveItemData(
   itemData: Omit<NewItem, 'id' | 'createdAt'>
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    // updatedAtを現在時刻に設定
-    const dataToSave = {
-      ...itemData,
-      updatedAt: new Date().toISOString()
-    };
+    // camelCaseからsnake_caseに変換
+    const dataToSave = toSnakeCase(itemData);
 
     const { error } = await supabase
       .from('items')
@@ -86,8 +84,8 @@ export async function updateItemTimestamp(
   try {
     const { error } = await supabase
       .from('items')
-      .update({ updatedAt: new Date().toISOString() })
-      .eq('riotId', riotId);
+      .update({ updated_at: new Date().toISOString() })  // snake_caseを使用
+      .eq('riot_id', riotId);  // snake_caseを使用
 
     if (error) {
       return { success: false, error: error.message };
@@ -109,7 +107,7 @@ export async function getAllItems() {
   const { data, error } = await supabase
     .from('items')
     .select('*')
-    .order('riotId', { ascending: true });
+    .order('riot_id', { ascending: true });  // snake_caseを使用
 
   if (error) {
     console.error('Fetch error:', error);
@@ -127,7 +125,7 @@ export async function getItemByRiotId(riotId: string) {
   const { data, error } = await supabase
     .from('items')
     .select('*')
-    .eq('riotId', riotId)
+    .eq('riot_id', riotId)  // snake_caseを使用
     .single();
 
   if (error) {
@@ -146,7 +144,7 @@ export async function deleteItem(riotId: string) {
   const { error } = await supabase
     .from('items')
     .delete()
-    .eq('riotId', riotId);
+    .eq('riot_id', riotId);  // snake_caseを使用
 
   if (error) {
     return { success: false, error: error.message };
@@ -162,8 +160,8 @@ export async function getAvailableItems() {
   const { data, error } = await supabase
     .from('items')
     .select('*')
-    .eq('isAvailable', true)
-    .order('riotId', { ascending: true });
+    .eq('is_available', true)  // snake_caseを使用
+    .order('riot_id', { ascending: true });  // snake_caseを使用
 
   if (error) {
     console.error('Fetch error:', error);
@@ -181,8 +179,8 @@ export async function getItemsByRole(role: string) {
   const { data, error } = await supabase
     .from('items')
     .select('*')
-    .contains('roleCategories', [role])
-    .order('riotId', { ascending: true });
+    .contains('role_categories', [role])  // snake_caseを使用
+    .order('riot_id', { ascending: true });  // snake_caseを使用
 
   if (error) {
     console.error('Fetch error:', error);
