@@ -8,7 +8,8 @@ import { Select } from '../components/ui/Select';
 import { Combobox } from '../components/ui/Combobox';
 import { Icon, type IconName } from '../components/ui/Icon';
 import { CategoryIcon, type IconCategory } from '../components/ui/CategoryIcon';
-import { Badge } from '../components/ui/Badge';
+import { ProgressBar } from '../components/ui/ProgressBar';
+import { StatusBadge } from '../components/ui/StatusBadge';
 import styles from './ComponentCatalog.module.css';
 
 // 利用可能な全アイコンのリスト
@@ -21,7 +22,8 @@ const ALL_ICONS: IconName[] = [
 
 const sections = [
   { id: 'buttons', label: 'Buttons' },
-  { id: 'badges', label: 'Badges' },
+  { id: 'status-badges', label: 'Status Badges' },
+  { id: 'progress', label: 'Progress' },
   { id: 'icons', label: 'Icons' },
   { id: 'inputs', label: 'Inputs' },
   { id: 'selects', label: 'Selects' },
@@ -123,57 +125,148 @@ export function ComponentCatalog() {
           </ComponentSection>
         )}
 
-        {/* Badges Section */}
-        {filteredSections.some(s => s.id === 'badges') && (
+        {/* Status Badges Section */}
+        {filteredSections.some(s => s.id === 'status-badges') && (
           <ComponentSection
-            id="badges"
-            title="Badges"
-            description="ステータス表示やラベル付けに使用するバッジコンポーネント"
+            id="status-badges"
+            title="Status Badges"
+            description="ステータス表示用のカラーコーディングされたバッジコンポーネント"
           >
             <div className={styles.demoGroup}>
-              <h3 className={styles.demoTitle}>Variants</h3>
+              <h3 className={styles.demoTitle}>同期ステータス (Sync Status)</h3>
               <div className={styles.demoRow}>
-                <Badge variant="default">Default</Badge>
-                <Badge variant="primary">New</Badge>
-                <Badge variant="secondary">Legacy</Badge>
-                <Badge variant="danger">Removed</Badge>
-                <Badge variant="success">Buffed</Badge>
-                <Badge variant="outline">Outline</Badge>
+                <StatusBadge status="new" />
+                <StatusBadge status="updated" />
+                <StatusBadge status="deleted" />
+                <StatusBadge status="unchanged" />
               </div>
             </div>
 
-            <CodeExample code={`<Badge variant="default">Default</Badge>
-<Badge variant="primary">New</Badge>
-<Badge variant="secondary">Legacy</Badge>
-<Badge variant="danger">Removed</Badge>
-<Badge variant="success">Buffed</Badge>
-<Badge variant="outline">Outline</Badge>`} />
+            <CodeExample code={`<StatusBadge status="new" />
+<StatusBadge status="updated" />
+<StatusBadge status="deleted" />
+<StatusBadge status="unchanged" />`} />
+
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>パッチステータス (Patch Status)</h3>
+              <div className={styles.demoRow}>
+                <StatusBadge status="buff" />
+                <StatusBadge status="nerf" />
+                <StatusBadge status="rework" />
+                <StatusBadge status="removed" />
+                <StatusBadge status="revived" />
+                <StatusBadge status="adjusted" />
+              </div>
+            </div>
+
+            <CodeExample code={`<StatusBadge status="buff" />
+<StatusBadge status="nerf" />
+<StatusBadge status="rework" />
+<StatusBadge status="removed" />
+<StatusBadge status="revived" />
+<StatusBadge status="adjusted" />`} />
+
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>アイコン付き</h3>
+              <div className={styles.demoRow}>
+                <StatusBadge status="new" showIcon />
+                <StatusBadge status="buff" showIcon />
+                <StatusBadge status="nerf" showIcon />
+                <StatusBadge status="rework" showIcon />
+              </div>
+            </div>
+
+            <CodeExample code={`<StatusBadge status="new" showIcon />
+<StatusBadge status="buff" showIcon />
+<StatusBadge status="nerf" showIcon />
+<StatusBadge status="rework" showIcon />`} />
+
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>サイズバリエーション</h3>
+              <div className={styles.demoRow}>
+                <StatusBadge status="buff" size="sm" />
+                <StatusBadge status="buff" size="md" />
+                <StatusBadge status="nerf" size="sm" showIcon />
+                <StatusBadge status="nerf" size="md" showIcon />
+              </div>
+            </div>
+
+            <CodeExample code={`<StatusBadge status="buff" size="sm" />
+<StatusBadge status="buff" size="md" />
+<StatusBadge status="nerf" size="sm" showIcon />
+<StatusBadge status="nerf" size="md" showIcon />`} />
+
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>カスタムラベル</h3>
+              <div className={styles.demoRow}>
+                <StatusBadge status="new" label="新アイテム" showIcon />
+                <StatusBadge status="buff" label="+10 AD" showIcon />
+                <StatusBadge status="nerf" label="-5% CD" showIcon />
+              </div>
+            </div>
+
+            <CodeExample code={`<StatusBadge status="new" label="新アイテム" showIcon />
+<StatusBadge status="buff" label="+10 AD" showIcon />
+<StatusBadge status="nerf" label="-5% CD" showIcon />`} />
+          </ComponentSection>
+        )}
+
+        {/* Progress Section */}
+        {filteredSections.some(s => s.id === 'progress') && (
+          <ComponentSection
+            id="progress"
+            title="Progress Bars"
+            description="進捗表示用のプログレスバーコンポーネント"
+          >
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>Determinate (確定モード)</h3>
+              <div className={styles.progressDemo}>
+                <ProgressBar value={0} label="開始" showPercentage />
+                <ProgressBar value={33} label="処理中..." showPercentage />
+                <ProgressBar value={66} label="もうすぐ完了" showPercentage />
+                <ProgressBar value={100} label="完了！" showPercentage />
+              </div>
+            </div>
+
+            <CodeExample code={`<ProgressBar value={0} label="開始" showPercentage />
+<ProgressBar value={33} label="処理中..." showPercentage />
+<ProgressBar value={66} label="もうすぐ完了" showPercentage />
+<ProgressBar value={100} label="完了！" showPercentage />`} />
 
             <div className={styles.demoGroup}>
               <h3 className={styles.demoTitle}>Sizes</h3>
-              <div className={styles.demoRow}>
-                <Badge size="sm">Small</Badge>
-                <Badge size="md">Medium</Badge>
+              <div className={styles.progressDemo}>
+                <ProgressBar value={60} label="Small" size="sm" showPercentage />
+                <ProgressBar value={60} label="Medium (default)" size="md" showPercentage />
+                <ProgressBar value={60} label="Large" size="lg" showPercentage />
               </div>
             </div>
 
-            <CodeExample code={`<Badge size="sm">Small</Badge>
-<Badge size="md">Medium</Badge>`} />
+            <CodeExample code={`<ProgressBar value={60} label="Small" size="sm" showPercentage />
+<ProgressBar value={60} label="Medium (default)" size="md" showPercentage />
+<ProgressBar value={60} label="Large" size="lg" showPercentage />`} />
 
             <div className={styles.demoGroup}>
-              <h3 className={styles.demoTitle}>With Icon</h3>
-              <div className={styles.demoRow}>
-                <Badge variant="primary"><span style={{ marginRight: '4px' }}>🛡️</span> Tank</Badge>
-                <Badge variant="danger"><span style={{ marginRight: '4px' }}>⚔️</span> Nerf</Badge>
+              <h3 className={styles.demoTitle}>Indeterminate (不確定モード)</h3>
+              <div className={styles.progressDemo}>
+                <ProgressBar value={0} variant="indeterminate" label="データを読み込み中..." />
+                <ProgressBar value={0} variant="indeterminate" size="sm" />
               </div>
             </div>
 
-            <CodeExample code={`<Badge variant="primary">
-  <span style={{ marginRight: '4px' }}>🛡️</span> Tank
-</Badge>
-<Badge variant="danger">
-  <span style={{ marginRight: '4px' }}>⚔️</span> Nerf
-</Badge>`} />
+            <CodeExample code={`<ProgressBar value={0} variant="indeterminate" label="データを読み込み中..." />
+<ProgressBar value={0} variant="indeterminate" size="sm" />`} />
+
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>Without Labels</h3>
+              <div className={styles.progressDemo}>
+                <ProgressBar value={75} />
+                <ProgressBar value={45} showPercentage />
+              </div>
+            </div>
+
+            <CodeExample code={`<ProgressBar value={75} />
+<ProgressBar value={45} showPercentage />`} />
           </ComponentSection>
         )}
 
