@@ -1,0 +1,70 @@
+.confirmDialog {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* アイコンコンテナ */
+.iconContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-2);
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+}
+
+/* バリアント別カラー */
+.info .icon {
+  color: var(--color-info);
+  filter: drop-shadow(0 0 8px rgba(16, 185, 255, 0.5));
+}
+
+.warning .icon {
+  color: var(--color-warning);
+  filter: drop-shadow(0 0 8px rgba(255, 193, 7, 0.5));
+}
+
+.danger .icon {
+  color: var(--color-danger);
+  filter: drop-shadow(0 0 8px rgba(244, 67, 54, 0.5));
+}
+
+/* メッセージ */
+.messageContainer {
+  text-align: center;
+}
+
+.message {
+  margin: 0;
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  color: var(--color-text-primary);
+}
+
+/* アクションボタン */
+.actions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+  margin-top: var(--space-2);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 640px) {
+  .icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .actions {
+    flex-direction: column-reverse;
+    gap: var(--space-2);
+  }
+
+  .actions button {
+    width: 100%;
+  }
+}

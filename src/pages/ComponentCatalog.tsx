@@ -10,6 +10,8 @@ import { Icon, type IconName } from '../components/ui/Icon';
 import { CategoryIcon, type IconCategory } from '../components/ui/CategoryIcon';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { StatusBadge } from '../components/ui/StatusBadge';
+import { Dialog } from '../components/ui/Dialog';
+import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import styles from './ComponentCatalog.module.css';
 
 // 利用可能な全アイコンのリスト
@@ -24,6 +26,7 @@ const sections = [
   { id: 'buttons', label: 'Buttons' },
   { id: 'status-badges', label: 'Status Badges' },
   { id: 'progress', label: 'Progress' },
+  { id: 'dialogs', label: 'Dialogs' },
   { id: 'icons', label: 'Icons' },
   { id: 'inputs', label: 'Inputs' },
   { id: 'selects', label: 'Selects' },
@@ -34,6 +37,14 @@ export function ComponentCatalog() {
   const [searchQuery, setSearchQuery] = useState('');
   const [comboboxValue, setComboboxValue] = useState('');
   const [activeCategory, setActiveCategory] = useState<IconCategory>('All');
+
+  // Dialog states
+  const [isBasicDialogOpen, setIsBasicDialogOpen] = useState(false);
+  const [isSmDialogOpen, setIsSmDialogOpen] = useState(false);
+  const [isLgDialogOpen, setIsLgDialogOpen] = useState(false);
+  const [isInfoConfirmOpen, setIsInfoConfirmOpen] = useState(false);
+  const [isWarningConfirmOpen, setIsWarningConfirmOpen] = useState(false);
+  const [isDangerConfirmOpen, setIsDangerConfirmOpen] = useState(false);
 
   // 検索クエリに基づいてセクションをフィルタリング
   const filteredSections = useMemo(() => {
@@ -267,6 +278,172 @@ export function ComponentCatalog() {
 
             <CodeExample code={`<ProgressBar value={75} />
 <ProgressBar value={45} showPercentage />`} />
+          </ComponentSection>
+        )}
+
+        {/* Dialogs Section */}
+        {filteredSections.some(s => s.id === 'dialogs') && (
+          <ComponentSection
+            id="dialogs"
+            title="Dialogs"
+            description="モーダルダイアログと確認ダイアログコンポーネント"
+          >
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>基本Dialog</h3>
+              <div className={styles.demoRow}>
+                <Button onClick={() => setIsBasicDialogOpen(true)}>
+                  基本Dialogを開く
+                </Button>
+              </div>
+              <Dialog
+                isOpen={isBasicDialogOpen}
+                onClose={() => setIsBasicDialogOpen(false)}
+                title="基本Dialog"
+              >
+                <p>これは基本的なDialogコンポーネントです。</p>
+                <p>ESCキーまたはオーバーレイをクリックして閉じることができます。</p>
+              </Dialog>
+            </div>
+
+            <CodeExample code={`const [isOpen, setIsOpen] = useState(false);
+
+<Button onClick={() => setIsOpen(true)}>Dialogを開く</Button>
+
+<Dialog
+  isOpen={isOpen}
+  onClose={() => setIsOpen(false)}
+  title="基本Dialog"
+>
+  <p>コンテンツ</p>
+  <Button onClick={() => setIsOpen(false)}>閉じる</Button>
+</Dialog>`} />
+
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>サイズバリエーション</h3>
+              <div className={styles.demoRow}>
+                <Button onClick={() => setIsSmDialogOpen(true)} size="sm">
+                  Small Dialog
+                </Button>
+                <Button onClick={() => setIsBasicDialogOpen(true)}>
+                  Medium Dialog (default)
+                </Button>
+                <Button onClick={() => setIsLgDialogOpen(true)} size="lg">
+                  Large Dialog
+                </Button>
+              </div>
+              <Dialog
+                isOpen={isSmDialogOpen}
+                onClose={() => setIsSmDialogOpen(false)}
+                title="Small Dialog"
+                maxWidth="sm"
+              >
+                <p>これは最大幅400pxのSmall Dialogです。</p>
+                <Button onClick={() => setIsSmDialogOpen(false)}>閉じる</Button>
+              </Dialog>
+              <Dialog
+                isOpen={isLgDialogOpen}
+                onClose={() => setIsLgDialogOpen(false)}
+                title="Large Dialog"
+                maxWidth="lg"
+              >
+                <p>これは最大幅640pxのLarge Dialogです。</p>
+                <p>より多くのコンテンツを含む場合に適しています。</p>
+                <Button onClick={() => setIsLgDialogOpen(false)}>閉じる</Button>
+              </Dialog>
+            </div>
+
+            <CodeExample code={`<Dialog maxWidth="sm">Small (400px)</Dialog>
+<Dialog maxWidth="md">Medium (480px, default)</Dialog>
+<Dialog maxWidth="lg">Large (640px)</Dialog>`} />
+
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>ConfirmDialog - Info</h3>
+              <div className={styles.demoRow}>
+                <Button onClick={() => setIsInfoConfirmOpen(true)}>
+                  同期確認を表示
+                </Button>
+              </div>
+              <ConfirmDialog
+                isOpen={isInfoConfirmOpen}
+                title="データ同期の確認"
+                message="Riot APIから最新データを取得して同期しますか？"
+                variant="info"
+                onConfirm={() => {
+                  alert('同期を開始しました');
+                }}
+                onCancel={() => setIsInfoConfirmOpen(false)}
+              />
+            </div>
+
+            <CodeExample code={`<ConfirmDialog
+  isOpen={isOpen}
+  title="データ同期の確認"
+  message="Riot APIから最新データを取得して同期しますか？"
+  variant="info"
+  onConfirm={() => { /* 処理 */ }}
+  onCancel={() => setIsOpen(false)}
+/>`} />
+
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>ConfirmDialog - Warning</h3>
+              <div className={styles.demoRow}>
+                <Button onClick={() => setIsWarningConfirmOpen(true)} variant="primary">
+                  上書き警告を表示
+                </Button>
+              </div>
+              <ConfirmDialog
+                isOpen={isWarningConfirmOpen}
+                title="データ上書きの警告"
+                message="既存のデータが上書きされます。この操作は元に戻せません。続行しますか？"
+                variant="warning"
+                confirmLabel="上書きする"
+                onConfirm={() => {
+                  alert('データを上書きしました');
+                }}
+                onCancel={() => setIsWarningConfirmOpen(false)}
+              />
+            </div>
+
+            <CodeExample code={`<ConfirmDialog
+  isOpen={isOpen}
+  title="データ上書きの警告"
+  message="既存のデータが上書きされます。この操作は元に戻せません。続行しますか？"
+  variant="warning"
+  confirmLabel="上書きする"
+  onConfirm={() => { /* 処理 */ }}
+  onCancel={() => setIsOpen(false)}
+/>`} />
+
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>ConfirmDialog - Danger</h3>
+              <div className={styles.demoRow}>
+                <Button onClick={() => setIsDangerConfirmOpen(true)} variant="danger">
+                  削除確認を表示
+                </Button>
+              </div>
+              <ConfirmDialog
+                isOpen={isDangerConfirmOpen}
+                title="アイテムの削除"
+                message="このアイテムを完全に削除しますか？この操作は元に戻せません。"
+                variant="danger"
+                confirmLabel="削除する"
+                cancelLabel="キャンセル"
+                onConfirm={() => {
+                  alert('アイテムを削除しました');
+                }}
+                onCancel={() => setIsDangerConfirmOpen(false)}
+              />
+            </div>
+
+            <CodeExample code={`<ConfirmDialog
+  isOpen={isOpen}
+  title="アイテムの削除"
+  message="このアイテムを完全に削除しますか？この操作は元に戻せません。"
+  variant="danger"
+  confirmLabel="削除する"
+  onConfirm={() => { /* 処理 */ }}
+  onCancel={() => setIsOpen(false)}
+/>`} />
           </ComponentSection>
         )}
 
