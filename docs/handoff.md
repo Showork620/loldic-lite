@@ -9,7 +9,8 @@
 - **Phase 0 (計画・設計)**: 完了
 - **Phase 1 (基盤構築)**: 完了
 - **Phase 2 (デザインシステム構築)**: 完了
-- **Phase 3 (管理画面機能構築)**: 着手中（task.md参照）
+- **Phase 3 (管理画面機能構築)**: 完了
+- **Phase 3.1 （管理画面用コンポーネント追加)**: 着手中
 
 ## プロジェクト概要
 Riot GamesのLoLアイテム情報を管理・閲覧するためのSPA開発プロジェクト。
@@ -24,7 +25,7 @@ Riot GamesのLoLアイテム情報を管理・閲覧するためのSPA開発プ�
 
 ## 次のアクション
 1. プロジェクトの初期化 (`create-vite`)
-2. `task.md` に従い、Phase 3 のタスクを順次実行する。
+2. `task.md` に従い、Phase 3.1 のタスクを順次実行する。
 
 ## 参照ファイル
 - `/Users/uemura/projects/ag-experiments/task.md`: 全体の工程表
