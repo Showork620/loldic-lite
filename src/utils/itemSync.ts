@@ -83,35 +83,94 @@ export async function syncSingleItem(
 }
 
 /**
- * アイテムが同期対象かどうかを判定
- * @param itemData Riot APIのアイテムデータ
+ * 指定されたアイテムIDのみを部分同期
+ * Admin画面での除外解除や新規除外時に使用
+ * @param itemIds 同期対象のアイテムIDリスト
+ * @param version パッチバージョン（省略時は最新）
  */
-function shouldIncludeItem(itemData: RiotItemData): boolean {
-  // 除外条件1: descriptionが空で、かつinStoreがtrueのもの
-  if (itemData.description === "" && itemData.inStore) {
-    return false;
-  }
+export async function syncSpecificItems(
+  itemIds: string[],
+  version?: string
+): Promise<SyncSummary> {
+  console.log(`🔄 Starting specific item synchronization for ${itemIds.length} items...\\n`);
 
-  // 除外条件2: maps.11とmaps.12がともにfalse（ノーマル・ARAMどちらにも出ない）
-  if (itemData.maps && !itemData.maps['11'] && !itemData.maps['12']) {
-    return false;
-  }
+  try {
+    // バージョン取得
+    const patchVersion = version || await getLatestVersion();
+    console.log(`📦 Using version: ${patchVersion}\\n`);
 
-  // 除外条件3: requiredChampionが設定されているもの（チャンピオン専用アイテム）
-  if ('requiredChampion' in itemData && itemData.requiredChampion) {
-    return false;
-  }
+    // アイテムデータ取得
+    const apiResponse = await fetchItemData(patchVersion);
 
-  return true;
+    const results: SyncResult[] = [];
+    let skippedCount = 0;
+
+    for (const itemId of itemIds) {
+      const itemData = apiResponse.data[itemId];
+
+      if (!itemData) {
+        console.log(`  ⊘ ${itemId} - Skipped (not found in API)`);
+        skippedCount++;
+        continue;
+      }
+
+      const result = await syncSingleItem(itemId, itemData, patchVersion);
+      results.push(result);
+    }
+
+    const successCount = results.filter(r => r.success).length;
+    const failedCount = results.filter(r => !r.success).length;
+
+    console.log('\\n' + '='.repeat(50));
+    console.log('📊 Specific Synchronization Summary:');
+    console.log(`  Total items requested: ${itemIds.length}`);
+    console.log(`  Skipped: ${skippedCount}`);
+    console.log(`  Processed: ${results.length}`);
+    console.log(`  ✓ Success: ${successCount}`);
+    console.log(`  ✗ Failed: ${failedCount}`);
+    console.log('='.repeat(50));
+
+    if (failedCount > 0) {
+      console.log('\\n❌ Failed items:');
+      results.filter(r => !r.success).forEach(r => {
+        console.log(`  - ${r.itemId}: ${r.error}`);
+      });
+    }
+
+    return {
+      success: failedCount === 0,
+      version: patchVersion,
+      total: itemIds.length,
+      successCount,
+      failedCount,
+      skippedCount,
+      results
+    };
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('\\n❌ Specific synchronization failed:', errorMessage);
+
+    return {
+      success: false,
+      version: version || '',
+      total: itemIds.length,
+      successCount: 0,
+      failedCount: 0,
+      skippedCount: 0,
+      results: []
+    };
+  }
 }
+
 
 /**
  * 全アイテムを同期（定数データを考慮）
+ * バッチ並列処理で高速化
  */
 export async function syncAllItems(
   onProgress?: (current: number, total: number, itemId: string) => void
 ): Promise<SyncSummary> {
-  console.log('🔄 Starting item synchronization...\n');
+  console.log('🔄 Starting item synchronization...\\n');
 
   try {
     // 1. 除外アイテムリストをDBから取得
@@ -121,50 +180,52 @@ export async function syncAllItems(
 
     // 2. 最新バージョン取得
     const version = await getLatestVersion();
-    console.log(`📦 Latest version: ${version}\n`);
+    console.log(`📦 Latest version: ${version}\\n`);
 
     // 3. アイテムデータ取得
     const apiResponse = await fetchItemData(version);
     const allItemIds = Object.keys(apiResponse.data);
-    console.log(`📥 Fetched ${allItemIds.length} items from Riot API\n`);
+    console.log(`📥 Fetched ${allItemIds.length} items from Riot API\\n`);
 
-    // 4. 各アイテムを同期
+    // 4. フィルタリング：除外アイテムを除く
+    const itemsToSync = allItemIds.filter(itemId => !unavailableIds.has(itemId));
+    const skippedCount = allItemIds.length - itemsToSync.length;
+
+    console.log(`⊘ Skipped ${skippedCount} unavailable items`);
+    console.log(`✓ Processing ${itemsToSync.length} items\\n`);
+
+    // 5. バッチ並列処理
+    const BATCH_SIZE = 20; // 一度に20アイテム並列処理
     const results: SyncResult[] = [];
-    let skippedCount = 0;
     let processedCount = 0;
 
-    for (const itemId of allItemIds) {
-      const itemData = apiResponse.data[itemId];
+    for (let i = 0; i < itemsToSync.length; i += BATCH_SIZE) {
+      const batch = itemsToSync.slice(i, i + BATCH_SIZE);
 
-      // 除外アイテムはスキップ
-      if (unavailableIds.has(itemId)) {
-        console.log(`  ⊘ ${itemId} - Skipped (unavailable)`);
-        skippedCount++;
-        continue;
-      }
+      // バッチ内を並列処理
+      const batchPromises = batch.map(async (itemId) => {
+        const itemData = apiResponse.data[itemId];
 
-      // フィルタリング（既存ロジック）
-      if (!shouldIncludeItem(itemData)) {
-        console.log(`  ⊘ ${itemId} - Skipped (filtered)`);
-        skippedCount++;
-        continue;
-      }
+        // 進捗コールバック
+        if (onProgress) {
+          onProgress(processedCount + 1, itemsToSync.length, itemId);
+        }
 
-      processedCount++;
+        return await syncSingleItem(itemId, itemData, version);
+      });
 
-      // 進捗コールバック
-      if (onProgress) {
-        onProgress(processedCount, allItemIds.length - skippedCount, itemId);
-      }
+      // バッチ完了を待つ
+      const batchResults = await Promise.all(batchPromises);
+      results.push(...batchResults);
+      processedCount += batch.length;
 
-      const result = await syncSingleItem(itemId, itemData, version);
-      results.push(result);
+      console.log(`  Batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(itemsToSync.length / BATCH_SIZE)} completed (${processedCount}/${itemsToSync.length})`);
     }
 
     const successCount = results.filter(r => r.success).length;
     const failedCount = results.filter(r => !r.success).length;
 
-    console.log('\n' + '='.repeat(50));
+    console.log('\\n' + '='.repeat(50));
     console.log('📊 Synchronization Summary:');
     console.log(`  Total items from API: ${allItemIds.length}`);
     console.log(`  Skipped: ${skippedCount}`);
@@ -174,7 +235,7 @@ export async function syncAllItems(
     console.log('='.repeat(50));
 
     if (failedCount > 0) {
-      console.log('\n❌ Failed items:');
+      console.log('\\n❌ Failed items:');
       results.filter(r => !r.success).forEach(r => {
         console.log(`  - ${r.itemId}: ${r.error}`);
       });
@@ -191,7 +252,7 @@ export async function syncAllItems(
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('\n❌ Synchronization failed:', errorMessage);
+    console.error('\\n❌ Synchronization failed:', errorMessage);
 
     return {
       success: false,
