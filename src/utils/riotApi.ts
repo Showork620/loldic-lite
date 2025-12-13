@@ -2,8 +2,7 @@
  * Riot API (Data Dragon) からアイテムデータを取得するユーティリティ関数
  */
 
-import type { RiotAPIResponse, RiotItemData } from '../types/item';
-import { UNAVAILABLE_ITEMS } from '../constants/riotApi';
+import type { RiotAPIResponse } from '../types/item';
 
 // Data Dragon APIのベースURL
 const DDRAGON_BASE_URL = 'https://ddragon.leagueoflegends.com';
@@ -60,39 +59,48 @@ export function getItemImageUrl(version: string, itemId: string): string {
 }
 
 /**
- * 使用可能なアイテムのみをフィルタリング
+ * ルールベースで除外すべきアイテムIDリストを取得
+ * unavailable_itemsテーブルの初期値を決定するためのロジック
  * @param itemsData アイテムデータ（Record形式）
- * @returns フィルタリングされたアイテムデータ
+ * @returns 除外すべきアイテムIDの配列
  */
-export function filterAvailableItems(
+export function getUnavailableItemIds(
   itemsData: Record<string, any>
-): Record<string, RiotItemData> {
-  const filtered: Record<string, RiotItemData> = {};
+): Array<{ riotId: string; reason: string | null }> {
+  const results: Array<{ riotId: string; reason: string | null }> = [];
 
   for (const [itemId, item] of Object.entries(itemsData)) {
+    // デフォルトの理由は null（後から管理画面で編集）
+    let reason: string = 'admin chosen';
+
     // 除外条件1: descriptionが空で、かつinStoreがtrueのもの
     if (item.description === "" && item.inStore) {
+      reason = 'description empty';
+      results.push({ riotId: itemId, reason });
       continue;
     }
 
-    // 除外条件2: UNAVAILABLE_ITEMSリストに含まれるもの
-    if (UNAVAILABLE_ITEMS.includes(itemId)) {
-      continue;
-    }
-
-    // 除外条件3: maps.11とmaps.12がともにfalse（ノーマル・ARAMどちらにも出ない）
+    // 除外条件2: maps.11とmaps.12がともにfalse（ノーマル・ARAMどちらにも出ない）
     if (item.maps && !item.maps['11'] && !item.maps['12']) {
+      reason = 'not available on maps';
+      results.push({ riotId: itemId, reason });
       continue;
     }
 
-    // 除外条件4: requiredChampionが設定されているもの（チャンピオン専用アイテム）
+    // 除外条件3: requiredChampionが設定されているもの（チャンピオン専用アイテム）
     if (item.requiredChampion) {
+      reason = 'requiredChampion set';
+      results.push({ riotId: itemId, reason });
       continue;
     }
 
-    // フィルタを通過したアイテムを追加
-    filtered[itemId] = item as RiotItemData;
+    // 除外条件4: inStoreがfalseで、specialRecipeがfalsyのもの
+    if (item.inStore === false && !item.specialRecipe) {
+      reason = 'not in store（and no specialRecipe）';
+      results.push({ riotId: itemId, reason });
+      continue;
+    }
   }
 
-  return filtered;
+  return results;
 }

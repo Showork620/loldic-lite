@@ -189,3 +189,60 @@ export async function getItemsByRole(role: string) {
 
   return { data, error: null };
 }
+
+/**
+ * 特定アイテムのsearch_tagsを更新
+ * @param riotId アイテムのRiot ID
+ * @param tags 新しいタグ配列
+ */
+export async function updateItemTags(
+  riotId: string,
+  tags: string[]
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { error } = await supabase
+      .from('items')
+      .update({ search_tags: tags })
+      .eq('riot_id', riotId);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    };
+  }
+}
+
+/**
+ * 特定アイテムのrole_categoriesを更新
+ * @param riotId アイテムのRiot ID
+ * @param roles 新しいロール配列
+ */
+export async function updateItemRoles(
+  riotId: string,
+  roles: string[]
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { error } = await supabase
+      .from('items')
+      .update({ role_categories: roles.length > 0 ? roles : null })
+      .eq('riot_id', riotId);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    };
+  }
+}
+

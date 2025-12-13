@@ -77,6 +77,7 @@ export interface RiotItemData {
     [mapId: string]: boolean;
   };
   inStore?: boolean;
+  specialRecipe?: number;
 }
 
 export interface RiotAPIResponse {
