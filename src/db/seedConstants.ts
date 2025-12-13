@@ -4,8 +4,8 @@
  */
 
 import { supabase } from '../lib/supabase';
+import { getLatestVersion, fetchItemData, getUnavailableItemIds } from '../utils/riotApi';
 import {
-  UNAVAILABLE_ITEMS,
   ADDITIONAL_TAGS,
   ITEMS_ROLE
 } from '../constants/riotApi';
@@ -15,9 +15,16 @@ import {
  */
 export async function seedUnavailableItems(): Promise<boolean> {
   try {
-    const data = UNAVAILABLE_ITEMS.map(riotId => ({
-      riot_id: riotId,
-      reason: null // 理由は後で管理画面で編集
+    // Riot APIから最新データを取得
+    const version = await getLatestVersion();
+    const apiResponse = await fetchItemData(version);
+
+    // ルールベースで除外アイテムIDリスト（と理由）を生成
+    const unavailable = getUnavailableItemIds(apiResponse.data);
+
+    const data = unavailable.map((item: { riotId: string; reason: string | null }) => ({
+      riot_id: item.riotId,
+      reason: item.reason // ルールで推定した理由を初期値として入れる
     }));
 
     const { error } = await supabase
@@ -42,26 +49,37 @@ export async function seedUnavailableItems(): Promise<boolean> {
  */
 export async function seedAdditionalTags(): Promise<boolean> {
   try {
-    const data = [];
+    // 既存データを取得
+    const { data: existing } = await supabase
+      .from('additional_tags')
+      .select('riot_id, tag');
 
+    const existingSet = new Set(
+      existing?.map(item => `${item.riot_id}:${item.tag}`) || []
+    );
+
+    const data = [];
     for (const [riotId, tags] of Object.entries(ADDITIONAL_TAGS)) {
       for (const tag of tags) {
-        data.push({ riot_id: riotId, tag });
+        const key = `${riotId}:${tag}`;
+        if (!existingSet.has(key)) {
+          data.push({ riot_id: riotId, tag });
+        }
       }
     }
 
-    // Supabaseのupsertは複合キーに対応していないため、個別に処理
-    for (const item of data) {
+    if (data.length > 0) {
       const { error } = await supabase
         .from('additional_tags')
-        .upsert(item, { onConflict: 'riot_id,tag', ignoreDuplicates: true });
+        .insert(data);
 
       if (error) {
-        console.error(`Failed to insert tag ${item.tag} for ${item.riot_id}:`, error);
+        console.error('Failed to seed additional tags:', error);
+        return false;
       }
     }
 
-    console.log(`✓ Seeded ${data.length} additional tags`);
+    console.log(`✓ Seeded ${data.length} additional tags (${existingSet.size} already existed)`);
     return true;
   } catch (error) {
     console.error('Error seeding additional tags:', error);
@@ -74,29 +92,40 @@ export async function seedAdditionalTags(): Promise<boolean> {
  */
 export async function seedRoleItems(): Promise<boolean> {
   try {
-    const data = [];
+    // 既存データを取得
+    const { data: existing } = await supabase
+      .from('role_items')
+      .select('role, riot_id');
 
+    const existingSet = new Set(
+      existing?.map(item => `${item.role}:${item.riot_id}`) || []
+    );
+
+    const data = [];
     for (const [role, itemIds] of Object.entries(ITEMS_ROLE)) {
       for (const itemId of itemIds) {
-        data.push({
-          role,
-          riot_id: String(itemId)
-        });
+        const key = `${role}:${String(itemId)}`;
+        if (!existingSet.has(key)) {
+          data.push({
+            role,
+            riot_id: String(itemId)
+          });
+        }
       }
     }
 
-    // 個別に処理
-    for (const item of data) {
+    if (data.length > 0) {
       const { error } = await supabase
         .from('role_items')
-        .upsert(item, { onConflict: 'role,riot_id', ignoreDuplicates: true });
+        .insert(data);
 
       if (error) {
-        console.error(`Failed to insert role ${item.role} for ${item.riot_id}:`, error);
+        console.error('Failed to seed role items:', error);
+        return false;
       }
     }
 
-    console.log(`✓ Seeded ${data.length} role items`);
+    console.log(`✓ Seeded ${data.length} role items (${existingSet.size} already existed)`);
     return true;
   } catch (error) {
     console.error('Error seeding role items:', error);
