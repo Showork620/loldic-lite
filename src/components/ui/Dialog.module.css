@@ -1,0 +1,128 @@
+/* オーバーレイ */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--space-4);
+  padding-bottom: 0;
+
+  /* アニメーション */
+  animation: fadeIn 200ms ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* モーダル本体 */
+.dialog {
+  background-color: var(--color-navy-800);
+  border: 1px solid var(--color-hextech-blue-500);
+  border-radius: var(--border-radius-lg);
+  box-shadow:
+    0 0 30px rgba(16, 185, 255, 0.3),
+    0 20px 60px rgba(0, 0, 0, 0.5);
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+
+  /* レイアウト */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+
+  /* アニメーション */
+  animation: slideIn 200ms ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* サイズバリエーション */
+.sm {
+  width: 100%;
+  max-width: 400px;
+}
+
+.md {
+  width: 100%;
+  max-width: 480px;
+}
+
+.lg {
+  width: 100%;
+  max-width: 640px;
+}
+
+/* ヘッダー */
+.header {
+  border-bottom: 1px solid var(--color-navy-600);
+  padding-bottom: var(--space-3);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-hextech-blue-300);
+  text-shadow: 0 0 10px rgba(16, 185, 255, 0.5);
+}
+
+/* スクロールバーのスタイリング（Hextechテーマ） */
+.dialog::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dialog::-webkit-scrollbar-track {
+  background: var(--color-navy-900);
+  border-radius: var(--border-radius-sm);
+}
+
+.dialog::-webkit-scrollbar-thumb {
+  background: var(--color-hextech-blue-600);
+  border-radius: var(--border-radius-sm);
+}
+
+.dialog::-webkit-scrollbar-thumb:hover {
+  background: var(--color-hextech-blue-500);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 640px) {
+  .overlay {
+    padding: var(--space-2);
+    padding-bottom: 0;
+  }
+
+  .dialog {
+    padding: var(--space-4);
+    gap: var(--space-3);
+  }
+
+  .title {
+    font-size: var(--font-size-lg);
+  }
+}
