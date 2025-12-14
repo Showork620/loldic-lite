@@ -228,12 +228,137 @@ showToast('保存しました', 'success');
 
 ---
 
+## 5. Card（基本カード）
+
+### 用途
+- 汎用的なカードコンテナ
+- アイテムプレビュー等の基礎コンポーネント
+- 統計情報表示
+
+### プロパティ
+
+```typescript
+interface CardProps {
+  children: ReactNode;
+  variant?: 'default' | 'outlined' | 'elevated';
+  padding?: 'sm' | 'md' | 'lg';
+  onClick?: () => void;
+  className?: string;
+}
+```
+
+### デザイン仕様
+
+#### カラー
+- **背景**: `var(--color-navy-800)`
+- **ボーダー**: Hextech Blue (`var(--color-hextech-blue-400)`)
+- **ホバー**: Glow効果 (`var(--glow-blue)`)
+
+#### バリアント
+- `default`: 背景のみ、ボーダーなし
+- `outlined`: 背景 + ボーダー
+- `elevated`: 背景 + シャドウ + Glow
+
+#### パディング
+- `sm`: `var(--space-2)`
+- `md`: `var(--space-4)` (デフォルト)
+- `lg`: `var(--space-6)`
+
+---
+
+## 6. ItemImage（アイテム画像表示）
+
+### 用途
+- 全アイテムプレビューでの共通画像表示
+- 画像取得・エラーハンドリング
+
+### プロパティ
+
+```typescript
+interface ItemImageProps {
+  imagePath: string;           // Supabase Storage パス
+  alt: string;                 // 代替テキスト
+  size?: number;               // CSS表示サイズ（デフォルト: 32）
+  className?: string;
+}
+```
+
+### デザイン仕様
+
+> [!IMPORTANT]
+> アイテム画像は全て **32x32px** が元サイズです。表示時の拡大は CSS で対応します。
+
+#### 機能
+- Supabase Storageからの画像取得
+- フォールバック画像（画像がない場合）
+- ローディング状態表示（Skeleton）
+- 画像エラー処理
+
+#### スタイル
+- 正方形表示
+- `border-radius: var(--border-radius-sm)`
+- 薄いボーダー（Hextech Blue）
+
+---
+
+## 7. ItemPreviewSync（同期用アイテムプレビュー）
+
+### 用途
+- データ同期ページ (`/admin/sync`) での差分確認
+- 同期実行前の確認ダイアログ
+
+### プロパティ
+
+```typescript
+interface ItemPreviewSyncProps {
+  item: Item;                  // アイテムデータ全体
+  status: 'new' | 'updated' | 'deleted' | 'unchanged';
+  unavailableReason?: string;  // 除外理由（オプション）
+  onClick?: () => void;
+}
+```
+
+### デザイン仕様
+
+#### 表示項目
+- ✅ アイテム画像（32x32px）
+- ✅ アイテム名（日本語）
+- ✅ Riot ID
+- ✅ ステータスバッジ（new/updated/deleted/unchanged）
+- ✅ 価格
+- ⚠️ 除外理由（除外アイテムの場合のみ）
+
+> [!NOTE]
+> **ステータスバッジの値について**  
+> `status` は `/admin/sync` ページの差分検出ロジックで自動計算され、このコンポーネントに渡されます。
+
+#### レイアウト
+
+横長のリストアイテム形式:
+
+```
+┌────────────────────────────────────────────────────────────┐
+│ [32x32] アイテム名 (riot_id)  [new/updated] 3000G         │
+│         除外理由: 廃止アイテム（除外アイテムの場合のみ）  │
+└────────────────────────────────────────────────────────────┘
+```
+
+#### カラー
+- Card を基礎として使用
+- ステータスバッジで視覚的に区別
+- 除外理由は薄いテキストで表示
+
+---
+
 ## 実装順序
 
-1. **ProgressBar** - 最もシンプル、CSSアニメーション練習
-2. **StatusBadge** - 既存Badgeの拡張、カラーマッピング
-3. **ConfirmDialog** - モーダル実装、フォーカストラップ
-4. **NotificationToast** - Context API、複数管理、タイマー
+1. **ProgressBar** - 最もシンプル、CSSアニメーション練習 ✅
+2. **StatusBadge** - 既存Badgeの拡張、カラーマッピング ✅
+3. **ConfirmDialog** - モーダル実装、フォーカストラップ ✅
+4. **NotificationToast** - Context API、複数管理、タイマー ✅
+5. **Card** - 基本カード、他コンポーネントの基礎
+6. **ItemImage** - 画像表示、エラーハンドリング
+7. **ItemPreviewSync** - Card + ItemImage + StatusBadge を組み合わせ
 
 ---
 
@@ -241,23 +366,42 @@ showToast('保存しました', 'success');
 
 各コンポーネント実装後、`ComponentCatalog.tsx` に以下を追加:
 
-### ProgressBar デモ
+### ProgressBar デモ ✅
 - Determinate（0%, 50%, 100%）
 - Indeterminate
 - サイズバリエーション
 
-### StatusBadge デモ
+### StatusBadge デモ ✅
 - 全ステータス一覧（Sync + Patch）
 - サイズバリエーション
 - アイコン有無
 
-### ConfirmDialog デモ
+### ConfirmDialog デモ ✅
 - Info/Warning/Danger バリアント
 - ボタンでモーダルを開く
 
-### NotificationToast デモ
+### NotificationToast デモ ✅
 - 各typeのトースト表示ボタン
 - 複数同時表示のテスト
+
+### Card デモ
+- バリアント（default/outlined/elevated）
+- パディングサイズ
+- クリック可能なカード
+
+### ItemImage デモ
+- 正常な画像表示
+- 存在しない画像（フォールバック）
+- ローディング状態
+- サイズバリエーション（CSS拡大）
+
+### ItemPreviewSync デモ
+- 各ステータス（new/updated/deleted/unchanged）
+- 除外理由付きアイテム
+- クリック動作
+
+> [!NOTE]
+> ItemPreviewSync のデモでは、モックの Item データを使用します。実際のSupabaseデータは不要です。
 
 ---
 
