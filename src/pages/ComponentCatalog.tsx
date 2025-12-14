@@ -13,6 +13,8 @@ import { StatusBadge } from '../components/ui/StatusBadge';
 import { Dialog } from '../components/ui/Dialog';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { useSnackbar } from '../components/ui/useSnackbar';
+import { Card } from '../components/ui/Card';
+import { ItemImage } from '../components/ui/ItemImage';
 import styles from './ComponentCatalog.module.css';
 
 // 利用可能な全アイコンのリスト
@@ -33,6 +35,8 @@ const sections = [
   { id: 'inputs', label: 'Inputs' },
   { id: 'selects', label: 'Selects' },
   { id: 'combobox', label: 'Combobox' },
+  { id: 'card', label: 'Card' },
+  { id: 'item-image', label: 'Item Image' },
 ];
 
 export function ComponentCatalog() {
@@ -533,6 +537,95 @@ showSnackbar('メッセージ', 'info');
 showSnackbar('1秒間表示されます', 'info', 1000);
 showSnackbar('5秒間表示されます', 'success', 5000);
 showSnackbar('10秒間表示されます', 'warning', 10000);`} />
+          </ComponentSection>
+        )}
+
+        {filteredSections.some(s => s.id === 'card') && (
+          <ComponentSection
+            id="card"
+            title="Card"
+            description="汎用的なカードコンテナコンポーネント"
+          >
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>Variants</h3>
+              <div className={styles.demoRow}>
+                <Card variant="default">
+                  <h4>デフォルトカード</h4>
+                  <p>背景色のみのシンプルなコンテナです。</p>
+                </Card>
+                <Card variant="outlined">
+                  <h4>枠線付きカード</h4>
+                  <p>枠線と透明感のある背景を持つカードです。</p>
+                </Card>
+                <Card variant="elevated">
+                  <h4>浮き出しカード</h4>
+                  <p>影と発光効果を持つカードです。</p>
+                </Card>
+              </div>
+            </div>
+
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>Padding</h3>
+              <div className={styles.demoRow}>
+                <Card padding="sm" variant="outlined">
+                  パディング (小)
+                </Card>
+                <Card padding="md" variant="outlined">
+                  パディング (中・デフォルト)
+                </Card>
+                <Card padding="lg" variant="outlined">
+                  パディング (大)
+                </Card>
+              </div>
+            </div>
+
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>Interactive</h3>
+              <div className={styles.demoRow}>
+                <Card
+                  variant="elevated"
+                  onClick={() => showSnackbar('カードがクリックされました！', 'info')}
+                  className="w-full"
+                >
+                  <h4>クリックしてください</h4>
+                  <p>インタラクティブなカードです。ホバーで発光効果を確認できます。</p>
+                </Card>
+              </div>
+            </div>
+          </ComponentSection>
+        )}
+
+        {filteredSections.some(s => s.id === 'item-image') && (
+          <ComponentSection
+            id="item-image"
+            title="Item Image"
+            description="Supabase Storageから画像を表示するコンポーネント"
+          >
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>Basic Usage</h3>
+              <div className={styles.demoRow}>
+                <ItemImage imagePath="3004.webp" alt="Manamune" />
+                <ItemImage imagePath="3031.webp" alt="Infinity Edge" />
+                <ItemImage imagePath="invalid.webp" alt="Invalid Path (Fallback)" />
+              </div>
+            </div>
+
+            <CodeExample code={`<ItemImage imagePath="3004.webp" alt="Manamune" />
+<ItemImage imagePath="3031.webp" alt="Infinity Edge" />
+<ItemImage imagePath="invalid.webp" alt="Invalid Path (Fallback)" />`} />
+
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>Sizes</h3>
+              <div className={styles.demoRow}>
+                <ItemImage imagePath="3004.webp" alt="Small" size={24} />
+                <ItemImage imagePath="3004.webp" alt="Medium (Default)" size={32} />
+                <ItemImage imagePath="3004.webp" alt="Large" size={64} />
+              </div>
+            </div>
+
+            <CodeExample code={`<ItemImage imagePath="3004.webp" alt="Small" size={24} />
+<ItemImage imagePath="3004.webp" alt="Medium (Default)" size={32} />
+<ItemImage imagePath="3004.webp" alt="Large" size={64} />`} />
           </ComponentSection>
         )}
 

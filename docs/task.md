@@ -12,7 +12,7 @@
 ## Phase 2: デザインシステム構築 (Aesthetics First)
 - [x] デザイン基礎定義 (Colors, Typography, Spacing in `index.css`) <!-- id: 5 -->
 - [x] UIコンポーネント実装: Button(完了), Input, Select, Combobox <!-- id: 6 -->
-- [ ] UIコンポーネント実装: Card (一旦スキップ) <!-- id: 7 -->
+- [x] UIコンポーネント実装: Card <!-- id: 7 -->
 - [x] UIコンポーネント実装: Icons (Generic & Category) <!-- id: 24 -->
 - [x] UIコンポーネント実装: Badge <!-- id: 25 -->
 - [x] コンポーネントカタログページ (Storybook的な一覧ページ) 作成 <!-- id: 8 -->
@@ -30,7 +30,7 @@
 
 ### Phase 3.1: データ同期基盤
 - [x] コンポーネントの追加 (Progressbar✅, StatusBadge✅, Dialog✅, Toast✅) <!-- id: 26 -->
-- [ ] アイテムプレビュー機能に伴うコンポーネント追加 <!-- id: 27 -->
+- [/] アイテムプレビュー機能に伴うコンポーネント追加 (ItemImage) <!-- id: 27 -->
 - [ ] データ同期ページ (`/admin/sync`) の実装 <!-- id: 30 -->
   - [ ] バージョン取得・表示機能 <!-- id: 31 -->
   - [ ] アイテムプレビュー機能 <!-- id: 32 -->
