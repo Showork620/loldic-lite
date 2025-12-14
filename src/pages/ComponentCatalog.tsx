@@ -15,6 +15,8 @@ import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { useSnackbar } from '../components/ui/useSnackbar';
 import { Card } from '../components/ui/Card';
 import { ItemImage } from '../components/ui/ItemImage';
+import { ItemPreviewSync } from '../components/ui/ItemPreviewSync';
+import type { Item } from '../types/item';
 import styles from './ComponentCatalog.module.css';
 
 // 利用可能な全アイコンのリスト
@@ -37,6 +39,7 @@ const sections = [
   { id: 'combobox', label: 'Combobox' },
   { id: 'card', label: 'Card' },
   { id: 'item-image', label: 'Item Image' },
+  { id: 'item-preview-sync', label: 'Item Preview Sync' },
 ];
 
 export function ComponentCatalog() {
@@ -626,6 +629,68 @@ showSnackbar('10秒間表示されます', 'warning', 10000);`} />
             <CodeExample code={`<ItemImage imagePath="3004.webp" alt="Small" size={24} />
 <ItemImage imagePath="3004.webp" alt="Medium (Default)" size={32} />
 <ItemImage imagePath="3004.webp" alt="Large" size={64} />`} />
+          </ComponentSection>
+        )}
+
+        {/* ItemPreviewSync Section */}
+        {filteredSections.some(s => s.id === 'item-preview-sync') && (
+          <ComponentSection
+            id="item-preview-sync"
+            title="Item Preview Sync"
+            description="データ同期用のアイテムプレビューコンポーネント (Item + Status)"
+          >
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>Sync Statuses</h3>
+              <div className={styles.progressDemo}> {/* Using progressDemo for column layout */}
+                {/* Mock data for demo */}
+                {(() => {
+                  const mockItem: Item = {
+                    id: '1', riot_id: '3004', name_ja: 'マナムネ', description_ja: '', plaintext_ja: '',
+                    price_total: 2900, price_sell: 2030, is_legendary: true, image_path: '3004.webp',
+                    tags: [], stats: {}, build_from: [], build_into: [], created_at: '', updated_at: ''
+                  };
+                  return (
+                    <>
+                      <ItemPreviewSync item={{ ...mockItem, name_ja: '新アイテム' }} status="new" onClick={() => showSnackbar('New item clicked', 'info')} />
+                      <ItemPreviewSync item={{ ...mockItem, name_ja: '更新アイテム' }} status="updated" />
+                      <ItemPreviewSync item={{ ...mockItem, name_ja: '削除アイテム' }} status="deleted" />
+                      <ItemPreviewSync item={{ ...mockItem, name_ja: '変更なしアイテム' }} status="unchanged" />
+                    </>
+                  );
+                })()}
+              </div>
+            </div>
+
+            <CodeExample code={`<ItemPreviewSync item={item} status="new" />
+<ItemPreviewSync item={item} status="updated" />
+<ItemPreviewSync item={item} status="deleted" />
+<ItemPreviewSync item={item} status="unchanged" />`} />
+
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>With Unavailable Reason</h3>
+              <div className={styles.progressDemo}>
+                {(() => {
+                  const mockItem: Item = {
+                    id: '2', riot_id: '1001', name_ja: 'ブーツ', description_ja: '', plaintext_ja: '',
+                    price_total: 300, price_sell: 210, is_legendary: false, image_path: '1001.webp',
+                    tags: [], stats: {}, build_from: [], build_into: [], created_at: '', updated_at: ''
+                  };
+                  return (
+                    <ItemPreviewSync
+                      item={mockItem}
+                      status="deleted"
+                      unavailableReason="アリーナモード専用アイテムのため除外"
+                    />
+                  );
+                })()}
+              </div>
+            </div>
+
+            <CodeExample code={`<ItemPreviewSync 
+  item={item} 
+  status="deleted" 
+  unavailableReason="アリーナモード専用アイテムのため除外" 
+/>`} />
           </ComponentSection>
         )}
 
