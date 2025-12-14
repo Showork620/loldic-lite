@@ -1,0 +1,165 @@
+.snackbar {
+  width: 360px;
+  max-width: 90vw;
+  background: rgba(20, 30, 48, 0.95);
+  border-radius: var(--border-radius-md);
+  border: 1px solid;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), var(--glow-blue);
+  overflow: hidden;
+  animation: slideIn 0.3s ease-out;
+  margin-bottom: var(--space-3);
+}
+
+.snackbar.exiting {
+  animation: slideOut 0.3s ease-out forwards;
+}
+
+/* Type別のカラー */
+.snackbar.success {
+  border-color: var(--color-success);
+  background: rgba(16, 185, 129, 0.15);
+}
+
+.snackbar.error {
+  border-color: var(--color-danger);
+  background: rgba(239, 68, 68, 0.15);
+}
+
+.snackbar.warning {
+  border-color: var(--color-warning);
+  background: rgba(245, 158, 11, 0.15);
+}
+
+.snackbar.info {
+  border-color: var(--color-info);
+  background: rgba(59, 130, 246, 0.15);
+}
+
+/* コンテンツ */
+.content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.icon {
+  font-size: var(--font-size-xl);
+  font-weight: bold;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.success .icon {
+  color: var(--color-success);
+}
+
+.error .icon {
+  color: var(--color-danger);
+}
+
+.warning .icon {
+  color: var(--color-warning);
+}
+
+.info .icon {
+  color: var(--color-info);
+}
+
+.message {
+  flex: 1;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-md);
+  line-height: 1.5;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-size: var(--font-size-lg);
+  padding: var(--space-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  transition: color 0.2s ease;
+}
+
+.closeButton:hover {
+  color: var(--color-text-primary);
+}
+
+.closeButton:focus {
+  outline: 2px solid var(--color-hextech-blue-400);
+  outline-offset: 2px;
+  border-radius: var(--border-radius-sm);
+}
+
+/* プログレスバー */
+.progressBar {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  transition: width 0.05s linear;
+}
+
+.success .progressFill {
+  background: var(--color-success);
+}
+
+.error .progressFill {
+  background: var(--color-danger);
+}
+
+.warning .progressFill {
+  background: var(--color-warning);
+}
+
+.info .progressFill {
+  background: var(--color-info);
+}
+
+/* アニメーション */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* レスポンシブ */
+@media (max-width: 640px) {
+  .snackbar {
+    width: 100%;
+    max-width: calc(100vw - var(--space-4) * 2);
+  }
+}

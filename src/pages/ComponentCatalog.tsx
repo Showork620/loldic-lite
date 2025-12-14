@@ -12,6 +12,7 @@ import { ProgressBar } from '../components/ui/ProgressBar';
 import { StatusBadge } from '../components/ui/StatusBadge';
 import { Dialog } from '../components/ui/Dialog';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
+import { useSnackbar } from '../components/ui/useSnackbar';
 import styles from './ComponentCatalog.module.css';
 
 // 利用可能な全アイコンのリスト
@@ -27,6 +28,7 @@ const sections = [
   { id: 'status-badges', label: 'Status Badges' },
   { id: 'progress', label: 'Progress' },
   { id: 'dialogs', label: 'Dialogs' },
+  { id: 'snackbars', label: 'Snackbars' },
   { id: 'icons', label: 'Icons' },
   { id: 'inputs', label: 'Inputs' },
   { id: 'selects', label: 'Selects' },
@@ -37,6 +39,7 @@ export function ComponentCatalog() {
   const [searchQuery, setSearchQuery] = useState('');
   const [comboboxValue, setComboboxValue] = useState('');
   const [activeCategory, setActiveCategory] = useState<IconCategory>('All');
+  const { showSnackbar } = useSnackbar();
 
   // Dialog states
   const [isBasicDialogOpen, setIsBasicDialogOpen] = useState(false);
@@ -444,6 +447,92 @@ export function ComponentCatalog() {
   onConfirm={() => { /* 処理 */ }}
   onCancel={() => setIsOpen(false)}
 />`} />
+          </ComponentSection>
+        )}
+
+        {/* Snackbars Section */}
+        {filteredSections.some(s => s.id === 'snackbars') && (
+          <ComponentSection
+            id="snackbars"
+            title="Snackbars (Toast Notifications)"
+            description="通知トーストコンポーネント - 成功/エラー/警告/情報メッセージの表示"
+          >
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>Types</h3>
+              <div className={styles.demoRow}>
+                <Button onClick={() => showSnackbar('操作が成功しました！', 'success')}>
+                  Success Toast
+                </Button>
+                <Button onClick={() => showSnackbar('エラーが発生しました', 'error')} variant="danger">
+                  Error Toast
+                </Button>
+                <Button onClick={() => showSnackbar('注意してください', 'warning')}>
+                  Warning Toast
+                </Button>
+                <Button onClick={() => showSnackbar('情報を確認してください', 'info')}>
+                  Info Toast
+                </Button>
+              </div>
+            </div>
+
+            <CodeExample code={`const { showSnackbar } = useSnackbar();
+
+<Button onClick={() => showSnackbar('操作が成功しました！', 'success')}>
+  Success Toast
+</Button>
+<Button onClick={() => showSnackbar('エラーが発生しました', 'error')}>
+  Error Toast
+</Button>
+<Button onClick={() => showSnackbar('注意してください', 'warning')}>
+  Warning Toast
+</Button>
+<Button onClick={() => showSnackbar('情報を確認してください', 'info')}>
+  Info Toast
+</Button>`} />
+
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>Multiple Toasts</h3>
+              <div className={styles.demoRow}>
+                <Button onClick={() => {
+                  showSnackbar('1つ目の通知', 'info');
+                  setTimeout(() => showSnackbar('2つ目の通知', 'success'), 300);
+                  setTimeout(() => showSnackbar('3つ目の通知', 'warning'), 600);
+                }}>
+                  Show Multiple (3 toasts)
+                </Button>
+              </div>
+            </div>
+
+            <CodeExample code={`<Button onClick={() => {
+  showSnackbar('1つ目の通知', 'info');
+  setTimeout(() => showSnackbar('2つ目の通知', 'success'), 300);
+  setTimeout(() => showSnackbar('3つ目の通知', 'warning'), 600);
+}}>
+  Show Multiple
+</Button>`} />
+
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>Custom Duration</h3>
+              <div className={styles.demoRow}>
+                <Button onClick={() => showSnackbar('1秒間表示されます', 'info', 1000)} size="sm">
+                  1-second Toast
+                </Button>
+                <Button onClick={() => showSnackbar('5秒間表示されます', 'success', 5000)}>
+                  5-second Toast
+                </Button>
+                <Button onClick={() => showSnackbar('10秒間表示されます', 'warning', 10000)} size="lg">
+                  10-second Toast
+                </Button>
+              </div>
+            </div>
+
+            <CodeExample code={`// デフォルトは3秒
+showSnackbar('メッセージ', 'info');
+
+// カスタムduration (ミリ秒)
+showSnackbar('1秒間表示されます', 'info', 1000);
+showSnackbar('5秒間表示されます', 'success', 5000);
+showSnackbar('10秒間表示されます', 'warning', 10000);`} />
           </ComponentSection>
         )}
 
