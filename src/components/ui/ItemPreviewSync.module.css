@@ -1,0 +1,77 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: var(--space-4);
+  /* Card uses generic font color, but we might want specific adjustments here */
+}
+
+/* Left side: Image + Names */
+.infoArea {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex: 1;
+  min-width: 0;
+  /* Important for truncation */
+}
+
+.textGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.headerLine {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.itemName {
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+
+.riotId {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  white-space: nowrap;
+}
+
+.unavailableReason {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-disabled);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Right side: Badge + Price */
+.statusArea {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-shrink: 0;
+}
+
+/* .price removed */
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+  .headerLine {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .statusArea {
+    gap: var(--space-2);
+  }
+
+
+}
