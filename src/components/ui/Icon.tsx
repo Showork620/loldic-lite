@@ -23,7 +23,8 @@ import {
   Loader2,
   Filter,
   LayoutGrid, // For Catalog
-  Database // For Admin/Data
+  Database, // For Admin/Data
+  Image, // For ItemImage fallback
 } from 'lucide-react';
 import { type ComponentProps } from 'react';
 
@@ -53,7 +54,8 @@ const ICONS = {
   Loader2,
   Filter,
   LayoutGrid,
-  Database
+  Database,
+  Image
 } as const;
 
 export type IconName = keyof typeof ICONS;

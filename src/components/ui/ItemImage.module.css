@@ -1,0 +1,51 @@
+.container {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--border-radius-sm);
+  background-color: var(--color-navy-800);
+  border: 1px solid var(--color-hextech-blue-700);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+      var(--color-navy-800) 0%,
+      var(--color-navy-700) 50%,
+      var(--color-navy-800) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-navy-900);
+  color: var(--color-text-secondary);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
