@@ -44,7 +44,7 @@ export const additionalTags = pgTable('additional_tags', {
 // ロール分類管理
 export const roleItems = pgTable('role_items', {
   id: uuid('id').defaultRandom().primaryKey(),
-  role: text('role').notNull(), // "ファイター用", "ADC用", "メイジ用"など
+  role: text('role').notNull(), // "fighter", "marksman", "mage"など
   riotId: text('riot_id').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });

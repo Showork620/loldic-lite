@@ -50,7 +50,7 @@ src/
 | image_path | text | **API** | Supabase Storageへのパス |
 | patch_status | text | **手動** | 最新パッチでの更新種別 (buff/nerf/rework/removed/new/revived/adjusted/unchanged) |
 | search_tags | text[] | **API (初回のみ)** | 検索用タグ ["attack-damage", "体力回復", "クリティカル"] |
-| role_categories | text[] | **手動** | ロール分類 ["メイジ用", "サポート用", "ファイター用", "タンク用", "ADC用", "アサシン用"] |
+| role_categories | text[] | **手動** | ロール分類 ["mage", "support", "fighter", "tank", "marksman", "assassin"] |
 | popular_champions | text[] | **手動** | よく使うチャンピオンID一覧 |
 | stats | jsonb | **API** | ステータス詳細 { "attack_damage": 60, ... } |
 | build_from | text[] | **API** | 素材元アイテムID一覧 |

@@ -70,7 +70,7 @@ Riot APIからアイテムデータを取得し、Supabaseへ保存・更新す�
 #### 2.3 ロール分類管理（`role_items`）
 - **機能**: アイテムのロールカテゴリを管理
 - **表示項目**:
-  - ロール名（例: 「メイジ用」「ADC用」）
+  - ロール名（例: 「メイジ」「マークスマン」）
   - Riot ID
 - **UI**:
   - ロール別グルーピング表示
@@ -108,7 +108,7 @@ Riot APIからアイテムデータを取得し、Supabaseへ保存・更新す�
 
 3. **ロール分類（`role_categories`）**
    - 複数選択可能
-   - 選択肢: メイジ用、サポート用、ファイター用、タンク用、ADC用、アサシン用
+   - 選択肢: mage, support, fighter, tank, marksman, assassin
 
 4. **人気チャンピオン（`popular_champions`）**
    - チャンピオンID配列
