@@ -4,7 +4,8 @@
  */
 
 import type { ItemAbility } from '../types/item';
-import { TAGS_TRANSLATE, ADDITIONAL_TAGS, STATS_KEYWORD } from '../constants/riotApi';
+import { TAGS_TRANSLATE, STATS_KEYWORD } from '../constants/riotApi';
+import { INITIAL_ADDITIONAL_TAGS as ADDITIONAL_TAGS } from '../constants/seedData';
 
 /**
  * descriptionから<passive>と<active>タグを抽出してアビリティ情報を生成

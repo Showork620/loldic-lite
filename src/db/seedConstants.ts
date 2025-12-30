@@ -6,9 +6,9 @@
 import { supabase } from '../lib/supabase';
 import { getLatestVersion, fetchItemData, getUnavailableItemIds } from '../utils/riotApi';
 import {
-  ADDITIONAL_TAGS,
-  ITEMS_ROLE
-} from '../constants/riotApi';
+  INITIAL_ADDITIONAL_TAGS,
+  INITIAL_ITEMS_ROLE
+} from '../constants/seedData';
 
 /**
  * 除外アイテムリストをDBに投入
@@ -59,7 +59,7 @@ export async function seedAdditionalTags(): Promise<boolean> {
     );
 
     const data = [];
-    for (const [riotId, tags] of Object.entries(ADDITIONAL_TAGS)) {
+    for (const [riotId, tags] of Object.entries(INITIAL_ADDITIONAL_TAGS)) {
       for (const tag of tags) {
         const key = `${riotId}:${tag}`;
         if (!existingSet.has(key)) {
@@ -102,7 +102,7 @@ export async function seedRoleItems(): Promise<boolean> {
     );
 
     const data = [];
-    for (const [role, itemIds] of Object.entries(ITEMS_ROLE)) {
+    for (const [role, itemIds] of Object.entries(INITIAL_ITEMS_ROLE)) {
       for (const itemId of itemIds) {
         const key = `${role}:${String(itemId)}`;
         if (!existingSet.has(key)) {
