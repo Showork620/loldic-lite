@@ -1,0 +1,124 @@
+.container {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid rgba(200, 155, 60, 0.3);
+  /* hextech-gold-500/30 */
+  border-radius: 4px;
+  background: rgba(10, 20, 40, 0.6);
+  /* hextech-black-400/60 */
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.875rem;
+}
+
+.thead {
+  background: rgba(1, 10, 19, 0.8);
+  /* hextech-black-500/80 */
+  border-bottom: 1px solid rgba(200, 155, 60, 0.3);
+  /* hextech-gold-500/30 */
+}
+
+.th {
+  padding: 1rem;
+  font-family: var(--font-display);
+  color: #C8AA6E;
+  /* hextech-gold-100 */
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.th.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.2s;
+}
+
+.th.sortable:hover {
+  color: #F0E6D2;
+  /* hextech-gold-50 */
+  background: rgba(200, 155, 60, 0.1);
+}
+
+.sortIcon {
+  margin-left: 0.5rem;
+  display: inline-block;
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.tbody tr {
+  border-bottom: 1px solid rgba(200, 155, 60, 0.1);
+  /* hextech-gold-500/10 */
+  transition: background-color 0.2s;
+}
+
+.tbody tr:last-child {
+  border-bottom: none;
+}
+
+.tbody tr:hover {
+  background: rgba(200, 155, 60, 0.05);
+  /* hextech-gold-500/5 */
+}
+
+.td {
+  padding: 1rem;
+  color: #A09B8C;
+  /* hextech-metal-200 */
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-top: 1px solid rgba(200, 155, 60, 0.3);
+  /* hextech-gold-500/30 */
+  background: rgba(1, 10, 19, 0.8);
+  /* hextech-black-500/80 */
+}
+
+.pageInfo {
+  color: #A09B8C;
+  /* hextech-metal-200 */
+  font-size: 0.875rem;
+}
+
+.pageControls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.pageButton {
+  padding: 0.25rem 0.75rem;
+  border: 1px solid rgba(200, 155, 60, 0.3);
+  background: transparent;
+  color: #C8AA6E;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.875rem;
+}
+
+.pageButton:hover:not(:disabled) {
+  background: rgba(200, 155, 60, 0.1);
+  border-color: #C8AA6E;
+}
+
+.pageButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: transparent;
+}
+
+.emptyState {
+  padding: 3rem;
+  text-align: center;
+  color: #A09B8C;
+  font-style: italic;
+}

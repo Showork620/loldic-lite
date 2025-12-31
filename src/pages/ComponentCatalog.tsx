@@ -11,6 +11,7 @@ import { CategoryIcon, type IconCategory } from '../components/ui/CategoryIcon';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { StatusBadge } from '../components/ui/StatusBadge';
 import { Accordion } from '../components/ui/Accordion';
+import { DataTable, type Column } from '../components/ui/DataTable';
 import { Dialog } from '../components/ui/Dialog';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { useSnackbar } from '../components/ui/useSnackbar';
@@ -42,6 +43,7 @@ const sections = [
   { id: 'item-image', label: 'Item Image' },
   { id: 'item-preview-sync', label: 'Item Preview Sync' },
   { id: 'accordion', label: 'Accordion' },
+  { id: 'datatable', label: 'Data Table' },
 ];
 
 export function ComponentCatalog() {
@@ -945,7 +947,86 @@ const options = [
 </Accordion>`} />
           </ComponentSection>
         )}
+
+        {/* DataTable Section */}
+        {filteredSections.some(s => s.id === 'datatable') && (
+          <ComponentSection
+            id="datatable"
+            title="Data Table"
+            description="ソート、ページネーション機能付きのデータテーブルコンポーネント"
+          >
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>Basic Usage</h3>
+              <div className={styles.demoRow} style={{ display: 'block' }}>
+                {(() => {
+                  interface DemoData {
+                    id: number;
+                    name: string;
+                    role: string;
+                    level: number;
+                  }
+
+                  const columns: Column<DemoData>[] = [
+                    { key: 'id', header: 'ID', sortable: true, width: '60px' },
+                    { key: 'name', header: 'Name', sortable: true },
+                    { key: 'role', header: 'Role', sortable: true },
+                    { key: 'level', header: 'Level', sortable: true },
+                    {
+                      key: 'action',
+                      header: 'Action',
+                      render: (item) => (
+                        <Button size="sm" variant="secondary" onClick={(e) => {
+                          e.stopPropagation();
+                          showSnackbar(`Edited ${item.name}`, 'info');
+                        }}>Edit</Button>
+                      )
+                    }
+                  ];
+
+                  const data: DemoData[] = [
+                    { id: 1, name: 'Ahri', role: 'Mage', level: 18 },
+                    { id: 2, name: 'Darius', role: 'Fighter', level: 18 },
+                    { id: 3, name: 'Ezreal', role: 'Marksman', level: 16 },
+                    { id: 4, name: 'Thresh', role: 'Support', level: 14 },
+                    { id: 5, name: 'Zed', role: 'Assassin', level: 18 },
+                    { id: 6, name: 'Shen', role: 'Tank', level: 17 },
+                    { id: 7, name: 'Lee Sin', role: 'Fighter', level: 15 },
+                    { id: 8, name: 'Jinx', role: 'Marksman', level: 16 },
+                    { id: 9, name: 'Lulu', role: 'Support', level: 14 },
+                    { id: 10, name: 'Kha\'Zix', role: 'Assassin', level: 17 },
+                    { id: 11, name: 'Lux', role: 'Mage', level: 15 },
+                    { id: 12, name: 'Vayne', role: 'Marksman', level: 18 },
+                  ];
+
+                  return (
+                    <DataTable
+                      columns={columns}
+                      data={data}
+                      pagination
+                      pageSize={5}
+                      onRowClick={(item) => showSnackbar(`Clicked ${item.name}`, 'success')}
+                    />
+                  );
+                })()}
+              </div>
+            </div>
+
+            <CodeExample code={`const columns: Column<Data>[] = [
+  { key: 'id', header: 'ID', sortable: true },
+  { key: 'name', header: 'Name', sortable: true },
+  { key: 'action', header: 'Action', render: (item) => <Button>Edit</Button> }
+];
+
+<DataTable
+  columns={columns}
+  data={data}
+  pagination
+  pageSize={5}
+  onRowClick={(item) => console.log(item)}
+/>`} />
+          </ComponentSection>
+        )}
       </main>
-    </div>
+    </div >
   );
 }
