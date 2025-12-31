@@ -10,6 +10,7 @@ import { Icon, type IconName } from '../components/ui/Icon';
 import { CategoryIcon, type IconCategory } from '../components/ui/CategoryIcon';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { StatusBadge } from '../components/ui/StatusBadge';
+import { Accordion } from '../components/ui/Accordion';
 import { Dialog } from '../components/ui/Dialog';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { useSnackbar } from '../components/ui/useSnackbar';
@@ -40,6 +41,7 @@ const sections = [
   { id: 'card', label: 'Card' },
   { id: 'item-image', label: 'Item Image' },
   { id: 'item-preview-sync', label: 'Item Preview Sync' },
+  { id: 'accordion', label: 'Accordion' },
 ];
 
 export function ComponentCatalog() {
@@ -884,6 +886,63 @@ const options = [
   onChange={setValue}
   placeholder="Type to search..."
 />`} />
+          </ComponentSection>
+        )}
+
+        {/* Accordion Section */}
+        {filteredSections.some(s => s.id === 'accordion') && (
+          <ComponentSection
+            id="accordion"
+            title="Accordion"
+            description="コンテンツの表示/非表示を切り替えるアコーディオンコンポーネント"
+          >
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>Basic Usage</h3>
+              <div className={styles.demoRow} style={{ display: 'block' }}>
+                <Accordion title="クリックして展開">
+                  <p className="p-4 text-hextech-blue-100">
+                    アコーディオンの中身です。ここには任意のコンテンツを配置できます。
+                  </p>
+                </Accordion>
+                <Accordion title="デフォルトで開いている項" defaultOpen>
+                  <p className="p-4 text-hextech-blue-100">
+                    defaultOpenプロパティを指定すると、初期状態で開いた状態になります。
+                  </p>
+                </Accordion>
+              </div>
+            </div>
+
+            <CodeExample code={`<Accordion title="クリックして展開">
+  <p>コンテンツ...</p>
+</Accordion>
+
+<Accordion title="デフォルトで開いている項" defaultOpen>
+  <p>コンテンツ...</p>
+</Accordion>`} />
+
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>With Count</h3>
+              <div className={styles.demoRow} style={{ display: 'block' }}>
+                <Accordion title="New Items" count={5}>
+                  <div className="p-4 text-hextech-blue-100">
+                    5個の新しいアイテムがあります。
+                  </div>
+                </Accordion>
+                <Accordion title="Updated Items" count={12} defaultOpen>
+                  <div className="p-4 text-hextech-blue-100">
+                    12個の更新されたアイテムがあります。
+                  </div>
+                </Accordion>
+              </div>
+            </div>
+
+            <CodeExample code={`<Accordion title="New Items" count={5}>
+  <div>コンテンツ...</div>
+</Accordion>
+
+<Accordion title="Updated Items" count={12} defaultOpen>
+  <div>コンテンツ...</div>
+</Accordion>`} />
           </ComponentSection>
         )}
       </main>
