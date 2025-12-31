@@ -26,6 +26,22 @@ export async function getLatestVersion(): Promise<string> {
 }
 
 /**
+ * 利用可能な全バージョンを取得
+ */
+export async function getVersions(): Promise<string[]> {
+  try {
+    const response = await fetch(`${DDRAGON_BASE_URL}/api/versions.json`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch versions: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching versions:', error);
+    throw error;
+  }
+}
+
+/**
  * 指定バージョンのアイテムデータを取得
  * @param version パッチバージョン
  * @param locale ロケール (デフォルト: ja_JP)

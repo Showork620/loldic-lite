@@ -29,6 +29,14 @@ export const ItemImage: React.FC<ItemImageProps> = ({
       return;
     }
 
+    // Direct URL check
+    if (imagePath.startsWith('http')) {
+      setImageUrl(imagePath);
+      setHasError(false);
+      setIsLoading(true);
+      return;
+    }
+
     try {
       // Get public URL from Supabase storage
       const url = getItemImagePublicUrl(imagePath);

@@ -1,5 +1,6 @@
 import React from 'react';
 import { MainLayout } from '../components/layout/MainLayout';
+import { Link } from 'react-router-dom';
 
 export const AdminPage: React.FC = () => {
   return (
@@ -22,10 +23,10 @@ export const AdminPage: React.FC = () => {
             <p className="text-hextech-metal-400 text-sm">Edit or delete existing items.</p>
           </div>
 
-          <div className="p-6 border border-hextech-metal-600 bg-hextech-black-400/30 rounded-lg hover:border-hextech-gold-500/50 transition-colors group">
+          <Link to="/admin/sync" className="block p-6 border border-hextech-metal-600 bg-hextech-black-400/30 rounded-lg hover:border-hextech-gold-500/50 transition-colors group">
             <h3 className="text-xl font-bold text-hextech-gold-400 mb-2 group-hover:text-hextech-gold-300">Sync Data</h3>
             <p className="text-hextech-metal-400 text-sm">Synchronize data with Riot API.</p>
-          </div>
+          </Link>
         </div>
 
         <div className="mt-8 p-4 bg-hextech-black-400/50 border border-hextech-gold-500/20 rounded">
