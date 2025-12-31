@@ -1,0 +1,145 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  /* gap-6 */
+  max-width: 80rem;
+  /* max-w-7xl */
+  margin: 0 auto;
+  /* mx-auto */
+  padding: 1.5rem;
+  /* p-6 */
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(200, 155, 60, 0.3);
+  /* border-hextech-gold-500/30 */
+  padding-bottom: 1rem;
+  /* pb-4 */
+}
+
+.pageTitle {
+  font-size: 1.875rem;
+  /* text-3xl */
+  font-weight: 700;
+  /* font-bold */
+  color: #CDFAFA;
+  /* text-hextech-blue-300 */
+  font-family: var(--font-display);
+  /* font-display */
+  letter-spacing: 0.025em;
+  /* tracking-wide */
+  margin: 0;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  /* gap-4 */
+}
+
+.selectWrapper {
+  width: 10rem;
+  /* w-40 */
+}
+
+.progressCard {
+  padding: 1.5rem;
+  /* p-6 */
+}
+
+.progressTitle {
+  color: #C8AA6E;
+  /* text-hextech-gold-300 */
+  margin-bottom: 0.5rem;
+  /* mb-2 */
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+.errorLog {
+  background-color: rgba(127, 29, 29, 0.4);
+  /* bg-red-900/40 */
+  border: 1px solid #ef4444;
+  /* border-red-500 */
+  padding: 1rem;
+  /* p-4 */
+  border-radius: 0.25rem;
+  /* rounded */
+  color: #fecaca;
+  /* text-red-200 */
+  font-size: 0.875rem;
+  /* text-sm */
+  max-height: 10rem;
+  /* max-h-40 */
+  overflow-y: auto;
+  /* overflow-y-auto */
+}
+
+.errorTitle {
+  font-weight: 700;
+  /* font-bold */
+  margin-bottom: 0.5rem;
+  /* mb-2 */
+}
+
+.errorList {
+  list-style-type: disc;
+  /* list-disc */
+  padding-left: 1.25rem;
+  /* pl-5 */
+  margin: 0;
+}
+
+.actionBar {
+  display: flex;
+  justify-content: flex-end;
+  /* justify-end */
+}
+
+.accordionList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  /* gap-2 */
+}
+
+.itemsGrid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem;
+  /* gap-4 */
+}
+
+@media (min-width: 768px) {
+  .itemsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .itemsGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .itemsGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.emptyState {
+  color: #9ca3af;
+  /* text-gray-400 */
+  font-style: italic;
+  /* italic */
+  padding: 1rem;
+  /* p-4 */
+  text-align: center;
+  /* text-center */
+}

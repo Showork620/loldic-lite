@@ -1,0 +1,70 @@
+.container {
+  border: 1px solid rgba(200, 155, 60, 0.3);
+  /* hextech-gold-500/30 */
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  /* Reduced from 1rem */
+  overflow: hidden;
+  background: rgba(10, 20, 40, 0.5);
+  /* hextech-black-400/50 */
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  cursor: pointer;
+  background: rgba(1, 10, 19, 0.6);
+  /* hextech-black-500/60 */
+  transition: background-color 0.2s;
+  user-select: none;
+}
+
+.header:hover {
+  background: rgba(200, 155, 60, 0.1);
+  /* hextech-gold-500/10 */
+}
+
+.titleGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.title {
+  font-family: var(--font-display);
+  color: #C8AA6E;
+  /* hextech-gold-100 */
+  font-size: 1.125rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.count {
+  font-family: var(--font-display);
+  color: #C8AA6E;
+  /* hextech-gold-100 */
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-left: auto;
+}
+
+.icon {
+  color: #C8AA6E;
+  transition: transform 0.2s ease;
+}
+
+.icon.expanded {
+  transform: rotate(180deg);
+}
+
+.content {
+  padding: 1rem;
+  border-top: 1px solid rgba(200, 155, 60, 0.1);
+  display: none;
+}
+
+.content.expanded {
+  display: block;
+}
