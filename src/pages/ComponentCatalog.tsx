@@ -647,9 +647,9 @@ showSnackbar('10秒間表示されます', 'warning', 10000);`} />
                 {/* Mock data for demo */}
                 {(() => {
                   const mockItem: Item = {
-                    id: '1', riot_id: '3004', name_ja: 'マナムネ', description_ja: '', plaintext_ja: '',
+                    id: '1', riot_id: '3004', is_available: true, name_ja: 'マナムネ', abilities: [], plaintext_ja: '',
                     price_total: 2900, price_sell: 2030, is_legendary: true, image_path: '3004.webp',
-                    tags: [], stats: {}, build_from: [], build_into: [], created_at: '', updated_at: ''
+                    patch_status: 'unknown', search_tags: [], role_categories: [], popular_champions: [], stats: {}, build_from: [], build_into: [], created_at: '', updated_at: ''
                   };
                   return (
                     <>
@@ -673,9 +673,9 @@ showSnackbar('10秒間表示されます', 'warning', 10000);`} />
               <div className={styles.progressDemo}>
                 {(() => {
                   const mockItem: Item = {
-                    id: '2', riot_id: '1001', name_ja: 'ブーツ', description_ja: '', plaintext_ja: '',
+                    id: '2', riot_id: '1001', is_available: true, name_ja: 'ブーツ', abilities: [], plaintext_ja: '',
                     price_total: 300, price_sell: 210, is_legendary: false, image_path: '1001.webp',
-                    tags: [], stats: {}, build_from: [], build_into: [], created_at: '', updated_at: ''
+                    patch_status: 'unknown', search_tags: [], role_categories: [], popular_champions: [], stats: {}, build_from: [], build_into: [], created_at: '', updated_at: ''
                   };
                   return (
                     <ItemPreviewSync

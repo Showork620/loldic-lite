@@ -35,8 +35,8 @@ export function toCamelCase(data: Record<string, any>): any {
   return {
     id: data.id,
     riotId: data.riot_id,
-    nameJa: data.name_ja,
     isAvailable: data.is_available,
+    nameJa: data.name_ja,
     abilities: data.abilities,
     plaintextJa: data.plaintext_ja,
     priceTotal: data.price_total,

@@ -1,5 +1,7 @@
 // Type definitions for LoL Item data
 
+import type { PatchStatus, RoleCategory } from "./common";
+
 // アビリティの型定義
 export interface ItemAbility {
   type: 'passive' | 'active';
@@ -34,14 +36,18 @@ export interface ItemStats {
 export interface Item {
   id: string;
   riot_id: string;
+  is_available: boolean;
   name_ja: string;
-  description_ja: string;
+  abilities: ItemAbility[];
   plaintext_ja: string;
   price_total: number;
   price_sell: number;
   is_legendary: boolean;
   image_path: string;
-  tags: string[];
+  patch_status: PatchStatus;
+  search_tags: string[];
+  role_categories: RoleCategory[];
+  popular_champions: string[];
   stats: ItemStats;
   build_from: string[];
   build_into: string[];
@@ -49,7 +55,7 @@ export interface Item {
   updated_at: string;
 }
 
-export interface RiotItemData {
+export interface RawRiotItemData {
   id: string;
   name: string;
   description: string;
@@ -84,6 +90,6 @@ export interface RiotAPIResponse {
   type: string;
   version: string;
   data: {
-    [key: string]: RiotItemData;
+    [key: string]: RawRiotItemData;
   };
 }
