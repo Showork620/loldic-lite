@@ -1,9 +1,3 @@
-CREATE TABLE "additional_tags" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"riot_id" text NOT NULL,
-	"tag" text NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL
-);
 --> statement-breakpoint
 CREATE TABLE "items" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -27,13 +21,6 @@ CREATE TABLE "items" (
 	CONSTRAINT "items_riot_id_unique" UNIQUE("riot_id")
 );
 --> statement-breakpoint
-CREATE TABLE "role_items" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"role" text NOT NULL,
-	"riot_id" text NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL
-);
---> statement-breakpoint
 CREATE TABLE "unavailable_items" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"riot_id" text NOT NULL,
@@ -41,4 +28,17 @@ CREATE TABLE "unavailable_items" (
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "unavailable_items_riot_id_unique" UNIQUE("riot_id")
+);
+CREATE TABLE "additional_tags" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"riot_id" text NOT NULL,
+	"tag" text NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "role_items" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"role" text NOT NULL,
+	"riot_id" text NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL
 );
