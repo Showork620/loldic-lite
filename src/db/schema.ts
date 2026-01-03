@@ -1,4 +1,5 @@
 import { pgTable, uuid, text, integer, boolean, timestamp, jsonb } from 'drizzle-orm/pg-core';
+import type { AbilityNumericParam } from '../types/abilityStats';
 
 // ========== アイテムテーブル ==========
 export const items = pgTable('items', {
@@ -12,12 +13,15 @@ export const items = pgTable('items', {
   priceSell: integer('price_sell').notNull(),
   imagePath: text('image_path').notNull(),
   patchStatus: text('patch_status'),
-  searchTags: text('search_tags').array().notNull().default([]),
-  roleCategories: text('role_categories').array(),
-  popularChampions: text('popular_champions').array(),
-  stats: jsonb('stats').notNull().default({}),
+  searchTags: text('search_tags').array().notNull().default([]), // 検索タグ
+  roleCategories: text('role_categories').array(), // ロール分類
+  popularChampions: text('popular_champions').array(), // よく使うチャンピオン
+  maps: integer('maps').array().notNull().default([]), // 11=通常SR, 12=ARAM
+  basicStats: jsonb('basic_stats').notNull().default({}), // 基本スタッツ
+  abilityStats: jsonb('ability_stats').$type<AbilityNumericParam[]>().array().notNull().default([]), // アビリティ内の数値パラメータ
   buildFrom: text('build_from').array().notNull().default([]),
   buildInto: text('build_into').array().notNull().default([]),
+  updatedPatch: text('updated_patch'), // 更新した最後のパッチバージョン
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
@@ -29,6 +33,7 @@ export const unavailableItems = pgTable('unavailable_items', {
   id: uuid('id').defaultRandom().primaryKey(),
   riotId: text('riot_id').notNull().unique(),
   reason: text('reason'), // 除外理由（例: "重複したヒュプリス", "廃止アイテム"）
+  updatedPatch: text('updated_patch'), // 更新した最後のパッチバージョン
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
@@ -39,14 +44,16 @@ export const additionalTags = pgTable('additional_tags', {
   riotId: text('riot_id').notNull(),
   tag: text('tag').notNull(), // 例: "体力レシオ", "体力割合ダメージ"
   createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
 // ロール分類管理
-export const roleItems = pgTable('role_items', {
+export const roleCategories = pgTable('role_categories', {
   id: uuid('id').defaultRandom().primaryKey(),
   role: text('role').notNull(), // "fighter", "marksman", "mage"など
   riotId: text('riot_id').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
 // ========== 型定義 ==========
@@ -60,5 +67,5 @@ export type NewUnavailableItem = typeof unavailableItems.$inferInsert;
 export type AdditionalTag = typeof additionalTags.$inferSelect;
 export type NewAdditionalTag = typeof additionalTags.$inferInsert;
 
-export type RoleItem = typeof roleItems.$inferSelect;
-export type NewRoleItem = typeof roleItems.$inferInsert;
+export type RoleCategory = typeof roleCategories.$inferSelect;
+export type NewRoleCategory = typeof roleCategories.$inferInsert;

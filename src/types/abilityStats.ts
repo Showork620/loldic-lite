@@ -11,6 +11,8 @@
  * - 複数のスケーリング要素の合算に対応
  */
 
+import type { ChampionStat, StatSource, TargetContext } from './stats'
+
 // ============================================================================
 // 1. スケーリングの軸
 // ============================================================================
@@ -19,68 +21,12 @@
  * スケーリングのタイプ
  * - flat: 固定値（例：50ダメージ）
  * - level: チャンピオンレベル依存（例：レベル1で10、レベル18で100）
- * - statRatio: ステータス参照（例：ボーナスADの50%）
+ * - statRatio: ステータス参照（例：ボーナス攻撃力の50%）
  */
 export type ScaleType = 'flat' | 'level' | 'statRatio'
 
 // ============================================================================
-// 2. ステータス種別（レシオ対象）
-// ============================================================================
-
-/**
- * チャンピオンのステータス種別
- * レシオ計算で参照できるすべてのステータスを定義
- */
-export type ChampionStat =
-  | 'AD' // 攻撃力
-  | 'AP' // 魔力
-  | 'HP' // 体力
-  | 'AR' // 物理防御
-  | 'MR' // 魔法防御
-  | 'AS' // 攻撃速度
-  | 'MS' // 移動速度
-  | 'mana' // マナ
-  | '脅威' // Lethality
-  | 'Armor Penetration' // 物理防御貫通
-  | 'Magic Penetration' // 魔法防御貫通
-  | 'Base Health Regen' // 基本体力自動回復
-  | 'Base Mana Regen' // 基本マナ自動回復
-  | 'ability haste' // スキルヘイスト
-  | 'Tenacity' // 粘り強さ
-  | 'Critical Damage' // クリティカルダメージ
-  | 'Critical Chance' // クリティカル率
-  | 'Heal and Shield Power' // 回復・シールド強化
-  | 'Gold10' // 10秒毎のゴールド
-  | 'Life Steal' // ライフスティール
-  | 'OmniVamp' // 全能吸血
-
-// ============================================================================
-// 3. ステータスのどの値を参照するか
-// ============================================================================
-
-/**
- * ステータスの参照元
- * - Total: 合計値（基礎値 + 増加値）
- * - Bonus: 増加値のみ（ルーンやアイテムによる増加分）
- * - Base: 基礎値のみ（チャンピオン固有の値）
- * - Current: 現在値（HPやマナの現在値）
- * - Missing: 減少値（最大値 - 現在値）
- */
-export type StatSource = 'Total' | 'Bonus' | 'Base' | 'Current' | 'Missing'
-
-// ============================================================================
-// 4. 自分のスタッツか対象のスタッツか
-// ============================================================================
-
-/**
- * ステータス参照の対象
- * - Self: 自分自身のステータス
- * - Target: 対象のステータス
- */
-export type TargetContext = 'Self' | 'Target'
-
-// ============================================================================
-// 5. 値の単位
+// 2. 値の単位
 // ============================================================================
 
 /**
@@ -91,7 +37,7 @@ export type TargetContext = 'Self' | 'Target'
 export type ValueUnit = 'Flat' | 'Percent'
 
 // ============================================================================
-// 6. スケーリング値の定義（コア）
+// 3. スケーリング値の定義（コア）
 // ============================================================================
 
 /**
@@ -111,19 +57,19 @@ export type ValueUnit = 'Flat' | 'Percent'
  *   valuesByLevel: [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95]
  * }
  * 
- * // ステータスレシオ: 自分のボーナスADの50%
+ * // ステータスレシオ: 自分のボーナス攻撃力の50%
  * const adRatio: ScalingValue = {
  *   type: 'statRatio',
- *   stat: 'AD',
+ *   stat: '攻撃力',
  *   source: 'Bonus',
  *   target: 'Self',
  *   ratio: 0.5
  * }
  * 
- * // ステータスレシオ: 対象の最大HPの8%
+ * // ステータスレシオ: 対象の最大体力の8%
  * const targetHpRatio: ScalingValue = {
  *   type: 'statRatio',
- *   stat: 'HP',
+ *   stat: '体力',
  *   source: 'Total',
  *   target: 'Target',
  *   ratio: 0.08
@@ -148,7 +94,7 @@ export type ScalingValue =
   }
 
 // ============================================================================
-// 7. 近接 / 遠隔対応ラッパー
+// 4. 近接 / 遠隔対応ラッパー
 // ============================================================================
 
 /**
@@ -182,7 +128,7 @@ export type RangeDependent<T> =
   }
 
 // ============================================================================
-// 8. 実際の「数値パラメータ」（最終的な公開インターフェース）
+// 5. 実際の「数値パラメータ」（最終的な公開インターフェース）
 // ============================================================================
 
 /**
@@ -201,7 +147,7 @@ export type RangeDependent<T> =
  *     appliesTo: 'meleeRanged',
  *     melee: [
  *       { type: 'flat', value: 40 },
- *       { type: 'statRatio', stat: 'AD', source: 'Total', target: 'Self', ratio: 0.4 }
+ *       { type: 'statRatio', stat: '攻撃力', source: 'Total', target: 'Self', ratio: 0.4 }
  *     ],
  *     ranged: [] // 遠隔は効果なし
  *   }
@@ -214,10 +160,10 @@ export type RangeDependent<T> =
  *   scaling: {
  *     appliesTo: 'meleeRanged',
  *     melee: [
- *       { type: 'statRatio', stat: 'AD', source: 'Base', target: 'Self', ratio: 2.0 }
+ *       { type: 'statRatio', stat: '攻撃力', source: 'Base', target: 'Self', ratio: 2.0 }
  *     ],
  *     ranged: [
- *       { type: 'statRatio', stat: 'AD', source: 'Base', target: 'Self', ratio: 1.5 }
+ *       { type: 'statRatio', stat: '攻撃力', source: 'Base', target: 'Self', ratio: 1.5 }
  *     ]
  *   }
  * }
@@ -245,7 +191,7 @@ export type RangeDependent<T> =
  *   scaling: {
  *     appliesTo: 'both',
  *     value: [
- *       { type: 'statRatio', stat: 'HP', source: 'Current', target: 'Target', ratio: 0.10 }
+ *       { type: 'statRatio', stat: '体力', source: 'Current', target: 'Target', ratio: 0.10 }
  *     ]
  *   }
  * }
@@ -269,7 +215,7 @@ export interface AbilityNumericParam {
    * スケーリング値の配列
    * 複数の要素を合算して最終的な値を計算します
    * 
-   * 例: [固定値50] + [ボーナスADの50%] + [レベルごとに5増加]
+   * 例: [固定値50] + [ボーナス攻撃力の50%] + [レベルごとに5増加]
    */
   scaling: RangeDependent<ScalingValue[]>
 }

@@ -3,6 +3,8 @@
  * PHPコードから移植した定数データ
  */
 
+import type { ChampionStat } from "../types/stats";
+
 // タグの翻訳マッピング（英語 -> 日本語）
 export const TAGS_TRANSLATE: Record<string, string> = {
   "AbilityHaste": "スキルヘイスト",
@@ -39,7 +41,7 @@ export const TAGS_TRANSLATE: Record<string, string> = {
 };
 
 // stats抽出用キーワード
-export const STATS_KEYWORD = [
+export const STATS_KEYWORD: ChampionStat[] = [
   "体力",
   "マナ",
   "攻撃力",

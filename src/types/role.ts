@@ -1,0 +1,1 @@
+export type RoleCategory = 'fighter' | 'marksman' | 'assassin' | 'mage' | 'tank' | 'support'
