@@ -18,7 +18,7 @@ export const items = pgTable('items', {
   popularChampions: text('popular_champions').array(), // よく使うチャンピオン
   maps: integer('maps').array().notNull().default([]), // 11=通常SR, 12=ARAM
   basicStats: jsonb('basic_stats').notNull().default({}), // 基本スタッツ
-  abilityStats: jsonb('ability_stats').$type<AbilityNumericParam[]>().array().notNull().default([]), // アビリティ内の数値パラメータ
+  abilityStats: jsonb('ability_stats').$type<AbilityNumericParam[]>().notNull().default([]), // アビリティ内の数値パラメータ
   buildFrom: text('build_from').array().notNull().default([]),
   buildInto: text('build_into').array().notNull().default([]),
   updatedPatch: text('updated_patch'), // 更新した最後のパッチバージョン
@@ -67,5 +67,5 @@ export type NewUnavailableItem = typeof unavailableItems.$inferInsert;
 export type AdditionalTag = typeof additionalTags.$inferSelect;
 export type NewAdditionalTag = typeof additionalTags.$inferInsert;
 
-export type RoleCategory = typeof roleCategories.$inferSelect;
-export type NewRoleCategory = typeof roleCategories.$inferInsert;
+export type RoleCategoryRecord = typeof roleCategories.$inferSelect;
+export type NewRoleCategoryRecord = typeof roleCategories.$inferInsert;

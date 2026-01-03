@@ -22,8 +22,9 @@ import type { ChampionStat, StatSource, TargetContext } from './stats'
  * - flat: 固定値（例：50ダメージ）
  * - level: チャンピオンレベル依存（例：レベル1で10、レベル18で100）
  * - statRatio: ステータス参照（例：ボーナス攻撃力の50%）
+ * - time: 効果時間（例: 1.5秒以内に2回攻撃したら）
  */
-export type ScaleType = 'flat' | 'level' | 'statRatio'
+export type ScaleType = 'flat' | 'level' | 'statRatio' | 'time'
 
 // ============================================================================
 // 2. 値の単位
@@ -74,6 +75,12 @@ export type ValueUnit = 'Flat' | 'Percent'
  *   target: 'Target',
  *   ratio: 0.08
  * }
+ * 
+ * // 効果時間: 4秒ごとに
+ * const cooldown: ScalingValue = {
+ *   type: 'time',
+ *   time: 4
+ * }
  * ```
  */
 export type ScalingValue =
@@ -91,6 +98,10 @@ export type ScalingValue =
     source: StatSource
     target: TargetContext
     ratio: number // 例: 0.5 = 50%
+  }
+  | {
+    type: 'time'
+    time: number // 例: 5 = 5秒
   }
 
 // ============================================================================
@@ -243,6 +254,13 @@ export function isLevelScaling(value: ScalingValue): value is Extract<ScalingVal
  */
 export function isStatRatioScaling(value: ScalingValue): value is Extract<ScalingValue, { type: 'statRatio' }> {
   return value.type === 'statRatio'
+}
+
+/**
+ * ScalingValueがtime型かどうかを判定
+ */
+export function isTimeScaling(value: ScalingValue): value is Extract<ScalingValue, { type: 'time' }> {
+  return value.type === 'time'
 }
 
 /**
