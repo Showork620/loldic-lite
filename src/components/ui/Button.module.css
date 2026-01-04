@@ -75,7 +75,6 @@
   background: transparent;
   border-color: transparent;
   color: var(--color-text-secondary);
-  clip-path: none;
 }
 
 .ghost:not(:disabled):hover {
