@@ -1,28 +1,27 @@
 /* ExclusionManagerItem styles */
 
 .container {
-  background: var(--hextech-black-400);
-  border: 1px solid var(--hextech-metal-600);
+  background: var(--color-navy-800);
   border-radius: 8px;
   padding: 8px;
   transition: all 0.2s ease;
 }
 
 .container:hover {
-  border-color: var(--hextech-blue-500);
+  border-color: var(--color-hextech-blue-500);
   box-shadow: 0 0 12px rgba(0, 157, 255, 0.15);
 }
 
 /* 除外アイテムの視覚的区別 */
 .excluded {
   opacity: 0.7;
-  border-color: var(--hextech-warning-500);
-  background: var(--hextech-black-500);
+  border-color: var(--color-warning);
+  background: var(--color-navy-900);
 }
 
 .excluded:hover {
   opacity: 0.85;
-  border-color: var(--hextech-warning-400);
+  border-color: var(--color-warning);
 }
 
 /* ヘッダーセクション */
@@ -60,7 +59,7 @@
   max-width: 360px;
   font-size: 14px;
   font-weight: 600;
-  color: var(--hextech-gold-500);
+  color: var(--color-gold-500);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -68,7 +67,7 @@
 
 .riotId {
   font-size: 12px;
-  color: var(--hextech-metal-300);
+  color: var(--color-text-secondary);
   font-family: 'Courier New', monospace;
 }
 
@@ -88,8 +87,8 @@
 .reasonInput {
   font-size: 12px;
   width: 100%;
-  background: var(--hextech-black-500);
-  border-color: var(--hextech-metal-600);
+  background: var(--color-navy-900);
+  border-color: var(--color-text-secondary);
 }
 
 .button {

@@ -19,6 +19,7 @@ export const ExclusionManager: React.FC = () => {
   const [saving, setSaving] = useState(false);
   const { showSnackbar } = useSnackbar();
   const [version, setVersion] = useState<string>('');
+  const [showNewOnly, setShowNewOnly] = useState(false);
 
   // データ初期ロード
   const loadData = async () => {
@@ -127,16 +128,30 @@ export const ExclusionManager: React.FC = () => {
         <div className={styles.sections}>
           <div className={styles.section}>
             <Accordion
-              title={<span>有効なアイテム (Items)</span>}
-              count={lists.items.length}
+              title={
+                <div className={styles.accordionHeader}>
+                  <span>有効なアイテム (Items)</span>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowNewOnly(!showNewOnly);
+                    }}
+                  >
+                    {showNewOnly ? '全て表示' : '新規のみ'}
+                  </Button>
+                </div>
+              }
+              count={showNewOnly ? lists.items.filter(i => i.isNew).length : lists.items.length}
               defaultOpen={true}
             >
               <div className={styles.scrollContainer}>
                 <div className={styles.itemGrid}>
-                  {lists.items.length === 0 ? (
+                  {(showNewOnly ? lists.items.filter(i => i.isNew) : lists.items).length === 0 ? (
                     <div className={styles.emptyState}>アイテムがありません</div>
                   ) : (
-                    lists.items.map(item => (
+                    (showNewOnly ? lists.items.filter(i => i.isNew) : lists.items).map(item => (
                       <ExclusionManagerItem
                         key={item.riotId}
                         item={item}
@@ -152,16 +167,30 @@ export const ExclusionManager: React.FC = () => {
 
           <div className={styles.section}>
             <Accordion
-              title={<span>除外アイテム (Unavailable Items)</span>}
-              count={lists.unavailable.length}
+              title={
+                <div className={styles.accordionHeader}>
+                  <span>除外アイテム (Unavailable Items)</span>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowNewOnly(!showNewOnly);
+                    }}
+                  >
+                    {showNewOnly ? '全て表示' : '新規のみ'}
+                  </Button>
+                </div>
+              }
+              count={showNewOnly ? lists.unavailable.filter(i => i.isNew).length : lists.unavailable.length}
               defaultOpen={false}
             >
               <div className={styles.scrollContainer}>
                 <div className={styles.itemGrid}>
-                  {lists.unavailable.length === 0 ? (
+                  {(showNewOnly ? lists.unavailable.filter(i => i.isNew) : lists.unavailable).length === 0 ? (
                     <div className={styles.emptyState}>除外アイテムがありません</div>
                   ) : (
-                    lists.unavailable.map(item => (
+                    (showNewOnly ? lists.unavailable.filter(i => i.isNew) : lists.unavailable).map(item => (
                       <ExclusionManagerItem
                         key={item.riotId}
                         item={item}

@@ -15,6 +15,7 @@ export interface ProcessedItem {
   isNew: boolean;
   status: 'available' | 'unavailable';
   reason: string | null; // For unavailable items
+  maps: number[]; // Available map IDs (11: SR, 12: ARAM, etc.)
   raw: RawRiotItemData;
 }
 
@@ -71,6 +72,13 @@ export async function processRiotItems(
 
     const isNew = !isExplicitlyAvailable && !isExplicitlyUnavailable;
 
+    // Extract available map IDs from maps object
+    const availableMaps = item.maps
+      ? Object.keys(item.maps)
+        .filter(key => item.maps![key])
+        .map(key => parseInt(key))
+      : [];
+
     const processedItem: ProcessedItem = {
       riotId,
       name: item.name,
@@ -78,6 +86,7 @@ export async function processRiotItems(
       isNew,
       status,
       reason,
+      maps: availableMaps,
       raw: item,
     };
 

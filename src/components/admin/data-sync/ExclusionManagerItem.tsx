@@ -3,6 +3,7 @@ import { Button } from '../../ui/Button';
 import { Input } from '../../ui/Input';
 import { ItemImage } from '../../ui/ItemImage';
 import { StatusBadge } from '../../ui/StatusBadge';
+import { MapLabel } from '../../ui/MapLabel';
 import type { ProcessedItem } from '../../../utils/riotItemManager';
 import styles from './ExclusionManagerItem.module.css';
 
@@ -37,6 +38,7 @@ export const ExclusionManagerItem: React.FC<ExclusionManagerItemProps> = ({
             <div className={styles.headerLine}>
               <span className={styles.riotId}>({item.riotId})</span>
               <StatusBadge status={item.isNew ? 'new' : 'unchanged'} size="sm" showIcon />
+              <MapLabel maps={item.maps} />
             </div>
           </div>
         </div>
@@ -60,7 +62,7 @@ export const ExclusionManagerItem: React.FC<ExclusionManagerItemProps> = ({
               e.stopPropagation();
               onExclusionChange(item.riotId, false);
             }}
-            variant="ghost"
+            variant="primary"
             size="sm"
             className={styles.button}
           >
