@@ -1,0 +1,31 @@
+/* MapLabel styles */
+
+.container {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.label {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.sr {
+  background: var(--color-hextech-blue-500);
+  color: var(--color-navy-900);
+}
+
+.aram {
+  background: var(--color-gold-500);
+  color: var(--color-navy-900);
+}
+
+.na {
+  background: var(--color-text-secondary);
+  color: var(--color-navy-900);
+}
