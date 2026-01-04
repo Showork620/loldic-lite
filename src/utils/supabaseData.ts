@@ -191,6 +191,34 @@ export async function getItemsByRole(role: string) {
 }
 
 /**
+ * 特定アイテムのis_availableを更新
+ * @param riotId アイテムのRiot ID
+ * @param isAvailable 
+ */
+export async function updateItemAvailability(
+  riotId: string,
+  isAvailable: boolean
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { error } = await supabase
+      .from('items')
+      .update({ is_available: isAvailable })
+      .eq('riot_id', riotId);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    };
+  }
+}
+
+/**
  * 特定アイテムのsearch_tagsを更新
  * @param riotId アイテムのRiot ID
  * @param tags 新しいタグ配列
