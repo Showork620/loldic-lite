@@ -16,7 +16,7 @@ export interface StatusBadgeProps {
 // ステータスの日本語ラベル
 const STATUS_LABELS: Record<StatusType, string> = {
   // Sync
-  'new': '新規',
+  'new': 'NEW',
   'updated': '更新',
   'deleted': '削除',
   'unchanged': '変更なし',
@@ -35,7 +35,7 @@ const STATUS_ICONS: Record<StatusType, string> = {
   'new': '✨',
   'updated': '🔄',
   'deleted': '🗑️',
-  'unchanged': '⚪',
+  'unchanged': '',
   // Patch
   'buff': '⬆️',
   'nerf': '⬇️',
@@ -52,6 +52,11 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
   showIcon = false,
   className = '',
 }) => {
+  // 'unchanged'の場合は何も表示しない
+  if (status === 'unchanged') {
+    return null;
+  }
+
   const displayLabel = label || STATUS_LABELS[status] || status;
   const icon = STATUS_ICONS[status];
 

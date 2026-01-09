@@ -28,11 +28,12 @@ export const items = pgTable('items', {
 
 // ========== 定数管理テーブル ==========
 
-// 除外アイテム管理
-export const unavailableItems = pgTable('unavailable_items', {
+// 手動設定アイテム管理
+export const itemManualSettings = pgTable('item_manual_settings', {
   id: uuid('id').defaultRandom().primaryKey(),
   riotId: text('riot_id').notNull().unique(),
-  reason: text('reason'), // 除外理由（例: "重複したヒュプリス", "廃止アイテム"）
+  isAvailable: boolean('is_available').notNull(), // true=手動で有効化, false=手動で除外
+  reason: text('reason'), // 理由（主に除外時に使用）
   updatedPatch: text('updated_patch'), // 更新した最後のパッチバージョン
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
@@ -61,8 +62,8 @@ export const roleCategories = pgTable('role_categories', {
 export type Item = typeof items.$inferSelect;
 export type NewItem = typeof items.$inferInsert;
 
-export type UnavailableItem = typeof unavailableItems.$inferSelect;
-export type NewUnavailableItem = typeof unavailableItems.$inferInsert;
+export type ItemManualSetting = typeof itemManualSettings.$inferSelect;
+export type NewItemManualSetting = typeof itemManualSettings.$inferInsert;
 
 export type AdditionalTag = typeof additionalTags.$inferSelect;
 export type NewAdditionalTag = typeof additionalTags.$inferInsert;

@@ -13,65 +13,63 @@ export interface ProcessedItem {
   name: string;
   imagePath: string;
   isNew: boolean;
-  isNonPurchasable: boolean; // Cannot be purchased from shop
-  status: 'available' | 'unavailable';
-  reason: string | null; // For unavailable items
-  maps: number[]; // Available map IDs (11: SR, 12: ARAM, etc.)
+  isNonPurchasable: boolean;
+  category: 'available' | 'manualSettings' | 'autoExcluded';
+  isManuallyAvailable: boolean | null; // manual_settingsのisAvailableフラグ（手動設定がある場合のみ）
+  reason: string | null;
+  maps: number[];
   raw: RawRiotItemData;
 }
 
 export interface ProcessingResult {
-  availableItems: ProcessedItem[];
-  unavailableItems: ProcessedItem[];
+  availableItems: ProcessedItem[];        // 自動除外ルールに該当せず、manual_settingsにも未登録
+  manualSettingsItems: ProcessedItem[];   // manual_settingsに登録されている全アイテム
+  autoExcludedItems: ProcessedItem[];     // 自動除外ルールに該当し、manual_settingsで有効化されていない
 }
 
 /**
  * Riot APIのデータを処理し、DBの現状と比較して
- * 「有効」「除外」「新規」の状態を持つリストを生成する
+ * 「有効」「手動設定」「自動除外」の状態を持つリストを生成する
  */
 export async function processRiotItems(
   riotData: RiotAPIResponse,
-  dbUnavailableIds: string[], // DBに既に存在する除外ID
-  dbItemIds: string[]         // DBに既に存在する有効ID
+  manualSettings: Map<string, { isAvailable: boolean; reason: string | null }>,
+  dbItemIds: string[]
 ): Promise<ProcessingResult> {
   const rawItems = riotData.data;
 
-  // 1. ルールベースでの除外判定（初期値）
-  const ruleBasedUnavailable = getUnavailableItemIds(rawItems);
-  const ruleBasedUnavailableMap = new Map(ruleBasedUnavailable.map(u => [u.riotId, u.reason]));
+  // 1. ルールベースでの除外判定
+  const ruleBasedExcluded = getUnavailableItemIds(rawItems);
+  const ruleBasedMap = new Map(ruleBasedExcluded.map(u => [u.riotId, u.reason]));
 
   const result: ProcessingResult = {
     availableItems: [],
-    unavailableItems: [],
+    manualSettingsItems: [],
+    autoExcludedItems: [],
   };
 
   for (const [riotId, item] of Object.entries(rawItems)) {
-    // 既存DBの状態を優先する
-    // DBで「除外」にあれば、除外リストへ
-    const isExplicitlyUnavailable = dbUnavailableIds.includes(riotId);
-    // DBで「有効」にあれば、有効リストへ
-    const isExplicitlyAvailable = dbItemIds.includes(riotId);
+    const manualSetting = manualSettings.get(riotId);
+    const isAutoExcluded = ruleBasedMap.has(riotId);
+    const isNew = !dbItemIds.includes(riotId) && !manualSetting;
 
-    let status: 'available' | 'unavailable';
+    let category: 'available' | 'manualSettings' | 'autoExcluded';
+    let isManuallyAvailable: boolean | null = null;
     let reason: string | null = null;
 
-    if (isExplicitlyUnavailable) {
-      status = 'unavailable';
-      // reason はDBから取得すべきだが、ここでは簡易的に"Previously excluded"か、ルールベースの理由を当てる
-      reason = ruleBasedUnavailableMap.get(riotId) || '手動除外';
-    } else if (isExplicitlyAvailable) {
-      status = 'available';
+    if (manualSetting) {
+      // 手動設定がある場合は、必ず manualSettings カテゴリ
+      category = 'manualSettings';
+      isManuallyAvailable = manualSetting.isAvailable;
+      reason = manualSetting.reason;
+    } else if (isAutoExcluded) {
+      // 自動除外ルールに該当し、手動設定なし
+      category = 'autoExcluded';
+      reason = ruleBasedMap.get(riotId) || null;
     } else {
-      // DBにない場合（新規アイテム）はルールベースで判定
-      if (ruleBasedUnavailableMap.has(riotId)) {
-        status = 'unavailable';
-        reason = ruleBasedUnavailableMap.get(riotId) || null;
-      } else {
-        status = 'available';
-      }
+      // 自動除外ルールに該当せず、手動設定もなし
+      category = 'available';
     }
-
-    const isNew = !isExplicitlyAvailable && !isExplicitlyUnavailable;
 
     // Detect non-purchasable items
     const isNonPurchasable = item.gold?.purchasable === false || item.inStore === false;
@@ -86,19 +84,22 @@ export async function processRiotItems(
     const processedItem: ProcessedItem = {
       riotId,
       name: item.name,
-      imagePath: `${riotId}.webp`, // 命名規則
+      imagePath: `${riotId}.webp`,
       isNew,
       isNonPurchasable,
-      status,
+      category,
+      isManuallyAvailable,
       reason,
       maps: availableMaps,
       raw: item,
     };
 
-    if (status === 'available') {
+    if (category === 'available') {
       result.availableItems.push(processedItem);
+    } else if (category === 'manualSettings') {
+      result.manualSettingsItems.push(processedItem);
     } else {
-      result.unavailableItems.push(processedItem);
+      result.autoExcludedItems.push(processedItem);
     }
   }
 
@@ -107,19 +108,26 @@ export async function processRiotItems(
 
 /**
  * ExclusionManager用のデータロードヘルパー
- * Riot APIからデータを取得し、DBの状態と比較して処理済みアイテムリストを返す
+ * R iot APIからデータを取得し、DBの状態と比較して処理済みアイテムリストを返す
  */
 export async function loadItemsForManagement(version: string): Promise<{ result: ProcessingResult; riotData: RiotAPIResponse }> {
   const { fetchItemData } = await import('./riotApi');
   const riotRes = await fetchItemData(version);
 
   const { data: dbItems } = await supabase.from('items').select('riot_id');
-  const { data: dbUnavailable } = await supabase.from('unavailable_items').select('riot_id');
+  const { data: dbManualSettings } = await supabase
+    .from('item_manual_settings')
+    .select('riot_id, is_available, reason');
 
   const dbItemIds = dbItems?.map(i => i.riot_id) || [];
-  const dbUnavailableIds = dbUnavailable?.map(i => i.riot_id) || [];
+  const manualSettingsMap = new Map(
+    dbManualSettings?.map(s => [
+      s.riot_id,
+      { isAvailable: s.is_available, reason: s.reason }
+    ]) || []
+  );
 
-  const result = await processRiotItems(riotRes, dbUnavailableIds, dbItemIds);
+  const result = await processRiotItems(riotRes, manualSettingsMap, dbItemIds);
 
   return { result, riotData: riotRes };
 }
