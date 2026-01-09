@@ -104,7 +104,7 @@ export async function processRiotItems(
  * ExclusionManager用のデータロードヘルパー
  * Riot APIからデータを取得し、DBの状態と比較して処理済みアイテムリストを返す
  */
-export async function loadItemsForManagement(version: string): Promise<ProcessingResult> {
+export async function loadItemsForManagement(version: string): Promise<{ result: ProcessingResult; riotData: RiotAPIResponse }> {
   const { fetchItemData } = await import('./riotApi');
   const riotRes = await fetchItemData(version);
 
@@ -114,8 +114,11 @@ export async function loadItemsForManagement(version: string): Promise<Processin
   const dbItemIds = dbItems?.map(i => i.riot_id) || [];
   const dbUnavailableIds = dbUnavailable?.map(i => i.riot_id) || [];
 
-  return processRiotItems(riotRes, dbUnavailableIds, dbItemIds);
+  const result = await processRiotItems(riotRes, dbUnavailableIds, dbItemIds);
+
+  return { result, riotData: riotRes };
 }
+
 
 
 /**

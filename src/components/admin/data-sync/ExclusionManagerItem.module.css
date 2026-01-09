@@ -40,6 +40,12 @@
   min-width: 0;
 }
 
+.headerRight {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
 .textGroup {
   display: flex;
   flex-direction: column;
