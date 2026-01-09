@@ -27,7 +27,20 @@ export const ExclusionManager: React.FC = () => {
     try {
       const ver = await getLatestVersion();
       setVersion(ver);
-      const result = await loadItemsForManagement(ver);
+      const loadResult = await loadItemsForManagement(ver);
+
+      console.log('loadItemsForManagement result:', loadResult);
+
+      // データ構造の検証
+      if (!loadResult || !loadResult.result) {
+        throw new Error('データの構造が不正です: resultがありません');
+      }
+
+      const { result } = loadResult;
+
+      if (!result.availableItems || !result.unavailableItems) {
+        throw new Error('データの構造が不正です: availableItems または unavailableItems がありません');
+      }
 
       setLists({
         items: result.availableItems.sort((a, b) => b.isNew === a.isNew ? 0 : b.isNew ? 1 : -1),

@@ -10,6 +10,9 @@ type ProgressCallback = (processed: number, total: number, message: string) => v
  * 2. 全アイテムデータ取得
  * 3. 各アイテムについて画像を取得・圧縮・アップロード
  * 
+ * 注意: この関数は画像のみをアップロードします。
+ * アイテムデータの管理はExclusionManagerで行います。
+ * 
  * @param onProgress 進捗更新用のコールバック
  */
 export async function updateAllItemImages(onProgress?: ProgressCallback): Promise<void> {
@@ -22,6 +25,7 @@ export async function updateAllItemImages(onProgress?: ProgressCallback): Promis
     const items = riotData.data;
     const itemIds = Object.keys(items);
     const total = itemIds.length;
+
 
     console.log(`Starting image update for ${total} items (Version: ${version})`);
 

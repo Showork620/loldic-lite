@@ -13,7 +13,9 @@ const DDRAGON_BASE_URL = 'https://ddragon.leagueoflegends.com';
  */
 export async function getLatestVersion(): Promise<string> {
   try {
-    const response = await fetch(`${DDRAGON_BASE_URL}/api/versions.json`);
+    const response = await fetch(`${DDRAGON_BASE_URL}/api/versions.json`, {
+      cache: 'no-cache', // キャッシュを無効化して常に最新を取得
+    });
     if (!response.ok) {
       throw new Error(`Failed to fetch versions: ${response.statusText}`);
     }
@@ -30,7 +32,9 @@ export async function getLatestVersion(): Promise<string> {
  */
 export async function getVersions(): Promise<string[]> {
   try {
-    const response = await fetch(`${DDRAGON_BASE_URL}/api/versions.json`);
+    const response = await fetch(`${DDRAGON_BASE_URL}/api/versions.json`, {
+      cache: 'no-cache', // キャッシュを無効化して常に最新を取得
+    });
     if (!response.ok) {
       throw new Error(`Failed to fetch versions: ${response.statusText}`);
     }
@@ -87,32 +91,25 @@ export function getUnavailableItemIds(
 
   for (const [itemId, item] of Object.entries(itemsData)) {
     // デフォルトの理由は null（後から管理画面で編集）
-    let reason: string = 'admin chosen';
+    let reason: string = '管理画面で選択';
 
-    // 除外条件1: descriptionが空で、かつinStoreがtrueのもの
-    if (item.description === "" && item.inStore) {
-      reason = 'description empty';
-      results.push({ riotId: itemId, reason });
-      continue;
-    }
-
-    // 除外条件2: maps.11とmaps.12がともにfalse（ノーマル・ARAMどちらにも出ない）
+    // 除外条件1: maps.11とmaps.12がともにfalse（ノーマル・ARAMどちらにも出ない）
     if (item.maps && !item.maps['11'] && !item.maps['12']) {
-      reason = 'not available on maps';
+      reason = 'ノーマル・ARAMどちらにも出ない';
       results.push({ riotId: itemId, reason });
       continue;
     }
 
-    // 除外条件3: requiredChampionが設定されているもの（チャンピオン専用アイテム）
+    // 除外条件2: requiredChampionが設定されているもの（チャンピオン専用アイテム）
     if (item.requiredChampion) {
-      reason = 'requiredChampion set';
+      reason = 'チャンピオン専用アイテム';
       results.push({ riotId: itemId, reason });
       continue;
     }
 
-    // 除外条件4: inStoreがfalseで、specialRecipeがfalsyのもの
-    if (item.inStore === false && !item.specialRecipe) {
-      reason = 'not in store（and no specialRecipe）';
+    // 除外条件3: 購入不可で、specialRecipeもfromも無いもの
+    if ((item.inStore === false || item.gold.purchasable === false) && !(item.specialRecipe || item.from)) {
+      reason = '店からの購入も素材からの進化もできない';
       results.push({ riotId: itemId, reason });
       continue;
     }

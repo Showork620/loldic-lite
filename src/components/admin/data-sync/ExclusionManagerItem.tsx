@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '../../ui/Button';
 import { Input } from '../../ui/Input';
 import { ItemImage } from '../../ui/ItemImage';
 import { StatusBadge } from '../../ui/StatusBadge';
 import { MapLabel } from '../../ui/MapLabel';
+import { RawDataModal } from './RawDataModal';
 import type { ProcessedItem } from '../../../utils/riotItemManager';
 import styles from './ExclusionManagerItem.module.css';
 
@@ -19,6 +20,7 @@ export const ExclusionManagerItem: React.FC<ExclusionManagerItemProps> = ({
   onReasonChange,
 }) => {
   const isExcluded = item.status === 'unavailable';
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <div className={styles.container}>
@@ -41,6 +43,16 @@ export const ExclusionManagerItem: React.FC<ExclusionManagerItemProps> = ({
               <MapLabel maps={item.maps} />
             </div>
           </div>
+        </div>
+
+        <div className={styles.headerRight}>
+          <Button
+            onClick={() => setIsModalOpen(true)}
+            variant="secondary"
+            size="sm"
+          >
+            元データを確認
+          </Button>
         </div>
       </div>
 
@@ -82,6 +94,14 @@ export const ExclusionManagerItem: React.FC<ExclusionManagerItemProps> = ({
           </Button>
         )}
       </div>
+
+      {/* 元データ確認モーダル */}
+      <RawDataModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        rawData={item.raw}
+        riotId={item.riotId}
+      />
     </div>
   );
 };
