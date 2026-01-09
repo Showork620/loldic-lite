@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '../../ui/Button';
 import { Accordion } from '../../ui/Accordion';
 import { ExclusionManagerItem } from './ExclusionManagerItem';
+import { FilterButtonGroup } from './FilterButtonGroup';
 import { getLatestVersion } from '../../../utils/riotApi';
 import { loadItemsForManagement, saveItemLists, type ProcessedItem } from '../../../utils/riotItemManager';
 import { useSnackbar } from '../../ui/useSnackbar';
@@ -13,13 +14,17 @@ interface ListState {
   unavailable: ProcessedItem[];
 }
 
+type NewItemFilter = 'all' | 'new' | 'existing';
+type PurchasableFilter = 'all' | 'purchasable' | 'nonPurchasable';
+
 export const ExclusionManager: React.FC = () => {
   const [lists, setLists] = useState<ListState>({ items: [], unavailable: [] });
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const { showSnackbar } = useSnackbar();
   const [version, setVersion] = useState<string>('');
-  const [showNewOnly, setShowNewOnly] = useState(false);
+  const [newItemFilter, setNewItemFilter] = useState<NewItemFilter>('all');
+  const [purchasableFilter, setPurchasableFilter] = useState<PurchasableFilter>('all');
 
   // データ初期ロード
   const loadData = async () => {
@@ -144,35 +149,64 @@ export const ExclusionManager: React.FC = () => {
               title={
                 <div className={styles.accordionHeader}>
                   <span>有効なアイテム (Items)</span>
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowNewOnly(!showNewOnly);
-                    }}
-                  >
-                    {showNewOnly ? '全て表示' : '新規のみ'}
-                  </Button>
+                  <div className={styles.filterGroups}>
+                    <FilterButtonGroup
+                      label="新着"
+                      options={[
+                        { value: 'all', label: '全て' },
+                        { value: 'new', label: '新着のみ' },
+                        { value: 'existing', label: '新着以外' },
+                      ]}
+                      value={newItemFilter}
+                      onChange={(v) => setNewItemFilter(v as NewItemFilter)}
+                    />
+                    <FilterButtonGroup
+                      label="購入"
+                      options={[
+                        { value: 'all', label: '全て' },
+                        { value: 'purchasable', label: '購入可能' },
+                        { value: 'nonPurchasable', label: '非売品' },
+                      ]}
+                      value={purchasableFilter}
+                      onChange={(v) => setPurchasableFilter(v as PurchasableFilter)}
+                    />
+                  </div>
                 </div>
               }
-              count={showNewOnly ? lists.items.filter(i => i.isNew).length : lists.items.length}
+              count={
+                lists.items.filter(item => {
+                  if (newItemFilter === 'new' && !item.isNew) return false;
+                  if (newItemFilter === 'existing' && item.isNew) return false;
+                  if (purchasableFilter === 'purchasable' && item.isNonPurchasable) return false;
+                  if (purchasableFilter === 'nonPurchasable' && !item.isNonPurchasable) return false;
+                  return true;
+                }).length
+              }
               defaultOpen={true}
             >
               <div className={styles.scrollContainer}>
                 <div className={styles.itemGrid}>
-                  {(showNewOnly ? lists.items.filter(i => i.isNew) : lists.items).length === 0 ? (
-                    <div className={styles.emptyState}>アイテムがありません</div>
-                  ) : (
-                    (showNewOnly ? lists.items.filter(i => i.isNew) : lists.items).map(item => (
-                      <ExclusionManagerItem
-                        key={item.riotId}
-                        item={item}
-                        onExclusionChange={handleExclusionChange}
-                        onReasonChange={handleReasonChange}
-                      />
-                    ))
-                  )}
+                  {(() => {
+                    const filtered = lists.items.filter(item => {
+                      if (newItemFilter === 'new' && !item.isNew) return false;
+                      if (newItemFilter === 'existing' && item.isNew) return false;
+                      if (purchasableFilter === 'purchasable' && item.isNonPurchasable) return false;
+                      if (purchasableFilter === 'nonPurchasable' && !item.isNonPurchasable) return false;
+                      return true;
+                    });
+                    return filtered.length === 0 ? (
+                      <div className={styles.emptyState}>アイテムがありません</div>
+                    ) : (
+                      filtered.map(item => (
+                        <ExclusionManagerItem
+                          key={item.riotId}
+                          item={item}
+                          onExclusionChange={handleExclusionChange}
+                          onReasonChange={handleReasonChange}
+                        />
+                      ))
+                    );
+                  })()}
                 </div>
               </div>
             </Accordion>
@@ -183,35 +217,64 @@ export const ExclusionManager: React.FC = () => {
               title={
                 <div className={styles.accordionHeader}>
                   <span>除外アイテム (Unavailable Items)</span>
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowNewOnly(!showNewOnly);
-                    }}
-                  >
-                    {showNewOnly ? '全て表示' : '新規のみ'}
-                  </Button>
+                  <div className={styles.filterGroups}>
+                    <FilterButtonGroup
+                      label="新着"
+                      options={[
+                        { value: 'all', label: '全て' },
+                        { value: 'new', label: '新着のみ' },
+                        { value: 'existing', label: '新着以外' },
+                      ]}
+                      value={newItemFilter}
+                      onChange={(v) => setNewItemFilter(v as NewItemFilter)}
+                    />
+                    <FilterButtonGroup
+                      label="購入"
+                      options={[
+                        { value: 'all', label: '全て' },
+                        { value: 'purchasable', label: '購入可能' },
+                        { value: 'nonPurchasable', label: '非売品' },
+                      ]}
+                      value={purchasableFilter}
+                      onChange={(v) => setPurchasableFilter(v as PurchasableFilter)}
+                    />
+                  </div>
                 </div>
               }
-              count={showNewOnly ? lists.unavailable.filter(i => i.isNew).length : lists.unavailable.length}
+              count={
+                lists.unavailable.filter(item => {
+                  if (newItemFilter === 'new' && !item.isNew) return false;
+                  if (newItemFilter === 'existing' && item.isNew) return false;
+                  if (purchasableFilter === 'purchasable' && item.isNonPurchasable) return false;
+                  if (purchasableFilter === 'nonPurchasable' && !item.isNonPurchasable) return false;
+                  return true;
+                }).length
+              }
               defaultOpen={false}
             >
               <div className={styles.scrollContainer}>
                 <div className={styles.itemGrid}>
-                  {(showNewOnly ? lists.unavailable.filter(i => i.isNew) : lists.unavailable).length === 0 ? (
-                    <div className={styles.emptyState}>除外アイテムがありません</div>
-                  ) : (
-                    (showNewOnly ? lists.unavailable.filter(i => i.isNew) : lists.unavailable).map(item => (
-                      <ExclusionManagerItem
-                        key={item.riotId}
-                        item={item}
-                        onExclusionChange={handleExclusionChange}
-                        onReasonChange={handleReasonChange}
-                      />
-                    ))
-                  )}
+                  {(() => {
+                    const filtered = lists.unavailable.filter(item => {
+                      if (newItemFilter === 'new' && !item.isNew) return false;
+                      if (newItemFilter === 'existing' && item.isNew) return false;
+                      if (purchasableFilter === 'purchasable' && item.isNonPurchasable) return false;
+                      if (purchasableFilter === 'nonPurchasable' && !item.isNonPurchasable) return false;
+                      return true;
+                    });
+                    return filtered.length === 0 ? (
+                      <div className={styles.emptyState}>除外アイテムがありません</div>
+                    ) : (
+                      filtered.map(item => (
+                        <ExclusionManagerItem
+                          key={item.riotId}
+                          item={item}
+                          onExclusionChange={handleExclusionChange}
+                          onReasonChange={handleReasonChange}
+                        />
+                      ))
+                    );
+                  })()}
                 </div>
               </div>
             </Accordion>

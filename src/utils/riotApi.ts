@@ -113,6 +113,13 @@ export function getUnavailableItemIds(
       results.push({ riotId: itemId, reason });
       continue;
     }
+
+    // 除外条件4: IDが4桁ではない（特別なモードのアイテム）
+    if (itemId.length !== 4) {
+      reason = 'IDが4桁ではない';
+      results.push({ riotId: itemId, reason });
+      continue;
+    }
   }
 
   return results;

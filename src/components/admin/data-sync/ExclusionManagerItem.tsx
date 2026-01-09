@@ -40,6 +40,7 @@ export const ExclusionManagerItem: React.FC<ExclusionManagerItemProps> = ({
             <div className={styles.headerLine}>
               <span className={styles.riotId}>({item.riotId})</span>
               <StatusBadge status={item.isNew ? 'new' : 'unchanged'} size="sm" showIcon />
+              {item.isNonPurchasable && <StatusBadge status="adjusted" size="sm" label="非売品" />}
               <MapLabel maps={item.maps} />
             </div>
           </div>

@@ -13,6 +13,7 @@ export interface ProcessedItem {
   name: string;
   imagePath: string;
   isNew: boolean;
+  isNonPurchasable: boolean; // Cannot be purchased from shop
   status: 'available' | 'unavailable';
   reason: string | null; // For unavailable items
   maps: number[]; // Available map IDs (11: SR, 12: ARAM, etc.)
@@ -72,6 +73,9 @@ export async function processRiotItems(
 
     const isNew = !isExplicitlyAvailable && !isExplicitlyUnavailable;
 
+    // Detect non-purchasable items
+    const isNonPurchasable = item.gold?.purchasable === false || item.inStore === false;
+
     // Extract available map IDs from maps object
     const availableMaps = item.maps
       ? Object.keys(item.maps)
@@ -84,6 +88,7 @@ export async function processRiotItems(
       name: item.name,
       imagePath: `${riotId}.webp`, // 命名規則
       isNew,
+      isNonPurchasable,
       status,
       reason,
       maps: availableMaps,
