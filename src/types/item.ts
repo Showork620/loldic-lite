@@ -90,6 +90,7 @@ export interface RawRiotItemData {
   };
   inStore?: boolean;
   specialRecipe?: number;
+  requiredChampion?: string;
 }
 
 export interface RiotAPIResponse {

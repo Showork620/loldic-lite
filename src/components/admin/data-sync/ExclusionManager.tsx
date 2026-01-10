@@ -3,23 +3,34 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '../../ui/Button';
 import { Accordion } from '../../ui/Accordion';
 import { ExclusionManagerItem } from './ExclusionManagerItem';
+import { FilterButtonGroup } from './FilterButtonGroup';
 import { getLatestVersion } from '../../../utils/riotApi';
-import { loadItemsForManagement, saveItemLists, type ProcessedItem } from '../../../utils/riotItemManager';
+import { loadItemsForManagement, type ProcessedItem } from '../../../utils/riotItemManager';
 import { useSnackbar } from '../../ui/useSnackbar';
+import { supabase } from '../../../lib/supabase';
 import styles from './ExclusionManager.module.css';
 
 interface ListState {
-  items: ProcessedItem[];
-  unavailable: ProcessedItem[];
+  available: ProcessedItem[];
+  manualSettings: ProcessedItem[];
+  autoExcluded: ProcessedItem[];
 }
 
+type NewItemFilter = 'all' | 'new' | 'existing';
+type PurchasableFilter = 'all' | 'purchasable' | 'nonPurchasable';
+
 export const ExclusionManager: React.FC = () => {
-  const [lists, setLists] = useState<ListState>({ items: [], unavailable: [] });
+  const [lists, setLists] = useState<ListState>({
+    available: [],
+    manualSettings: [],
+    autoExcluded: [],
+  });
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const { showSnackbar } = useSnackbar();
   const [version, setVersion] = useState<string>('');
-  const [showNewOnly, setShowNewOnly] = useState(false);
+  const [newItemFilter, setNewItemFilter] = useState<NewItemFilter>('all');
+  const [purchasableFilter, setPurchasableFilter] = useState<PurchasableFilter>('all');
 
   // データ初期ロード
   const loadData = async () => {
@@ -29,24 +40,17 @@ export const ExclusionManager: React.FC = () => {
       setVersion(ver);
       const loadResult = await loadItemsForManagement(ver);
 
-      console.log('loadItemsForManagement result:', loadResult);
-
-      // データ構造の検証
-      if (!loadResult || !loadResult.result) {
-        throw new Error('データの構造が不正です: resultがありません');
-      }
-
       const { result } = loadResult;
 
-      if (!result.availableItems || !result.unavailableItems) {
-        throw new Error('データの構造が不正です: availableItems または unavailableItems がありません');
+      if (!result.availableItems || !result.manualSettingsItems || !result.autoExcludedItems) {
+        throw new Error('データの構造が不正です');
       }
 
       setLists({
-        items: result.availableItems.sort((a, b) => b.isNew === a.isNew ? 0 : b.isNew ? 1 : -1),
-        unavailable: result.unavailableItems.sort((a, b) => b.isNew === a.isNew ? 0 : b.isNew ? 1 : -1),
+        available: result.availableItems.sort((a, b) => b.isNew === a.isNew ? 0 : b.isNew ? 1 : -1),
+        manualSettings: result.manualSettingsItems.sort((a, b) => b.isNew === a.isNew ? 0 : b.isNew ? 1 : -1),
+        autoExcluded: result.autoExcludedItems.sort((a, b) => b.isNew === a.isNew ? 0 : b.isNew ? 1 : -1),
       });
-
     } catch (error) {
       console.error('Failed to load data:', error);
       showSnackbar('データのロードに失敗しました', 'error');
@@ -59,39 +63,90 @@ export const ExclusionManager: React.FC = () => {
     loadData();
   }, []);
 
-  // 除外/復元の切り替え
-  const handleExclusionChange = (riotId: string, isExcluded: boolean, defaultReason?: string) => {
+  // 有効アイテムを手動除外に移動
+  const handleExcludeItem = (riotId: string, reason: string) => {
     setLists(prev => {
-      const sourceList = isExcluded ? prev.items : prev.unavailable;
-
-      const itemIndex = sourceList.findIndex(i => i.riotId === riotId);
+      const itemIndex = prev.available.findIndex(i => i.riotId === riotId);
       if (itemIndex === -1) return prev;
 
-      const item = sourceList[itemIndex];
+      const item = prev.available[itemIndex];
       const newItem: ProcessedItem = {
         ...item,
-        status: isExcluded ? 'unavailable' : 'available',
-        reason: isExcluded ? (defaultReason || item.reason || '手動除外') : item.reason,
+        category: 'manualSettings',
+        isManuallyAvailable: false,
+        reason: reason || '手動除外',
       };
 
       return {
-        items: isExcluded
-          ? [...prev.items.slice(0, itemIndex), ...prev.items.slice(itemIndex + 1)]
-          : [newItem, ...prev.items],
-        unavailable: isExcluded
-          ? [newItem, ...prev.unavailable]
-          : [...prev.unavailable.slice(0, itemIndex), ...prev.unavailable.slice(itemIndex + 1)],
+        ...prev,
+        available: prev.available.filter((_, i) => i !== itemIndex),
+        manualSettings: [newItem, ...prev.manualSettings],
       };
     });
   };
 
-  // 理由の変更（有効/除外両方のリストで対応）
+  // 自動除外アイテムを手動有効化（手動設定に移動）
+  const handleEnableItem = (riotId: string) => {
+    setLists(prev => {
+      const itemIndex = prev.autoExcluded.findIndex(i => i.riotId === riotId);
+      if (itemIndex === -1) return prev;
+
+      const item = prev.autoExcluded[itemIndex];
+      const newItem: ProcessedItem = {
+        ...item,
+        category: 'manualSettings',
+        isManuallyAvailable: true,
+        reason: null,
+      };
+
+      return {
+        ...prev,
+        autoExcluded: prev.autoExcluded.filter((_, i) => i !== itemIndex),
+        manualSettings: [newItem, ...prev.manualSettings],
+      };
+    });
+  };
+
+  // 手動設定を解除（元のカテゴリに戻す）
+  const handleRemoveSetting = (riotId: string) => {
+    setLists(prev => {
+      const itemIndex = prev.manualSettings.findIndex(i => i.riotId === riotId);
+      if (itemIndex === -1) return prev;
+
+      const item = prev.manualSettings[itemIndex];
+
+      // 自動除外ルールに該当するかチェック（簡易版：reasonが設定されているか）
+      const shouldBeAutoExcluded = item.reason && item.reason !== '手動除外';
+
+      const resetItem: ProcessedItem = {
+        ...item,
+        category: shouldBeAutoExcluded ? 'autoExcluded' : 'available',
+        isManuallyAvailable: null,
+        reason: shouldBeAutoExcluded ? item.reason : null,
+      };
+
+      return {
+        ...prev,
+        manualSettings: prev.manualSettings.filter((_, i) => i !== itemIndex),
+        ...(shouldBeAutoExcluded
+          ? { autoExcluded: [resetItem, ...prev.autoExcluded] }
+          : { available: [resetItem, ...prev.available] }
+        ),
+      };
+    });
+  };
+
+  // 理由の変更
   const handleReasonChange = (riotId: string, reason: string) => {
     setLists(prev => ({
-      items: prev.items.map(item =>
+      ...prev,
+      available: prev.available.map(item =>
         item.riotId === riotId ? { ...item, reason } : item
       ),
-      unavailable: prev.unavailable.map(item =>
+      manualSettings: prev.manualSettings.map(item =>
+        item.riotId === riotId ? { ...item, reason } : item
+      ),
+      autoExcluded: prev.autoExcluded.map(item =>
         item.riotId === riotId ? { ...item, reason } : item
       ),
     }));
@@ -103,18 +158,80 @@ export const ExclusionManager: React.FC = () => {
 
     setSaving(true);
     try {
-      const result = await saveItemLists(lists.items, lists.unavailable);
-      if (result.success) {
-        showSnackbar('変更を保存しました', 'success');
-        await loadData();
-      } else {
-        throw new Error(result.error);
+      // 1. 有効なアイテムをitemsテーブルに保存
+      // 有効なアイテム = lists.available + 手動で有効化されたアイテム
+      const manuallyEnabledItems = lists.manualSettings.filter(i => i.isManuallyAvailable === true);
+      const allAvailableItems = [...lists.available, ...manuallyEnabledItems];
+
+      const itemsPayload = allAvailableItems.map(item => ({
+        riot_id: item.riotId,
+        name_ja: item.name,
+        is_available: true,
+        plaintext_ja: item.raw.plaintext || '',
+        price_total: item.raw.gold.total,
+        price_sell: item.raw.gold.sell,
+        image_path: item.imagePath,
+        maps: item.maps,
+        // 他のフィールドはデフォルト値が使用される
+      }));
+
+      if (itemsPayload.length > 0) {
+        const { error: itemsError } = await supabase
+          .from('items')
+          .upsert(itemsPayload, { onConflict: 'riot_id', ignoreDuplicates: false });
+
+        if (itemsError) throw itemsError;
       }
+
+      // 2. 手動設定アイテムをitem_manual_settingsに保存
+      const manualSettingsPayload = lists.manualSettings.map(item => ({
+        riot_id: item.riotId,
+        is_available: item.isManuallyAvailable ?? false,
+        reason: item.reason,
+      }));
+
+      if (manualSettingsPayload.length > 0) {
+        const { error } = await supabase
+          .from('item_manual_settings')
+          .upsert(manualSettingsPayload, { onConflict: 'riot_id' });
+
+        if (error) throw error;
+      }
+
+      // 3. 手動設定から削除されたアイテムをDBからも削除
+      const manualRiotIds = lists.manualSettings.map(i => i.riotId);
+      if (manualRiotIds.length > 0) {
+        await supabase.from('item_manual_settings').delete().not('riot_id', 'in', `(${manualRiotIds.join(',')})`);
+      } else {
+        await supabase.from('item_manual_settings').delete().neq('riot_id', '');
+      }
+
+      // 4. 有効でないアイテムをitemsテーブルから削除
+      // （手動除外されたアイテムと自動除外アイテム）
+      const availableRiotIds = allAvailableItems.map(i => i.riotId);
+      if (availableRiotIds.length > 0) {
+        await supabase.from('items').delete().not('riot_id', 'in', `(${availableRiotIds.join(',')})`);
+      }
+
+      showSnackbar('変更を保存しました', 'success');
+      await loadData();
     } catch (error) {
+      console.error('Save error:', error);
       showSnackbar(`保存に失敗しました: ${error instanceof Error ? error.message : 'Unknown'}`, 'error');
     } finally {
       setSaving(false);
     }
+  };
+
+  // フィルタ関数
+  const filterItems = (items: ProcessedItem[]) => {
+    return items.filter(item => {
+      if (newItemFilter === 'new' && !item.isNew) return false;
+      if (newItemFilter === 'existing' && item.isNew) return false;
+      if (purchasableFilter === 'purchasable' && item.isNonPurchasable) return false;
+      if (purchasableFilter === 'nonPurchasable' && !item.isNonPurchasable) return false;
+      return true;
+    });
   };
 
   return (
@@ -139,36 +256,51 @@ export const ExclusionManager: React.FC = () => {
         </div>
       ) : (
         <div className={styles.sections}>
+          {/* 有効なアイテム */}
           <div className={styles.section}>
             <Accordion
               title={
                 <div className={styles.accordionHeader}>
-                  <span>有効なアイテム (Items)</span>
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowNewOnly(!showNewOnly);
-                    }}
-                  >
-                    {showNewOnly ? '全て表示' : '新規のみ'}
-                  </Button>
+                  <span>有効なアイテム (Available Items)</span>
+                  <div className={styles.filterGroups}>
+                    <FilterButtonGroup
+                      label="新着"
+                      options={[
+                        { value: 'all', label: '全て' },
+                        { value: 'new', label: '新着のみ' },
+                        { value: 'existing', label: '新着以外' },
+                      ]}
+                      value={newItemFilter}
+                      onChange={(v) => setNewItemFilter(v as NewItemFilter)}
+                    />
+                    <FilterButtonGroup
+                      label="購入"
+                      options={[
+                        { value: 'all', label: '全て' },
+                        { value: 'purchasable', label: '購入可能' },
+                        { value: 'nonPurchasable', label: '非売品' },
+                      ]}
+                      value={purchasableFilter}
+                      onChange={(v) => setPurchasableFilter(v as PurchasableFilter)}
+                    />
+                  </div>
                 </div>
               }
-              count={showNewOnly ? lists.items.filter(i => i.isNew).length : lists.items.length}
+              count={filterItems(lists.available).length}
               defaultOpen={true}
             >
               <div className={styles.scrollContainer}>
                 <div className={styles.itemGrid}>
-                  {(showNewOnly ? lists.items.filter(i => i.isNew) : lists.items).length === 0 ? (
+                  {filterItems(lists.available).length === 0 ? (
                     <div className={styles.emptyState}>アイテムがありません</div>
                   ) : (
-                    (showNewOnly ? lists.items.filter(i => i.isNew) : lists.items).map(item => (
+                    filterItems(lists.available).map(item => (
                       <ExclusionManagerItem
                         key={item.riotId}
                         item={item}
-                        onExclusionChange={handleExclusionChange}
+                        onExcludeItem={handleExcludeItem}
+                        onEnableItem={handleEnableItem}
+                        onRemoveSetting={handleRemoveSetting}
                         onReasonChange={handleReasonChange}
                       />
                     ))
@@ -178,36 +310,105 @@ export const ExclusionManager: React.FC = () => {
             </Accordion>
           </div>
 
+          {/* 手動設定アイテム */}
           <div className={styles.section}>
             <Accordion
               title={
                 <div className={styles.accordionHeader}>
-                  <span>除外アイテム (Unavailable Items)</span>
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowNewOnly(!showNewOnly);
-                    }}
-                  >
-                    {showNewOnly ? '全て表示' : '新規のみ'}
-                  </Button>
+                  <span>手動設定アイテム (Manual Settings)</span>
+                  <div className={styles.filterGroups}>
+                    <FilterButtonGroup
+                      label="新着"
+                      options={[
+                        { value: 'all', label: '全て' },
+                        { value: 'new', label: '新着のみ' },
+                        { value: 'existing', label: '新着以外' },
+                      ]}
+                      value={newItemFilter}
+                      onChange={(v) => setNewItemFilter(v as NewItemFilter)}
+                    />
+                    <FilterButtonGroup
+                      label="購入"
+                      options={[
+                        { value: 'all', label: '全て' },
+                        { value: 'purchasable', label: '購入可能' },
+                        { value: 'nonPurchasable', label: '非売品' },
+                      ]}
+                      value={purchasableFilter}
+                      onChange={(v) => setPurchasableFilter(v as PurchasableFilter)}
+                    />
+                  </div>
                 </div>
               }
-              count={showNewOnly ? lists.unavailable.filter(i => i.isNew).length : lists.unavailable.length}
+              count={filterItems(lists.manualSettings).length}
+              defaultOpen={true}
+            >
+              <div className={styles.scrollContainer}>
+                <div className={styles.itemGrid}>
+                  {filterItems(lists.manualSettings).length === 0 ? (
+                    <div className={styles.emptyState}>手動設定アイテムがありません</div>
+                  ) : (
+                    filterItems(lists.manualSettings).map(item => (
+                      <ExclusionManagerItem
+                        key={item.riotId}
+                        item={item}
+                        onExcludeItem={handleExcludeItem}
+                        onEnableItem={handleEnableItem}
+                        onRemoveSetting={handleRemoveSetting}
+                        onReasonChange={handleReasonChange}
+                      />
+                    ))
+                  )}
+                </div>
+              </div>
+            </Accordion>
+          </div>
+
+          {/* 自動除外アイテム */}
+          <div className={styles.section}>
+            <Accordion
+              title={
+                <div className={styles.accordionHeader}>
+                  <span>自動除外アイテム (Auto-Excluded Items)</span>
+                  <div className={styles.filterGroups}>
+                    <FilterButtonGroup
+                      label="新着"
+                      options={[
+                        { value: 'all', label: '全て' },
+                        { value: 'new', label: '新着のみ' },
+                        { value: 'existing', label: '新着以外' },
+                      ]}
+                      value={newItemFilter}
+                      onChange={(v) => setNewItemFilter(v as NewItemFilter)}
+                    />
+                    <FilterButtonGroup
+                      label="購入"
+                      options={[
+                        { value: 'all', label: '全て' },
+                        { value: 'purchasable', label: '購入可能' },
+                        { value: 'nonPurchasable', label: '非売品' },
+                      ]}
+                      value={purchasableFilter}
+                      onChange={(v) => setPurchasableFilter(v as PurchasableFilter)}
+                    />
+                  </div>
+                </div>
+              }
+              count={filterItems(lists.autoExcluded).length}
               defaultOpen={false}
             >
               <div className={styles.scrollContainer}>
                 <div className={styles.itemGrid}>
-                  {(showNewOnly ? lists.unavailable.filter(i => i.isNew) : lists.unavailable).length === 0 ? (
-                    <div className={styles.emptyState}>除外アイテムがありません</div>
+                  {filterItems(lists.autoExcluded).length === 0 ? (
+                    <div className={styles.emptyState}>自動除外アイテムがありません</div>
                   ) : (
-                    (showNewOnly ? lists.unavailable.filter(i => i.isNew) : lists.unavailable).map(item => (
+                    filterItems(lists.autoExcluded).map(item => (
                       <ExclusionManagerItem
                         key={item.riotId}
                         item={item}
-                        onExclusionChange={handleExclusionChange}
+                        onExcludeItem={handleExcludeItem}
+                        onEnableItem={handleEnableItem}
+                        onRemoveSetting={handleRemoveSetting}
                         onReasonChange={handleReasonChange}
                       />
                     ))

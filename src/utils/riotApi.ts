@@ -2,7 +2,7 @@
  * Riot API (Data Dragon) からアイテムデータを取得するユーティリティ関数
  */
 
-import type { RiotAPIResponse } from '../types/item';
+import type { RawRiotItemData, RiotAPIResponse } from '../types/item';
 
 // Data Dragon APIのベースURL
 const DDRAGON_BASE_URL = 'https://ddragon.leagueoflegends.com';
@@ -89,7 +89,7 @@ export function getUnavailableItemIds(
 ): Array<{ riotId: string; reason: string | null }> {
   const results: Array<{ riotId: string; reason: string | null }> = [];
 
-  for (const [itemId, item] of Object.entries(itemsData)) {
+  for (const [itemId, item] of Object.entries(itemsData) as [string, RawRiotItemData][]) {
     // デフォルトの理由は null（後から管理画面で編集）
     let reason: string = '管理画面で選択';
 
@@ -108,8 +108,35 @@ export function getUnavailableItemIds(
     }
 
     // 除外条件3: 購入不可で、specialRecipeもfromも無いもの
-    if ((item.inStore === false || item.gold.purchasable === false) && !(item.specialRecipe || item.from)) {
+    const canPurchase = item.inStore === true || item.gold.purchasable === true;
+    const canBuild = item.specialRecipe || item.from
+
+    if (!canPurchase && !canBuild) {
       reason = '店からの購入も素材からの進化もできない';
+      results.push({ riotId: itemId, reason });
+      continue;
+    }
+
+    // 除外条件4: IDが4桁ではない（特別なモードのアイテム）
+    if (itemId.length !== 4) {
+      reason = 'IDが4桁ではない';
+      results.push({ riotId: itemId, reason });
+      continue;
+    }
+
+    // 除外条件5: スタッツを持たないアイテム
+    // descriptionのXMLから<stats>...</stats>要素を全て抽出
+    const statsTagRegex = /<stats>(.*?)<\/stats>/g;
+    const statsMatches = [...item.description.matchAll(statsTagRegex)];
+
+    // <stats>タグが存在しない、または全ての<stats>タグが空の場合は除外
+    const hasNoStats = statsMatches.length === 0 || statsMatches.every(match => {
+      const content = match[1]?.trim();
+      return !content || content === '';
+    });
+
+    if (hasNoStats) {
+      reason = 'スタッツを持たない';
       results.push({ riotId: itemId, reason });
       continue;
     }

@@ -10,16 +10,19 @@ import styles from './ExclusionManagerItem.module.css';
 
 interface ExclusionManagerItemProps {
   item: ProcessedItem;
-  onExclusionChange: (riotId: string, isExcluded: boolean, reason?: string) => void;
+  onExcludeItem: (riotId: string, reason: string) => void;
+  onEnableItem: (riotId: string) => void;
+  onRemoveSetting: (riotId: string) => void;
   onReasonChange: (riotId: string, reason: string) => void;
 }
 
 export const ExclusionManagerItem: React.FC<ExclusionManagerItemProps> = ({
   item,
-  onExclusionChange,
+  onExcludeItem,
+  onEnableItem,
+  onRemoveSetting,
   onReasonChange,
 }) => {
-  const isExcluded = item.status === 'unavailable';
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -40,6 +43,17 @@ export const ExclusionManagerItem: React.FC<ExclusionManagerItemProps> = ({
             <div className={styles.headerLine}>
               <span className={styles.riotId}>({item.riotId})</span>
               <StatusBadge status={item.isNew ? 'new' : 'unchanged'} size="sm" showIcon />
+              {item.isNonPurchasable && <StatusBadge status="adjusted" size="sm" label="非売品" />}
+
+              {/* 手動設定アイテムの場合、設定ステータスを表示 */}
+              {item.category === 'manualSettings' && (
+                <StatusBadge
+                  status={item.isManuallyAvailable ? 'buff' : 'nerf'}
+                  size="sm"
+                  label={item.isManuallyAvailable ? '有効化' : '除外'}
+                />
+              )}
+
               <MapLabel maps={item.maps} />
             </div>
           </div>
@@ -62,35 +76,57 @@ export const ExclusionManagerItem: React.FC<ExclusionManagerItemProps> = ({
           <Input
             value={item.reason || ''}
             onChange={(e) => onReasonChange(item.riotId, e.target.value)}
-            placeholder={isExcluded ? "除外理由" : "除外する場合は理由を入力"}
+            placeholder={
+              item.category === 'available'
+                ? "除外する場合は理由を入力"
+                : item.category === 'manualSettings'
+                  ? "理由（任意）"
+                  : "除外理由"
+            }
             className={styles.reasonInput}
           />
         </div>
 
         {/* アクションボタン */}
-        {isExcluded ? (
+        {item.category === 'available' && (
           <Button
             onClick={(e) => {
               e.stopPropagation();
-              onExclusionChange(item.riotId, false);
-            }}
-            variant="primary"
-            size="sm"
-            className={styles.button}
-          >
-            復元
-          </Button>
-        ) : (
-          <Button
-            onClick={(e) => {
-              e.stopPropagation();
-              onExclusionChange(item.riotId, true, item.reason || '手動除外');
+              onExcludeItem(item.riotId, item.reason || '手動除外');
             }}
             variant="danger"
             size="sm"
             className={styles.button}
           >
             除外
+          </Button>
+        )}
+
+        {item.category === 'manualSettings' && (
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              onRemoveSetting(item.riotId);
+            }}
+            variant="secondary"
+            size="sm"
+            className={styles.button}
+          >
+            設定解除
+          </Button>
+        )}
+
+        {item.category === 'autoExcluded' && (
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              onEnableItem(item.riotId);
+            }}
+            variant="primary"
+            size="sm"
+            className={styles.button}
+          >
+            有効化
           </Button>
         )}
       </div>
