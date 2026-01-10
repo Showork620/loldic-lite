@@ -21,9 +21,12 @@ export function toSnakeCase(item: Omit<NewItem, 'id' | 'createdAt'>): Record<str
     search_tags: item.searchTags,
     role_categories: item.roleCategories,
     popular_champions: item.popularChampions,
-    stats: item.stats,
+    maps: item.maps,
+    basic_stats: item.basicStats,
+    ability_stats: item.abilityStats,
     build_from: item.buildFrom,
     build_into: item.buildInto,
+    updated_patch: item.updatedPatch,
     updated_at: new Date().toISOString()
   };
 }
@@ -46,9 +49,12 @@ export function toCamelCase(data: Record<string, any>): any {
     searchTags: data.search_tags,
     roleCategories: data.role_categories,
     popularChampions: data.popular_champions,
-    stats: data.stats,
+    maps: data.maps,
+    basicStats: data.basic_stats,
+    abilityStats: data.ability_stats,
     buildFrom: data.build_from,
     buildInto: data.build_into,
+    updatedPatch: data.updated_patch,
     createdAt: new Date(data.created_at),
     updatedAt: new Date(data.updated_at)
   };

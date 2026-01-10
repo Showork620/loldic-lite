@@ -1,5 +1,5 @@
 import React from 'react';
-import { MainLayout } from '../components/layout/MainLayout';
+import { MainLayout } from '../../components/layout/MainLayout';
 
 export const PublicPage: React.FC = () => {
   return (
@@ -18,3 +18,5 @@ export const PublicPage: React.FC = () => {
     </MainLayout>
   );
 };
+
+export default PublicPage;

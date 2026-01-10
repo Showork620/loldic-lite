@@ -1,6 +1,6 @@
-import { Dialog } from '../../ui/Dialog';
-import { Button } from '../../ui/Button';
-import type { RawRiotItemData } from '../../../types/item';
+import { Dialog } from '../../../../../components/ui/Dialog';
+import { Button } from '../../../../../components/ui/Button';
+import type { RawRiotItemData } from '../../../../../types/domain/item';
 import styles from './RawDataModal.module.css';
 
 interface RawDataModalProps {

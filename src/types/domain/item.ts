@@ -1,7 +1,7 @@
 // Type definitions for LoL Item data
 
 import type { AbilityNumericParam } from "./abilityStats";
-import type { PatchStatus } from "./common";
+import type { PatchStatus } from "../shared";
 import type { RoleCategory } from "./role";
 
 // アビリティの型定義

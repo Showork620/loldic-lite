@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { MainLayout } from '../../components/layout/MainLayout';
-import { ImageSyncSection } from '../../components/admin/data-sync/ImageSyncSection';
-import { ExclusionManager } from '../../components/admin/data-sync/ExclusionManager';
+import { MainLayout } from '../../../components/layout/MainLayout';
+import { ImageSyncSection } from './features/ImageSyncSection/ImageSyncSection';
+import { ExclusionManager } from './features/ExclusionManager/ExclusionManager';
 import { Link } from 'react-router-dom';
 
 export const AdminDataSyncPage: React.FC = () => {
@@ -34,3 +34,5 @@ export const AdminDataSyncPage: React.FC = () => {
     </MainLayout>
   );
 };
+
+export default AdminDataSyncPage;

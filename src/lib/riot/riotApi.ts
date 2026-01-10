@@ -2,7 +2,7 @@
  * Riot API (Data Dragon) からアイテムデータを取得するユーティリティ関数
  */
 
-import type { RawRiotItemData, RiotAPIResponse } from '../types/item';
+import type { RawRiotItemData, RiotAPIResponse } from '../../types/domain/item';
 
 // Data Dragon APIのベースURL
 const DDRAGON_BASE_URL = 'https://ddragon.leagueoflegends.com';

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Button } from '../../ui/Button';
-import { Input } from '../../ui/Input';
-import { ItemImage } from '../../ui/ItemImage';
-import { StatusBadge } from '../../ui/StatusBadge';
-import { MapLabel } from '../../ui/MapLabel';
-import { RawDataModal } from './RawDataModal';
-import type { ProcessedItem } from '../../../utils/riotItemManager';
+import { Button } from '../../../../../components/ui/Button';
+import { Input } from '../../../../../components/ui/Input';
+import { ItemImage } from '../../../../../components/ui/ItemImage';
+import { StatusBadge } from '../../../../../components/ui/StatusBadge';
+import { MapLabel } from '../../../../../components/ui/MapLabel';
+import { RawDataModal } from '../RawDataModal/RawDataModal';
+import type { ProcessedItem } from '../../../../../lib/riot/riotItemManager';
 import styles from './ExclusionManagerItem.module.css';
 
 interface ExclusionManagerItemProps {

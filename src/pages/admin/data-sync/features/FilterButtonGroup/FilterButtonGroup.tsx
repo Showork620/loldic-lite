@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '../../ui/Button';
+import { Button } from '../../../../../components/ui/Button';
 import styles from './FilterButtonGroup.module.css';
 
 interface FilterOption {

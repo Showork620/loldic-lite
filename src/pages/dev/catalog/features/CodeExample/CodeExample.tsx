@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Icon } from '../ui/Icon';
+import { Icon } from '../../../../../components/ui/Icon';
 import styles from './CodeExample.module.css';
 
 interface CodeExampleProps {

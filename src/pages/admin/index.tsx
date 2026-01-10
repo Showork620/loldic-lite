@@ -1,5 +1,5 @@
 import React from 'react';
-import { MainLayout } from '../components/layout/MainLayout';
+import { MainLayout } from '../../components/layout/MainLayout';
 import { Link } from 'lucide-react';
 
 export const AdminPage: React.FC = () => {
@@ -33,3 +33,5 @@ export const AdminPage: React.FC = () => {
     </MainLayout>
   );
 };
+
+export default AdminPage;

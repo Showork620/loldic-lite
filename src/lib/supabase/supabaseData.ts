@@ -3,9 +3,9 @@
  * アイテムデータの保存、更新、取得を管理
  */
 
-import { supabase } from '../lib/supabase';
-import type { NewItem } from '../db/schema';
-import { toSnakeCase } from './caseConverter';
+import { supabase } from '../supabase';
+import type { NewItem } from '../../db/schema';
+import { toSnakeCase } from '../../utils/caseConverter';
 
 /**
  * アイテムデータをDBに保存（upsert）
