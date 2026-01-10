@@ -1,6 +1,6 @@
 
-import { type RiotAPIResponse, type RawRiotItemData } from '../types/item';
-import { supabase } from '../lib/supabase';
+import { type RiotAPIResponse, type RawRiotItemData } from '../../types/domain/item';
+import { supabase } from '../supabase';
 import { getUnavailableItemIds } from './riotApi';
 // Note: schema.ts export adjustments needed if Database type is not exported directly, usually inference is better for Drizzle but here we use Supabase client directly or Drizzle. Let's use Drizzle generally but for bulk ops Supabase direct might be easier if we don't have bulk upsert in utils yet. However user said "SupabaseData.ts" exists. Let's check that first.
 // Checking file availability from previous context - src/utils/supabaseData.ts exists.

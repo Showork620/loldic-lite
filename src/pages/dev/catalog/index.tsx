@@ -1,21 +1,21 @@
 import { useState, useMemo } from 'react';
-import { Sidebar } from '../components/layout/Sidebar';
-import { ComponentSection } from '../components/logic/ComponentSection';
-import { CodeExample } from '../components/logic/CodeExample';
-import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
-import { Select } from '../components/ui/Select';
-import { Combobox } from '../components/ui/Combobox';
-import { Icon, type IconName } from '../components/ui/Icon';
-import { CategoryIcon, type IconCategory } from '../components/ui/CategoryIcon';
-import { ProgressBar } from '../components/ui/ProgressBar';
-import { StatusBadge } from '../components/ui/StatusBadge';
-import { Accordion } from '../components/ui/Accordion';
-import { Dialog } from '../components/ui/Dialog';
-import { ConfirmDialog } from '../components/ui/ConfirmDialog';
-import { useSnackbar } from '../components/ui/useSnackbar';
-import { Card } from '../components/ui/Card';
-import { ItemImage } from '../components/ui/ItemImage';
+import { Sidebar } from '../../../components/layout/Sidebar';
+import { ComponentSection } from './features/ComponentSection/ComponentSection';
+import { CodeExample } from './features/CodeExample/CodeExample';
+import { Button } from '../../../components/ui/Button';
+import { Input } from '../../../components/ui/Input';
+import { Select } from '../../../components/ui/Select';
+import { Combobox } from '../../../components/ui/Combobox';
+import { Icon, type IconName } from '../../../components/ui/Icon';
+import { CategoryIcon, type IconCategory } from '../../../components/ui/CategoryIcon';
+import { ProgressBar } from '../../../components/ui/ProgressBar';
+import { StatusBadge } from '../../../components/ui/StatusBadge';
+import { Accordion } from '../../../components/ui/Accordion';
+import { Dialog } from '../../../components/ui/Dialog';
+import { ConfirmDialog } from '../../../components/ui/ConfirmDialog';
+import { useSnackbar } from '../../../components/ui/useSnackbar';
+import { Card } from '../../../components/ui/Card';
+import { ItemImage } from '../../../components/ui/ItemImage';
 
 import styles from './ComponentCatalog.module.css';
 
@@ -888,3 +888,5 @@ const options = [
     </div>
   );
 }
+
+export default ComponentCatalog;

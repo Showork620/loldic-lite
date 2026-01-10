@@ -1,5 +1,5 @@
 import { pgTable, uuid, text, integer, boolean, timestamp, jsonb } from 'drizzle-orm/pg-core';
-import type { AbilityNumericParam } from '../types/abilityStats';
+import type { AbilityNumericParam } from '../types/domain/abilityStats';
 
 // ========== アイテムテーブル ==========
 export const items = pgTable('items', {

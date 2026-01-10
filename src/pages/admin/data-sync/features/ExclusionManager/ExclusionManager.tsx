@@ -1,13 +1,13 @@
 
 import React, { useEffect, useState } from 'react';
-import { Button } from '../../ui/Button';
-import { Accordion } from '../../ui/Accordion';
+import { Button } from '../../../../../components/ui/Button';
+import { Accordion } from '../../../../../components/ui/Accordion';
 import { ExclusionManagerItem } from './ExclusionManagerItem';
-import { FilterButtonGroup } from './FilterButtonGroup';
-import { getLatestVersion } from '../../../utils/riotApi';
-import { loadItemsForManagement, type ProcessedItem } from '../../../utils/riotItemManager';
-import { useSnackbar } from '../../ui/useSnackbar';
-import { supabase } from '../../../lib/supabase';
+import { FilterButtonGroup } from '../FilterButtonGroup/FilterButtonGroup';
+import { getLatestVersion } from '../../../../../lib/riot/riotApi';
+import { loadItemsForManagement, type ProcessedItem } from '../../../../../lib/riot/riotItemManager';
+import { useSnackbar } from '../../../../../components/ui/useSnackbar';
+import { supabase } from '../../../../../lib/supabase';
 import styles from './ExclusionManager.module.css';
 
 interface ListState {

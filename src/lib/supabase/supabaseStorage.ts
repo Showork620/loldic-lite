@@ -3,7 +3,7 @@
  * アイテム画像のアップロード、URL取得、削除を管理
  */
 
-import { supabase } from '../lib/supabase';
+import { supabase } from '../supabase';
 
 const STORAGE_BUCKET = 'item-images';
 const CACHE_CONTROL = '604800'; // 1週間（7日 × 24時間 × 3600秒）

@@ -3,7 +3,7 @@
  * PHPコードから移植した定数データ
  */
 
-import type { ChampionStat } from "../types/stats";
+import type { ChampionStat } from "../types/domain/stats";
 
 // タグの翻訳マッピング（英語 -> 日本語）
 export const TAGS_TRANSLATE: Record<string, string> = {

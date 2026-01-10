@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getItemImagePublicUrl } from '../../utils/supabaseStorage';
+import { getItemImagePublicUrl } from '../../lib/supabase/supabaseStorage';
 import { Icon } from './Icon';
 import styles from './ItemImage.module.css';
 

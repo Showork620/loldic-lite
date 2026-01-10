@@ -1,9 +1,9 @@
 
 import React, { useState } from 'react';
-import { Button } from '../../ui/Button';
-import { ProgressBar } from '../../ui/ProgressBar';
-import { updateAllItemImages } from '../../../utils/imageUpdater';
-import { useSnackbar } from '../../ui/useSnackbar';
+import { Button } from '../../../../../components/ui/Button';
+import { ProgressBar } from '../../../../../components/ui/ProgressBar';
+import { updateAllItemImages } from '../../../../../lib/supabase/imageUpdater';
+import { useSnackbar } from '../../../../../components/ui/useSnackbar';
 
 export const ImageSyncSection: React.FC = () => {
   const [isUpdating, setIsUpdating] = useState(false);

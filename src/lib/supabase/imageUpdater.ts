@@ -1,5 +1,5 @@
-import { getLatestVersion, fetchItemData, getItemImageUrl } from './riotApi';
-import { resizeAndConvertToWebP, fetchImageAsBlob } from './imageProcessing';
+import { getLatestVersion, fetchItemData, getItemImageUrl } from '../riot/riotApi';
+import { resizeAndConvertToWebP, fetchImageAsBlob } from '../../utils/imageProcessing';
 import { uploadItemImage } from './supabaseStorage';
 
 type ProgressCallback = (processed: number, total: number, message: string) => void;
