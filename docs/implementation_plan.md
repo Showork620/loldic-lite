@@ -14,23 +14,99 @@ Riot GamesのLoLアイテム情報を管理・閲覧するためのSPA。
 - **Image Processing**: Canvas API (Client-side processing)
 
 ## 3. ディレクトリ構造
+
+プロジェクトはハイブリッド型の階層構造を採用し、責務を明確に分離しています。
+
 ```
 src/
-├── assets/          # 静的リソース
-├── components/      # 共通コンポーネント
-│   ├── ui/          # Atomic Designに基づく基本UIパーツ (Atoms/Molecules)
-│   ├── layout/      # ヘッダー、ラッパー等のレイアウト
-│   └── logic/       # ビジネスロジックを含むコンポーネント
-├── features/        # 機能単位のモジュール
-│   ├── admin/       # 管理画面機能
-│   ├── catalog/     # アイテム図鑑公開機能
-│   └── design/      # デザインシステム・カタログ
-├── lib/             # 外部ライブラリ設定 (Supabase, Drizzle等)
-├── db/              # Drizzle Schema & Migrations
-├── utils/           # ユーティリティ関数 (画像圧縮、フォーマット等)
-├── types/           # 型定義
-└── pages/           # ページコンポーネント (ルーティング単位)
+├── pages/                   # ページ（ルーティング単位）
+│   ├── public/              # 公開ページ
+│   │   └── index.tsx        # / ルート
+│   ├── admin/               # 管理ページ
+│   │   ├── index.tsx        # /admin ルート
+│   │   ├── data-sync/
+│   │   │   ├── index.tsx    # /admin/data-sync ルート
+│   │   │   └── features/    # data-syncページ専用コンポーネント
+│   │   │       ├── ExclusionManager/
+│   │   │       ├── ImageSyncSection/
+│   │   │       ├── FilterButtonGroup/
+│   │   │       └── RawDataModal/
+│   │   └── tag-and-role-management/
+│   │       ├── index.tsx
+│   │       └── features/    # tag-and-role-managementページ専用コンポーネント
+│   └── dev/                 # 開発者向けページ
+│       └── catalog/
+│           ├── index.tsx    # /dev/catalog ルート
+│           └── features/    # catalogページ専用コンポーネント
+│
+├── components/              # 汎用コンポーネント（複数ページで再利用）
+│   ├── ui/                  # 基本UIコンポーネント
+│   │   ├── Button.tsx
+│   │   ├── Input.tsx
+│   │   ├── Dialog.tsx
+│   │   └── ...              # 他の汎用UIコンポーネント
+│   ├── layout/              # レイアウトコンポーネント
+│   │   ├── Header.tsx
+│   │   ├── Footer.tsx
+│   │   ├── Sidebar.tsx
+│   │   └── MainLayout.tsx
+│   └── admin/               # 管理画面共通コンポーネント
+│       ├── PatchVersionDisplay/
+│       └── PatchUpdateModal/
+│
+├── lib/                     # ビジネスロジック・外部サービス連携
+│   ├── riot/                # Riot API関連
+│   │   ├── riotApi.ts       # Data Dragon API通信
+│   │   ├── riotItemManager.ts # アイテムデータ処理
+│   │   ├── patchManager.ts  # パッチバージョン管理
+│   │   └── index.ts         # re-export
+│   ├── supabase/            # Supabase関連
+│   │   ├── supabaseData.ts  # データCRUD
+│   │   ├── supabaseStorage.ts # ストレージ操作
+│   │   ├── patchData.ts     # パッチデータ管理
+│   │   ├── imageUpdater.ts  # 画像更新
+│   │   └── index.ts         # re-export
+│   └── supabase.ts          # Supabaseクライアント初期化
+│
+├── types/                   # 型定義
+│   ├── domain/              # ドメインモデル（ビジネスの核心概念）
+│   │   ├── item.ts          # アイテム関連型
+│   │   ├── stats.ts         # ステータス型
+│   │   ├── abilityStats.ts  # アビリティステータス型
+│   │   ├── role.ts          # ロール関連型
+│   │   └── maps.ts          # マップ関連型
+│   └── shared.ts            # 共通型定義
+│
+├── utils/                   # 汎用ユーティリティ（純粋関数）
+│   ├── caseConverter.ts     # camelCase ⇔ snake_case
+│   └── imageProcessing.ts   # Canvas画像処理
+│
+├── db/                      # データベース関連
+│   ├── schema.ts            # Drizzle スキーマ定義
+│   └── migrations/          # マイグレーションファイル
+│
+├── constants/               # 定数定義
+│   ├── riotApi.ts           # API関連定数
+│   └── seedData.ts          # シードデータ
+│
+├── assets/                  # 静的リソース
+├── App.tsx                  # アプリケーションルート
+└── main.tsx                 # エントリーポイント
 ```
+
+### 責務の分離原則
+
+| ディレクトリ | 責務 | 例 |
+|------------|------|-----|
+| `pages/{page}/index.tsx` | ルーティング単位のページ | URLパスと一致 |
+| `pages/{page}/features/` | ページ専用コンポーネント | そのページでのみ使用 |
+| `components/ui/` | 汎用UIコンポーネント | Button, Dialog等 |
+| `components/layout/` | レイアウトコンポーネント | Header, Footer等 |
+| `components/{domain}/` | ドメイン共通コンポーネント | 管理画面全体で共有 |
+| `lib/{service}/` | ビジネスロジック・外部連携 | Riot API, Supabase |
+| `types/domain/` | ドメインモデル | Item, Stats等 |
+| `utils/` | 純粋関数ユーティリティ | 外部依存なし |
+
 
 ## 4. データベース設計 (Supabase + Drizzle)
 
