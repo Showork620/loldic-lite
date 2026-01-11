@@ -1,12 +1,12 @@
 import {
-  Axe,
-  Crosshair,
-  Sword,
-  Book,
-  Shield,
-  Heart,
-  Grid,
-} from 'lucide-react';
+  FighterIcon,
+  MarksmanIcon,
+  AssassinIcon,
+  MageIcon,
+  TankIcon,
+  SupportIcon,
+  AllIcon,
+} from './icons/RoleIcons';
 import styles from './CategoryIcon.module.css';
 
 export type IconCategory = 'Fighter' | 'Marksman' | 'Assassin' | 'Mage' | 'Tank' | 'Support' | 'All';
@@ -19,13 +19,13 @@ interface CategoryIconProps {
 }
 
 const CATEGORY_MAP = {
-  Fighter: Axe,
-  Marksman: Crosshair,
-  Assassin: Sword,
-  Mage: Book,
-  Tank: Shield,
-  Support: Heart,
-  All: Grid,
+  Fighter: FighterIcon,
+  Marksman: MarksmanIcon,
+  Assassin: AssassinIcon,
+  Mage: MageIcon,
+  Tank: TankIcon,
+  Support: SupportIcon,
+  All: AllIcon,
 };
 
 export const CategoryIcon = ({ category, isActive = false, onClick, className = '' }: CategoryIconProps) => {

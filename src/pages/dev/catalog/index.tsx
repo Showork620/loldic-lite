@@ -16,6 +16,15 @@ import { ConfirmDialog } from '../../../components/ui/ConfirmDialog';
 import { useSnackbar } from '../../../components/ui/useSnackbar';
 import { Card } from '../../../components/ui/Card';
 import { ItemImage } from '../../../components/ui/ItemImage';
+import {
+  FighterIcon,
+  MarksmanIcon,
+  AssassinIcon,
+  MageIcon,
+  TankIcon,
+  SupportIcon,
+  AllIcon,
+} from '../../../components/ui/icons/RoleIcons';
 
 import styles from './ComponentCatalog.module.css';
 
@@ -666,6 +675,40 @@ type IconName =
 <Icon name="User" color="gold" />
 <Icon name="Settings" color="secondary" />
 <Icon name="AlertCircle" color="danger" />`} />
+
+            <div className={styles.demoGroup}>
+              <h3 className={styles.demoTitle}>Role Icons (Custom SVG)</h3>
+              <div className={styles.iconList}>
+                <div className={styles.iconItem}>
+                  <FighterIcon size={24} className="text-gold-400" />
+                  <span className={styles.iconName}>Fighter</span>
+                </div>
+                <div className={styles.iconItem}>
+                  <MarksmanIcon size={24} className="text-gold-400" />
+                  <span className={styles.iconName}>Marksman</span>
+                </div>
+                <div className={styles.iconItem}>
+                  <AssassinIcon size={24} className="text-gold-400" />
+                  <span className={styles.iconName}>Assassin</span>
+                </div>
+                <div className={styles.iconItem}>
+                  <MageIcon size={24} className="text-gold-400" />
+                  <span className={styles.iconName}>Mage</span>
+                </div>
+                <div className={styles.iconItem}>
+                  <TankIcon size={24} className="text-gold-400" />
+                  <span className={styles.iconName}>Tank</span>
+                </div>
+                <div className={styles.iconItem}>
+                  <SupportIcon size={24} className="text-gold-400" />
+                  <span className={styles.iconName}>Support</span>
+                </div>
+                <div className={styles.iconItem}>
+                  <AllIcon size={24} className="text-gold-400" />
+                  <span className={styles.iconName}>All</span>
+                </div>
+              </div>
+            </div>
 
             <div className={styles.demoGroup}>
               <h3 className={styles.demoTitle}>Generic Icons (サンプル)</h3>
