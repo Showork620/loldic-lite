@@ -19,7 +19,13 @@ export const RawDataModal: React.FC<RawDataModalProps> = ({
   const content = JSON.stringify(rawData, null, 2);
 
   return (
-    <Dialog isOpen={isOpen} onClose={onClose} title={`元データ: ${riotId}`} maxWidth="lg">
+    <Dialog
+      isOpen={isOpen}
+      onClose={onClose}
+      title={`元データ: ${riotId}`}
+      maxWidth="lg"
+      closeOnOverlayClick={false}
+    >
       <div className={styles.container}>
         <pre className={styles.jsonDisplay}>{content}</pre>
         <div className={styles.footer}>
