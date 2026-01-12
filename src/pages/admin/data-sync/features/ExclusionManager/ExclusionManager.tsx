@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '../../../../../components/ui/Button';
 import { Accordion } from '../../../../../components/ui/Accordion';
+import { ConfirmDialog } from '../../../../../components/ui/ConfirmDialog';
 import { ExclusionManagerItem } from './ExclusionManagerItem';
 import { FilterButtonGroup } from '../FilterButtonGroup/FilterButtonGroup';
 import { getLatestVersion } from '../../../../../lib/riot/riotApi';
@@ -27,6 +28,7 @@ export const ExclusionManager: React.FC = () => {
   });
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const { showSnackbar } = useSnackbar();
   const [version, setVersion] = useState<string>('');
   const [newItemFilter, setNewItemFilter] = useState<NewItemFilter>('all');
@@ -152,9 +154,14 @@ export const ExclusionManager: React.FC = () => {
     }));
   };
 
+  // 保存確認ダイアログを開く
+  const handleSaveClick = () => {
+    setShowConfirmDialog(true);
+  };
+
   // 保存処理
   const handleSave = async () => {
-    if (!confirm('変更をデータベースに反映しますか？')) return;
+    setShowConfirmDialog(false);
 
     setSaving(true);
     try {
@@ -172,6 +179,8 @@ export const ExclusionManager: React.FC = () => {
         price_sell: item.raw.gold.sell,
         image_path: item.imagePath,
         maps: item.maps,
+        search_tags: item.autoTags, // 自動抽出されたタグ
+        basic_stats: item.basicStats, // 自動抽出されたステータス
         // 他のフィールドはデフォルト値が使用される
       }));
 
@@ -244,7 +253,7 @@ export const ExclusionManager: React.FC = () => {
           <Button onClick={loadData} variant="secondary" size="sm" disabled={loading || saving}>
             リロード
           </Button>
-          <Button onClick={handleSave} variant="primary" disabled={loading || saving}>
+          <Button onClick={handleSaveClick} variant="primary" disabled={loading || saving}>
             {saving ? '保存中...' : '変更を保存'}
           </Button>
         </div>
@@ -419,6 +428,18 @@ export const ExclusionManager: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* 保存確認ダイアログ */}
+      <ConfirmDialog
+        isOpen={showConfirmDialog}
+        title="変更の保存"
+        message="変更をデータベースに反映しますか？"
+        confirmLabel="保存"
+        cancelLabel="キャンセル"
+        variant="warning"
+        onConfirm={handleSave}
+        onCancel={() => setShowConfirmDialog(false)}
+      />
     </div>
   );
 };

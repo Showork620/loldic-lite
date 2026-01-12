@@ -3,27 +3,25 @@
  * PHPコードから移植した定数データ
  */
 
-import type { ChampionStat } from "../types/domain/stats";
+import type { ChampionStat, ItemTag } from "../types/domain/stats";
 
 // タグの翻訳マッピング（英語 -> 日本語）
-export const TAGS_TRANSLATE: Record<string, string> = {
+export const TAGS_TRANSLATE: Record<string, ItemTag> = {
   "AbilityHaste": "スキルヘイスト",
   "Active": "発動効果あり",
   "Armor": "物理防御",
   "ArmorPenetration": "物理防御貫通",
   "AttackSpeed": "攻撃速度",
-  "Aura": "周囲効果",
   "Boots": "移動速度",
   "Consumable": "消費アイテム",
   "CooldownReduction": "スキルヘイスト",
-  "CriticalStrike": "クリティカル",
+  "CriticalStrike": "クリティカル効果",
   "Damage": "攻撃力",
-  "GoldPer": "獲得ゴールド",
+  "GoldPer": "獲得ゴールド(10秒毎)",
   "Health": "体力",
   "HealthRegen": "体力回復効果",
-  "Jungle": "ジャングル用アイテム",
   "Lane": "初期購入アイテム",
-  "LifeSteal": "ライフスティール",
+  "LifeSteal": "ライフ スティール",
   "MagicPenetration": "魔法防御貫通",
   "MagicResist": "魔法防御",
   "Mana": "マナ",
@@ -36,7 +34,6 @@ export const TAGS_TRANSLATE: Record<string, string> = {
   "SpellVamp": "オムニヴァンプ",
   "Stealth": "ステルス",
   "Tenacity": "行動妨害耐性",
-  "Trinket": "トリンケット",
   "Vision": "視界"
 };
 
