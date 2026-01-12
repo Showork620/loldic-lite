@@ -57,6 +57,35 @@ export const roleCategories = pgTable('role_categories', {
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
+// ========== パッチ管理テーブル ==========
+
+// 現在適用中のパッチバージョン管理（単一レコード）
+export const patchVersions = pgTable('patch_versions', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  currentPatch: text('current_patch').notNull(),
+  lastCheckedAt: timestamp('last_checked_at').notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+// v16.1.1基準データ（加工後のItemsデータ）
+export const patchBaselineData = pgTable('patch_baseline_data', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  patchVersion: text('patch_version').notNull(),
+  riotId: text('riot_id').notNull(),
+  itemData: jsonb('item_data').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+// パッチごとのアイテム変更差分（加工後のItemsデータ）
+export const patchItemsDiff = pgTable('patch_items_diff', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  patchVersion: text('patch_version').notNull(),
+  riotId: text('riot_id').notNull(),
+  itemData: jsonb('item_data').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
 // ========== 型定義 ==========
 
 export type Item = typeof items.$inferSelect;
@@ -70,3 +99,12 @@ export type NewAdditionalTag = typeof additionalTags.$inferInsert;
 
 export type RoleCategoryRecord = typeof roleCategories.$inferSelect;
 export type NewRoleCategoryRecord = typeof roleCategories.$inferInsert;
+
+export type PatchVersion = typeof patchVersions.$inferSelect;
+export type NewPatchVersion = typeof patchVersions.$inferInsert;
+
+export type PatchBaselineData = typeof patchBaselineData.$inferSelect;
+export type NewPatchBaselineData = typeof patchBaselineData.$inferInsert;
+
+export type PatchItemsDiff = typeof patchItemsDiff.$inferSelect;
+export type NewPatchItemsDiff = typeof patchItemsDiff.$inferInsert;
