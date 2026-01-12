@@ -180,6 +180,7 @@ export const ExclusionManager: React.FC = () => {
         image_path: item.imagePath,
         maps: item.maps,
         search_tags: item.autoTags, // 自動抽出されたタグ
+        basic_stats: item.basicStats, // 自動抽出されたステータス
         // 他のフィールドはデフォルト値が使用される
       }));
 

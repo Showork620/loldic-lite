@@ -3,7 +3,8 @@ import { type RiotAPIResponse, type RawRiotItemData } from '../../types/domain/i
 import { supabase } from '../supabase';
 import { getUnavailableItemIds } from './riotApi';
 import { extractTagsFromRawData } from './autoTagExtractor';
-import type { ItemTag } from '../../types/domain/stats';
+import { extractStatsFromDescription } from './autoStatsExtractor';
+import type { ItemTag, BasicStats } from '../../types/domain/stats';
 // Note: schema.ts export adjustments needed if Database type is not exported directly, usually inference is better for Drizzle but here we use Supabase client directly or Drizzle. Let's use Drizzle generally but for bulk ops Supabase direct might be easier if we don't have bulk upsert in utils yet. However user said "SupabaseData.ts" exists. Let's check that first.
 // Checking file availability from previous context - src/utils/supabaseData.ts exists.
 // Re-reading context...
@@ -21,6 +22,7 @@ export interface ProcessedItem {
   reason: string | null;
   maps: number[];
   autoTags: ItemTag[]; // 自動抽出されたタグ
+  basicStats: BasicStats; // 自動抽出されたステータス
   raw: RawRiotItemData;
 }
 
@@ -87,6 +89,9 @@ export async function processRiotItems(
     // 自動タグ抽出
     const autoTags = extractTagsFromRawData(item);
 
+    // 自動ステータス抽出
+    const basicStats = extractStatsFromDescription(item.description);
+
     const processedItem: ProcessedItem = {
       riotId,
       name: item.name,
@@ -98,6 +103,7 @@ export async function processRiotItems(
       reason,
       maps: availableMaps,
       autoTags,
+      basicStats,
       raw: item,
     };
 
@@ -160,6 +166,7 @@ export async function saveItemLists(
       is_available: true,
       image_path: item.imagePath,
       search_tags: item.autoTags, // 自動抽出されたタグを設定
+      basic_stats: item.basicStats, // 自動抽出されたステータス
       // 必須フィールドのデフォルト値設定（実際のデータ変換はもっと複雑だが、ここでは初期同期用として最小限に）
       plaintext_ja: item.raw.plaintext || '',
       price_total: item.raw.gold.total,
