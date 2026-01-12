@@ -1,6 +1,6 @@
 import React from 'react';
 import { MainLayout } from '../../components/layout/MainLayout';
-import { Link } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const AdminPage: React.FC = () => {
   return (
@@ -16,6 +16,11 @@ export const AdminPage: React.FC = () => {
           <Link to="/admin/data-sync" className="p-6 border border-hextech-metal-600 bg-hextech-black-400/30 rounded-lg hover:border-hextech-gold-500/50 transition-colors group block">
             <h3 className="text-xl font-bold text-hextech-gold-400 mb-2 group-hover:text-hextech-gold-300">Data Sync</h3>
             <p className="text-hextech-metal-400 text-sm">Update item images and manage exclusion rules.</p>
+          </Link>
+
+          <Link to="/admin/tag-and-role-management" className="p-6 border border-hextech-metal-600 bg-hextech-black-400/30 rounded-lg hover:border-hextech-gold-500/50 transition-colors group block">
+            <h3 className="text-xl font-bold text-hextech-gold-400 mb-2 group-hover:text-hextech-gold-300">Tag & Role Management</h3>
+            <p className="text-hextech-metal-400 text-sm">Manage tags and role categories for finished items.</p>
           </Link>
 
           <div className="p-6 border border-hextech-metal-600 bg-hextech-black-400/30 rounded-lg opacity-50 cursor-not-allowed">
