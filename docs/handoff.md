@@ -58,33 +58,32 @@
 - 同一機能は1ディレクトリにまとめる
 
 
-## 現状ステータス
-- **Phase 0 (計画・設計)**: 完了
-- **Phase 1 (基盤構築)**: 完了
-- **Phase 2 (デザインシステム構築)**: 完了
-- **Phase 3 (管理画面機能構築)**: 完了
-- **Phase 3.1 (管理画面用コンポーネント追加)**: 完了
-- **Phase 3.2 (パッチ管理機能)**: 進行中
-- **ディレクトリ構造リファクタリング**: 完了 ✅
+## 現状ステータス（2026-07 アーキテクチャ全面刷新済み）
+
+3層データモデル（生データ / 正規状態 / 変更イベント）＋データパイプライン＋レビューキュー＋公開タイムラインまで実装完了。
+詳細は `docs/architecture.md` と `docs/task.md` を参照。
+
+- **コア原則**: 生データ不変・正規データは純粋マージで再導出・手動修正はオーバーライド・自動化は提案まで（人間が承認）
+- **パッチ命名**: ゲームパッチ 26.N ↔ DDragon 16.N.x。hotfix（26.Nb）はDDragonに存在しない
+- **パイプライン**: `npm run pipeline:*`（ingest → fetch-note → extract → propose → publish）。scripts/ はDATABASE_URL直結
+- **テスト**: `npm run test`（vitest、実データfixtureのgolden test）。パーサー修正時はfixture更新→`pipeline:extract --rerun`
 
 ## プロジェクト概要
-Riot GamesのLoLアイテム情報を管理・閲覧するためのSPA開発プロジェクト。
-既存のJSアプリをReactでリプレースし、デザインシステム導入とバックエンド(Supabase)連携を行う。
+LoLアイテムの最新能力＋パッチをまたぐ能力の変遷履歴を提供するSPA。
+DDragonだけでは能力データが不完全なため、公式パッチノート解析＋人手キュレーションを継続的に取り込む。
 
 ## 決定済みの技術スタック
-- **Frontend**: React, TypeScript, Vite
-- **Styling**: Vanilla CSS, Atomic Design
-- **Backend**: Supabase (PostgreSQL, Storage)
-- **ORM**: Drizzle ORM
-- **画像処理**: 管理画面側でCanvasを使用し 32x32px WebP に変換してStorageへ保存
+- **Frontend**: React 19, TypeScript, Vite, Vanilla CSS (CSS Modules)
+- **Backend**: Supabase (PostgreSQL + RLS, Storage, Auth)
+- **Pipeline**: Node (tsx) + Drizzle ORM + cheerio + sharp、GitHub Actions（無料枠）
+- **画像処理**: パイプライン側でsharp（64x64 WebP）。ブラウザ側Canvas版もフォールバックとして残置
 
-## 次のアクション
-1. Phase 3.2のパッチ管理機能の完成
-2. タグ・ロール管理画面の完成
-3. Phase 4（公開画面機能）へ移行
+## 次のアクション（運用開始）
+1. Supabase本番へマイグレーション適用＋Auth管理者作成＋GitHub Secrets設定
+2. `pipeline:backfill -- --from 26.1 --to 26.13 --notes-manifest scripts/notes.json`
+3. `/admin/review` でレビュー → `pipeline:publish`
 
 ## 参照ファイル
 - `README.md`: プロジェクト概要とセットアップガイド
-- `docs/task.md`: 全体の工程表  
-- `docs/implementation_plan.md`: 詳細仕様書
-- `.gemini/antigravity/brain/.../walkthrough.md`: リファクタリング完了報告
+- `docs/architecture.md`: アーキテクチャ詳細（データモデル・パイプライン・運用フロー）
+- `docs/task.md`: 進捗と残タスク

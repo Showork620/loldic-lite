@@ -1,75 +1,47 @@
 # 実装タスクリスト
 
 このドキュメントはプロジェクトの進捗と残タスクを管理します。
+アーキテクチャの全体像は [architecture.md](./architecture.md) を参照。
 
-## Phase 1: プロジェクト基盤構築 
-- [x] プロジェクト初期セットアップ (Vite + React + TypeScript) <!-- id: 0 -->
-- [x] ESLint, Prettier 設定 <!-- id: 1 -->
-- [x] ディレクトリ構造の整備 <!-- id: 2 -->
-- [x] Supabase プロジェクト設定・ローカル環境構築 <!-- id: 3 -->
-- [x] データベーススキーマ定義 (Itemsテーブル等) <!-- id: 4 -->
+## 完了済み
 
-## Phase 2: デザインシステム構築 (Aesthetics First)
-- [x] デザイン基礎定義 (Colors, Typography, Spacing in `index.css`) <!-- id: 5 -->
-- [x] UIコンポーネント実装: Button(完了), Input, Select, Combobox <!-- id: 6 -->
-- [x] UIコンポーネント実装: Card <!-- id: 7 -->
-- [x] UIコンポーネント実装: Icons (Generic & Category) <!-- id: 24 -->
-- [x] UIコンポーネント実装: Badge <!-- id: 25 -->
-- [x] コンポーネントカタログページ (Storybook的な一覧ページ) 作成 <!-- id: 8 -->
-- [x] レイアウトコンポーネント作成 (Header, Footer, MainLayout) <!-- id: 9 -->
+### 基盤（旧Phase 1〜3.1）
+- [x] プロジェクト初期セットアップ (Vite + React + TypeScript)
+- [x] デザインシステム構築（Hextechテーマ、UIコンポーネント、カタログページ）
+- [x] Supabase / Drizzle セットアップ
+- [x] 画像処理・Storageアップロード
+- [x] 除外アイテム管理（ExclusionManager）
 
-## Phase 3: 管理画面機能 (Admin)
+### アーキテクチャ刷新（2026-07）
+- [x] 3層データモデル（生データ / 正規状態 / 変更イベント）のスキーマ＋RLS
+- [x] src/core 純粋ロジック層（説明文パーサー、パッチノート解析、マージ、diff、分類）
+- [x] vitest ＋ 実データfixtureによるgolden test（49件）
+- [x] データパイプライン scripts/（ingest / fetch-note / extract / propose / publish / backfill）
+- [x] GitHub Actions（手動dispatch＋新パッチ自動検知cron）
+- [x] 管理UI: パッチ管理 `/admin/patches`
+- [x] 管理UI: 変更レビューキュー `/admin/review`（承認・修正・却下、オーバーライド作成、抽出の手動紐付け）
+- [x] 管理UI: タグ・ロール管理 `/admin/tag-and-role-management`
+- [x] Supabase Auth（管理者ログイン `/admin/login`＋RequireAuth）
+- [x] 公開UI: アイテム一覧 `/`（名前・ロール・タグ・マップフィルタ）
+- [x] 公開UI: アイテム詳細 `/item/:riotId`（アビリティ・ビルドパス・変遷タイムライン）
+- [x] dead code削除（baseline/diff旧サブシステム、saveItemLists等）
+- [x] ドキュメント刷新（README, architecture.md）
 
-詳細な実装計画: [admin_implementation_plan.md](./admin_implementation_plan.md)
+## 運用開始前の残タスク（要ユーザー環境）
 
-- [x] ルーティング設定 (React Router) <!-- id: 10 -->
-- [x] Riot API 取得用ユーティリティ実装 <!-- id: 11 -->
-- [x] 画像処理ユーティリティ実装 (Canvas使用: Resize, WebP変換) <!-- id: 12 -->
-- [x] Supabase Storage アップロード処理実装 <!-- id: 13 -->
-- [x] アイテムデータ保存・更新処理実装 <!-- id: 14 -->
-
-### Phase 3.1: データ同期基盤
-- [x] コンポーネントの追加 (Progressbar✅, StatusBadge✅, Dialog✅, Toast✅) <!-- id: 26 -->
-- [x] アイテムプレビュー機能に伴うコンポーネント追加 (ItemImage) <!-- id: 27 -->
-- [x] アイテムプレビュー機能に伴うコンポーネント追加 (ItemPreviewSync) <!-- id: 48 -->
-- [x] データ同期ページ (`/admin/sync`) の実装 <!-- id: 30 -->
-  - [x] バージョン取得・表示機能 <!-- id: 31 -->
-  - [x] アイテムプレビュー機能 <!-- id: 32 -->
-  - [x] 差分検出ロジック <!-- id: 33 -->
-  - [x] 一括同期UI・プログレスバー <!-- id: 34 -->
-
-### Phase 3.2: アイテム管理UI
-- [ ] アイテム一覧ページ (`/admin/items`) <!-- id: 35 -->
-  - [ ] DataTable コンポーネント実装 <!-- id: 36 -->
-  - [ ] 検索・フィルタ機能 <!-- id: 37 -->
-- [ ] アイテム詳細編集ページ (`/admin/items/:id`) <!-- id: 38 -->
-  - [ ] 編集フォーム実装 <!-- id: 39 -->
-  - [ ] アビリティエディタ (JSONまたはフォーム) <!-- id: 40 -->
-  - [ ] プレビュー機能 <!-- id: 41 -->
-
-### Phase 3.3: 定数管理UI
-- [ ] 定数管理ページ (`/admin/constants`) <!-- id: 42 -->
-  - [ ] 除外アイテム管理 <!-- id: 43 -->
-  - [ ] 追加タグ管理 <!-- id: 44 -->
-  - [ ] ロール分類管理 <!-- id: 45 -->
-
-### Phase 3.4: 補助機能
-- [ ] データ検証ページ (`/admin/validation`) <!-- id: 46 -->
-- [ ] ダッシュボード拡充（統計情報、クイックアクション） <!-- id: 47 -->
-
-## Phase 4: 公開画面機能 (Public)
-- [ ] 公開用アイテム一覧ページ実装 <!-- id: 16 -->
-- [ ] フィルタリング・検索ロジック実装 (Supabase query) <!-- id: 17 -->
-- [ ] アイテム詳細モーダル/ページ実装 <!-- id: 18 -->
-- [ ] レスポンシブ対応・アニメーション調整 <!-- id: 19 -->
-
-## Phase 5: 最終調整・リリース準備
-- [ ] SEO設定 (Meta tags, Title) <!-- id: 20 -->
-- [ ] パフォーマンス最適化 (Lazy loading, Memoization) <!-- id: 21 -->
-- [ ] エラーハンドリング・バグ修正 <!-- id: 22 -->
-- [ ] README拡充・ドキュメント整理 <!-- id: 23 -->
+- [ ] Supabase本番プロジェクトへのマイグレーション適用（`npm run db:migrate`）
+- [ ] Supabase Authで管理者ユーザー作成
+- [ ] GitHub Secrets設定（DATABASE_URL / SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY）
+- [ ] バックフィル実行（26.1〜最新、`pipeline:backfill`）
+- [ ] 初回レビュー＆publish
+- [ ] 既存テーブル（items等）のRLS方針確認（現状はanon書き込み可の可能性）
 
 ## Backlog / Future Improvements
-- [ ] カテゴリアイコンの正式版SVG作成・差し替え (現在はプロキシを使用)
-- [ ] コンポーネントカタログで利用可能なアイコン一覧を明示する
-- [ ] 将来的にはルーンとチャンピオンの図鑑も作成予定
+
+- [ ] アビリティパラメータのキュレーションUI（レビュー画面からの{param}テンプレート編集支援）
+- [ ] hotfixパッチの実データでの検証（追記型/独立記事型の両方）
+- [ ] snapshotの容量監視（無料枠500MB。将来的に古いパッチのraw圧縮/間引き）
+- [ ] パッチノートの英語版フォールバック（ja-jp記事が遅れる場合）
+- [ ] 任意の2パッチ間diff表示・「パッチX時点のアイテム」タイムトラベル表示
+- [ ] カテゴリアイコンの正式版SVG作成・差し替え
+- [ ] 将来的にはルーンとチャンピオンの図鑑も作成予定（champion_states等、同じ3層モデルで拡張可能）
