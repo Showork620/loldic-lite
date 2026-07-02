@@ -1,0 +1,31 @@
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-gold-700);
+  padding-bottom: 1rem;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-gold-300);
+}
+
+.patch {
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+}
+
+.message {
+  color: var(--color-text-secondary);
+  text-align: center;
+  padding: 3rem;
+}
+
+.count {
+  color: var(--color-text-secondary);
+  font-size: 0.8125rem;
+  margin-bottom: 0.75rem;
+}

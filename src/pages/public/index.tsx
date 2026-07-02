@@ -1,20 +1,64 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { MainLayout } from '../../components/layout/MainLayout';
+import { ItemFilterBar, type ItemFilters } from './features/ItemFilterBar/ItemFilterBar';
+import { ItemGrid } from './features/ItemGrid/ItemGrid';
+import { getAvailableItems, type PublicItem } from '../../lib/supabase/publicData';
+import styles from './public.module.css';
 
 export const PublicPage: React.FC = () => {
+  const [items, setItems] = useState<PublicItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [filters, setFilters] = useState<ItemFilters>({
+    name: '',
+    role: '',
+    tag: '',
+    map: null,
+  });
+
+  useEffect(() => {
+    getAvailableItems()
+      .then(setItems)
+      .catch((e) => setError(e instanceof Error ? e.message : '読み込みに失敗しました'))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const tagOptions = useMemo(
+    () => [...new Set(items.flatMap((i) => i.searchTags))].sort(),
+    [items]
+  );
+
+  const filtered = useMemo(
+    () =>
+      items.filter((item) => {
+        if (filters.name && !item.nameJa.includes(filters.name)) return false;
+        if (filters.role && !item.roleCategories.includes(filters.role)) return false;
+        if (filters.tag && !item.searchTags.includes(filters.tag)) return false;
+        if (filters.map !== null && !item.maps.includes(filters.map)) return false;
+        return true;
+      }),
+    [items, filters]
+  );
+
   return (
     <MainLayout>
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
-        <h1 className="text-4xl font-bold text-hextech-gold-500 font-display tracking-wider filter drop-shadow-glow">
-          Welcome to LoL Item Manager
-        </h1>
-        <p className="text-hextech-metal-300 text-lg max-w-2xl text-center">
-          Explore the vast arsenal of Runeterra. Browse items, view details, and prepare for your next battle.
-        </p>
-        <div className="p-6 border border-hextech-gold-500/30 bg-hextech-black-400/50 rounded-lg backdrop-blur-sm">
-          <p className="text-hextech-blue-300">Phase 4: Public View (Under Construction)</p>
-        </div>
+      <div className={styles.header}>
+        <h1 className={styles.title}>アイテム図鑑</h1>
+        {items[0]?.updatedPatch && (
+          <span className={styles.patch}>パッチ {items[0].updatedPatch}</span>
+        )}
       </div>
+      <ItemFilterBar filters={filters} tagOptions={tagOptions} onChange={setFilters} />
+      {loading ? (
+        <p className={styles.message}>読み込み中…</p>
+      ) : error ? (
+        <p className={styles.message}>{error}</p>
+      ) : (
+        <>
+          <p className={styles.count}>{filtered.length} / {items.length} 件</p>
+          <ItemGrid items={filtered} />
+        </>
+      )}
     </MainLayout>
   );
 };

@@ -1,0 +1,39 @@
+.bar {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .bar {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.mapToggles {
+  display: flex;
+  gap: 0.375rem;
+}
+
+.mapButton {
+  background: var(--color-navy-800);
+  border: 1px solid var(--color-navy-700);
+  color: var(--color-text-secondary);
+  border-radius: 6px;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.mapButton:hover {
+  border-color: var(--color-gold-500);
+}
+
+.mapActive {
+  border-color: var(--color-hextech-blue-400);
+  color: var(--color-hextech-blue-300);
+  background: rgba(15, 165, 212, 0.1);
+}
