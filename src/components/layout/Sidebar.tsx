@@ -91,7 +91,7 @@ export function Sidebar({ sections, searchQuery, onSearchChange }: SidebarProps)
                     {/* Replaced <a> with Link */}
                     <Link
                       to={`#${section.id}`} // Assuming Link can handle hash links for internal navigation
-                      onClick={(e) => handleNavClick(e as any, section.id)} // Cast e to any to match React.MouseEvent<HTMLAnchorElement>
+                      onClick={(e) => handleNavClick(e, section.id)}
                       className={`${styles.navLink} ${activeSection === section.id ? styles.active : ''}`}
                     >
                       {section.label}

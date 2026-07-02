@@ -1,5 +1,19 @@
-import { pgTable, uuid, text, integer, boolean, timestamp, jsonb } from 'drizzle-orm/pg-core';
+import {
+  pgTable,
+  uuid,
+  text,
+  integer,
+  boolean,
+  timestamp,
+  jsonb,
+  real,
+  uniqueIndex,
+  index,
+} from 'drizzle-orm/pg-core';
 import type { AbilityNumericParam } from '../types/domain/abilityStats';
+import type { ItemStateData, Provenance } from '../types/domain/itemState';
+import type { ChangeEntry } from '../types/domain/itemChange';
+import type { ParsedChange } from '../types/domain/patchnote';
 
 // ========== アイテムテーブル ==========
 export const items = pgTable('items', {
@@ -68,25 +82,189 @@ export const patchVersions = pgTable('patch_versions', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
-// v16.1.1基準データ（加工後のItemsデータ）
-export const patchBaselineData = pgTable('patch_baseline_data', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  patchVersion: text('patch_version').notNull(),
-  riotId: text('riot_id').notNull(),
-  itemData: jsonb('item_data').notNull(),
+// ========== パッチマスタ（Layer 1・他テーブルのFK先） ==========
+
+/**
+ * ゲームパッチの全順序管理。
+ * version はゲームパッチ名（例 "26.1", hotfixは "26.1b"）。
+ * DDragonバージョン（例 "16.1.1"）とは命名体系が異なるため別カラムで持つ。
+ * hotfix は DDragon に現れないため ddragonVersion = null。
+ */
+export const patches = pgTable('patches', {
+  version: text('version').primaryKey(),
+  kind: text('kind', { enum: ['major', 'hotfix'] }).notNull().default('major'),
+  ddragonVersion: text('ddragon_version'),
+  patchnoteUrl: text('patchnote_url'),
+  releasedAt: timestamp('released_at'),
+  status: text('status', { enum: ['draft', 'ingested', 'reviewed', 'published'] })
+    .notNull()
+    .default('draft'),
+  sortKey: integer('sort_key').notNull(), // 例: 26.1=26010, 26.1b=26011, 26.2=26020
   createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
-// パッチごとのアイテム変更差分（加工後のItemsデータ）
-export const patchItemsDiff = pgTable('patch_items_diff', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  patchVersion: text('patch_version').notNull(),
-  riotId: text('riot_id').notNull(),
-  itemData: jsonb('item_data').notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-});
+// ========== Layer 0: 生データ（append-only、書き換え禁止） ==========
+
+/** DDragon item.json の1エントリそのまま。パーサー修正時の再導出の源泉 */
+export const ddragonSnapshots = pgTable(
+  'ddragon_snapshots',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    patchVersion: text('patch_version')
+      .notNull()
+      .references(() => patches.version),
+    riotId: text('riot_id').notNull(),
+    raw: jsonb('raw').notNull(),
+    fetchedAt: timestamp('fetched_at').defaultNow().notNull(),
+  },
+  (t) => [
+    uniqueIndex('ux_snapshots_patch_riot').on(t.patchVersion, t.riotId),
+    index('ix_snapshots_riot').on(t.riotId),
+  ]
+);
+
+/** パッチノートの生HTML。DOM構造が変わってもパーサー修正→再抽出できる */
+export const patchnoteDocuments = pgTable(
+  'patchnote_documents',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    patchVersion: text('patch_version')
+      .notNull()
+      .references(() => patches.version),
+    url: text('url').notNull(),
+    rawHtml: text('raw_html').notNull(),
+    fetchedAt: timestamp('fetched_at').defaultNow().notNull(),
+  },
+  (t) => [uniqueIndex('ux_patchnote_doc').on(t.patchVersion, t.url)]
+);
+
+/** パッチノート解析結果。riotId=null は名前解決失敗（レビューUIで手動紐付け） */
+export const patchnoteExtracts = pgTable(
+  'patchnote_extracts',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    documentId: uuid('document_id')
+      .notNull()
+      .references(() => patchnoteDocuments.id),
+    patchVersion: text('patch_version')
+      .notNull()
+      .references(() => patches.version),
+    riotId: text('riot_id'),
+    itemName: text('item_name').notNull(),
+    quotedText: text('quoted_text').notNull(),
+    parsedChanges: jsonb('parsed_changes').$type<ParsedChange[]>().notNull().default([]),
+    confidence: real('confidence').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (t) => [
+    index('ix_extracts_patch').on(t.patchVersion),
+    index('ix_extracts_riot').on(t.riotId),
+  ]
+);
+
+// ========== Layer 1: 正規状態 ==========
+
+/**
+ * パッチごとのアイテムの確定した姿。
+ * mergeItemState（純粋関数）で Layer 0 ＋ overrides から再導出可能。
+ */
+export const itemStates = pgTable(
+  'item_states',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    riotId: text('riot_id').notNull(),
+    patchVersion: text('patch_version')
+      .notNull()
+      .references(() => patches.version),
+    data: jsonb('data').$type<ItemStateData>().notNull(),
+    provenance: jsonb('provenance').$type<Provenance>().notNull().default({}),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  },
+  (t) => [
+    uniqueIndex('ux_states_riot_patch').on(t.riotId, t.patchVersion),
+    index('ix_states_patch').on(t.patchVersion),
+  ]
+);
+
+/**
+ * フィールド単位・パッチ範囲付きの手動修正。
+ * 再同期で消えず、「26.10〜26.12の間だけ正しい値」も表現できる。
+ * effectiveToPatch = null は「現在まで有効」。
+ */
+export const manualOverrides = pgTable(
+  'manual_overrides',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    riotId: text('riot_id').notNull(),
+    fieldPath: text('field_path').notNull(),
+    value: jsonb('value').notNull(),
+    effectiveFromPatch: text('effective_from_patch')
+      .notNull()
+      .references(() => patches.version),
+    effectiveToPatch: text('effective_to_patch'),
+    reason: text('reason'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  },
+  (t) => [index('ix_overrides_riot').on(t.riotId, t.effectiveFromPatch)]
+);
+
+// ========== Layer 2: 変更イベント ==========
+
+/**
+ * パッチごとのアイテム変更。自動生成は review_status='pending' で、
+ * 人間の承認（approved）を経て公開タイムラインに表示される。
+ */
+export const itemChanges = pgTable(
+  'item_changes',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    riotId: text('riot_id').notNull(),
+    patchVersion: text('patch_version')
+      .notNull()
+      .references(() => patches.version),
+    changeType: text('change_type', {
+      enum: ['buff', 'nerf', 'adjusted', 'rework', 'new', 'removed'],
+    }).notNull(),
+    changes: jsonb('changes').$type<ChangeEntry[]>().notNull().default([]),
+    patchnoteQuote: text('patchnote_quote'),
+    reviewStatus: text('review_status', { enum: ['pending', 'approved', 'rejected'] })
+      .notNull()
+      .default('pending'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  },
+  (t) => [
+    uniqueIndex('ux_changes_riot_patch').on(t.riotId, t.patchVersion),
+    index('ix_changes_patch_status').on(t.patchVersion, t.reviewStatus),
+    index('ix_changes_riot_status').on(t.riotId, t.reviewStatus),
+  ]
+);
 
 // ========== 型定義 ==========
+
+export type Patch = typeof patches.$inferSelect;
+export type NewPatch = typeof patches.$inferInsert;
+
+export type DdragonSnapshot = typeof ddragonSnapshots.$inferSelect;
+export type NewDdragonSnapshot = typeof ddragonSnapshots.$inferInsert;
+
+export type PatchnoteDocument = typeof patchnoteDocuments.$inferSelect;
+export type NewPatchnoteDocument = typeof patchnoteDocuments.$inferInsert;
+
+export type PatchnoteExtract = typeof patchnoteExtracts.$inferSelect;
+export type NewPatchnoteExtract = typeof patchnoteExtracts.$inferInsert;
+
+export type ItemState = typeof itemStates.$inferSelect;
+export type NewItemState = typeof itemStates.$inferInsert;
+
+export type ManualOverride = typeof manualOverrides.$inferSelect;
+export type NewManualOverride = typeof manualOverrides.$inferInsert;
+
+export type ItemChange = typeof itemChanges.$inferSelect;
+export type NewItemChange = typeof itemChanges.$inferInsert;
 
 export type Item = typeof items.$inferSelect;
 export type NewItem = typeof items.$inferInsert;
@@ -102,9 +280,3 @@ export type NewRoleCategoryRecord = typeof roleCategories.$inferInsert;
 
 export type PatchVersion = typeof patchVersions.$inferSelect;
 export type NewPatchVersion = typeof patchVersions.$inferInsert;
-
-export type PatchBaselineData = typeof patchBaselineData.$inferSelect;
-export type NewPatchBaselineData = typeof patchBaselineData.$inferInsert;
-
-export type PatchItemsDiff = typeof patchItemsDiff.$inferSelect;
-export type NewPatchItemsDiff = typeof patchItemsDiff.$inferInsert;

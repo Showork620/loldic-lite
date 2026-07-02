@@ -1,0 +1,228 @@
+{
+  "1120": {
+    "name": "ドラン ヘルム",
+    "description": "<mainText><stats>体力<attention>150</attention><br>物理防御 <attention>8</attention><br>魔法防御<attention>8</attention></stats><br><br><passive>手助け</passive><br>通常攻撃がミニオンに<physicalDamage>5の追加物理ダメージ</physicalDamage>を与える。</mainText>",
+    "colloq": "",
+    "plaintext": "",
+    "image": {
+      "full": "1120.png",
+      "sprite": "item0.png",
+      "group": "item",
+      "x": 96,
+      "y": 192,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 450,
+      "purchasable": true,
+      "total": 450,
+      "sell": 180
+    },
+    "tags": [
+      "Health",
+      "SpellBlock",
+      "Armor",
+      "Lane"
+    ],
+    "maps": {
+      "11": true,
+      "12": true,
+      "21": true,
+      "22": false,
+      "30": false,
+      "33": false,
+      "35": false
+    },
+    "stats": {
+      "FlatSpellBlockMod": 8,
+      "FlatHPPoolMod": 150,
+      "FlatArmorMod": 8
+    }
+  },
+  "3078": {
+    "name": "トリニティ フォース",
+    "description": "<mainText><stats>攻撃力<attention>36</attention><br>攻撃速度<attention>30%</attention><br>体力<attention>333</attention><br>スキルヘイスト<attention>15</attention></stats><br><br><passive>追撃</passive><br>スキル使用後、次の通常攻撃で<physicalDamage>追加物理ダメージ</physicalDamage> <OnHit>通常攻撃時効果</OnHit>を与える。<br><br><passive>加速</passive><br>通常攻撃で2秒間、<speed>移動速度が20</speed>増加する。</mainText>",
+    "colloq": ";Trinity Force;triforce;tons of damage;TF;てぃーえふ;ティーエフ;とりにてぃ・ふぉーす;トリニティ フォース;とりにてぃふぉーす;トリニティフォース;torinitexifo-su;torinitelifo-su;toriniteifuosu;toriniteihuosu",
+    "plaintext": "圧倒的ダメージ",
+    "from": [
+      "3057",
+      "3044",
+      "3051"
+    ],
+    "image": {
+      "full": "3078.png",
+      "sprite": "item3.png",
+      "group": "item",
+      "x": 384,
+      "y": 240,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 133,
+      "purchasable": true,
+      "total": 3333,
+      "sell": 2333
+    },
+    "tags": [
+      "Health",
+      "Damage",
+      "AttackSpeed",
+      "CooldownReduction",
+      "OnHit",
+      "NonbootsMovement",
+      "AbilityHaste"
+    ],
+    "maps": {
+      "11": true,
+      "12": true,
+      "21": true,
+      "22": false,
+      "30": false,
+      "33": false,
+      "35": true
+    },
+    "stats": {
+      "FlatHPPoolMod": 333,
+      "FlatPhysicalDamageMod": 36,
+      "PercentAttackSpeedMod": 0.3
+    },
+    "effect": {
+      "Effect1Amount": "25",
+      "Effect2Amount": "60",
+      "Effect3Amount": "2",
+      "Effect4Amount": "1.5",
+      "Effect5Amount": "1.5"
+    },
+    "depth": 3
+  },
+  "4005": {
+    "name": "帝国の指令",
+    "description": "<mainText><stats>魔力<attention>60</attention><br>スキルヘイスト<attention>15</attention><br>基本マナ自動回復<attention>150%</attention></stats><br><br><passive>制御</passive><br><keyword>移動不能効果</keyword>を持つスキルが20のスキルヘイストを獲得する。<br><br><passive>指令</passive><br>敵チャンピオンに<keyword>移動不能効果</keyword>を与えると、その敵を4秒間、7%の<Keyword>「弱点」</Keyword>でマークする。<br></mainText>",
+    "colloq": ";Imperial•Mandate;Zhonya's Foresight;ぞーにゃのみらいどけい;ゾーニャの未来時計;時計;とけい;帝国の指令;ていこくのしれい;テイコクノシレイ;zo-nyanomiraidokei;teikokunosirei",
+    "plaintext": "被ダメージを先送り",
+    "from": [
+      "1052",
+      "4642",
+      "1052"
+    ],
+    "image": {
+      "full": "4005.png",
+      "sprite": "item5.png",
+      "group": "item",
+      "x": 48,
+      "y": 0,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 700,
+      "purchasable": true,
+      "total": 2400,
+      "sell": 1680
+    },
+    "tags": [
+      "SpellDamage",
+      "ManaRegen",
+      "CooldownReduction",
+      "AbilityHaste"
+    ],
+    "maps": {
+      "11": true,
+      "12": true,
+      "21": true,
+      "22": false,
+      "30": false,
+      "33": false,
+      "35": true
+    },
+    "stats": {
+      "FlatMagicDamageMod": 60
+    },
+    "depth": 3
+  },
+  "224005": {
+    "name": "帝国の指令",
+    "description": "<mainText><stats>魔力<attention>60</attention><br>スキルヘイスト<attention>15</attention><br>基本マナ自動回復<attention>150%</attention></stats><br><br><passive>制御</passive><br><keyword>移動不能効果</keyword>を持つスキルが15のスキルヘイストを獲得する。<br><br><passive>指令</passive><br>敵チャンピオンに<keyword>移動不能効果</keyword>を与えると、その敵を4秒間、6%の<Keyword>「弱点」</Keyword>でマークする。<br></mainText>",
+    "colloq": "",
+    "plaintext": "",
+    "image": {
+      "full": "224005.png",
+      "sprite": "item2.png",
+      "group": "item",
+      "x": 0,
+      "y": 192,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 2500,
+      "purchasable": true,
+      "total": 2500,
+      "sell": 1250
+    },
+    "tags": [
+      "SpellDamage",
+      "ManaRegen",
+      "CooldownReduction",
+      "AbilityHaste"
+    ],
+    "maps": {
+      "11": false,
+      "12": false,
+      "21": false,
+      "22": false,
+      "30": true,
+      "33": false,
+      "35": false
+    },
+    "stats": {
+      "FlatMagicDamageMod": 60
+    }
+  },
+  "324005": {
+    "name": "帝国の指令",
+    "description": "<mainText><stats>魔力<attention>65</attention><br>スキルヘイスト<attention>15</attention><br>基本マナ自動回復<attention>150%</attention></stats><br><br><passive>制御</passive><br><keyword>移動不能効果</keyword>を持つスキルが20のスキルヘイストを獲得する。<br><br><passive>指令</passive><br>敵チャンピオンに<keyword>移動不能効果</keyword>を与えると、その敵を4秒間、7%の<Keyword>「弱点」</Keyword>でマークする。<br></mainText>",
+    "colloq": "",
+    "plaintext": "",
+    "from": [
+      "1026",
+      "4642"
+    ],
+    "image": {
+      "full": "324005.png",
+      "sprite": "item4.png",
+      "group": "item",
+      "x": 288,
+      "y": 192,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 650,
+      "purchasable": true,
+      "total": 2400,
+      "sell": 1680
+    },
+    "tags": [
+      "SpellDamage",
+      "ManaRegen",
+      "CooldownReduction",
+      "AbilityHaste"
+    ],
+    "maps": {
+      "11": true,
+      "12": false,
+      "21": false,
+      "22": false,
+      "30": false,
+      "33": false,
+      "35": false
+    },
+    "stats": {
+      "FlatMagicDamageMod": 65
+    },
+    "depth": 3
+  }
+}

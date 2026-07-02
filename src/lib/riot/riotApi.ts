@@ -19,7 +19,7 @@ export async function getLatestVersion(): Promise<string> {
     if (!response.ok) {
       throw new Error(`Failed to fetch versions: ${response.statusText}`);
     }
-    const versions: string[] = await response.json();
+    const versions = (await response.json()) as string[];
     return versions[0]; // 最新バージョンは配列の先頭
   } catch (error) {
     console.error('Error fetching latest version:', error);
@@ -38,7 +38,7 @@ export async function getVersions(): Promise<string[]> {
     if (!response.ok) {
       throw new Error(`Failed to fetch versions: ${response.statusText}`);
     }
-    return await response.json();
+    return (await response.json()) as string[];
   } catch (error) {
     console.error('Error fetching versions:', error);
     throw error;
@@ -61,7 +61,7 @@ export async function fetchItemData(
     if (!response.ok) {
       throw new Error(`Failed to fetch item data: ${response.statusText}`);
     }
-    return await response.json();
+    return (await response.json()) as RiotAPIResponse;
   } catch (error) {
     console.error('Error fetching item data:', error);
     throw error;
@@ -85,7 +85,7 @@ export function getItemImageUrl(version: string, itemId: string): string {
  * @returns 除外すべきアイテムIDの配列
  */
 export function getUnavailableItemIds(
-  itemsData: Record<string, any>
+  itemsData: Record<string, RawRiotItemData>
 ): Array<{ riotId: string; reason: string | null }> {
   const results: Array<{ riotId: string; reason: string | null }> = [];
 

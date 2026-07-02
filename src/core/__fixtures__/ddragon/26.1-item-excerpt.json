@@ -1,0 +1,632 @@
+{
+  "1001": {
+    "name": "ブーツ",
+    "description": "<mainText><stats>移動速度<attention>25</attention></stats><br><br></mainText>",
+    "colloq": ";Boots of Speed;くつ;クツ;ぶーつ;ブーツ;靴;bu-tsu;bu-tu;butsu;butu",
+    "plaintext": "移動速度がわずかに上昇",
+    "into": [
+      "3005",
+      "3047",
+      "3006",
+      "3009",
+      "3010",
+      "3020",
+      "3111",
+      "3117",
+      "3158"
+    ],
+    "image": {
+      "full": "1001.png",
+      "sprite": "item0.png",
+      "group": "item",
+      "x": 0,
+      "y": 0,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 300,
+      "purchasable": true,
+      "total": 300,
+      "sell": 210
+    },
+    "tags": [
+      "Boots"
+    ],
+    "maps": {
+      "11": true,
+      "12": true,
+      "21": true,
+      "22": false,
+      "30": false,
+      "33": false,
+      "35": true
+    },
+    "stats": {
+      "FlatMovementSpeedMod": 25
+    }
+  },
+  "1035": {
+    "name": "残炎のナイフ",
+    "description": "<mainText><stats></stats><br><br>ジャングルモンスターに対してはオムニヴァンプ<passive>7%</passive><br><li><passive>烈炎:</passive> ジャングルモンスターにダメージを与えると対象を燃やし、5秒かけて<magicDamage>0の魔法ダメージ</magicDamage>を与える。<li><passive>挑戦の道:</passive> 「スマイト」を5回使用するとこのアイテムが<status>消費</status>されて、「スマイト」が<attention>「チャレンジ・スマイト」</attention>にアップグレードされ、モンスターへのダメージが<trueDamage>900</trueDamage>に増加し、ミニオンへのダメージが<trueDamage>500(+対象の最大体力の10%)</trueDamage>に増加する。「チャレンジ・スマイト」は4秒間チャンピオンをマークする。マークしたチャンピオンにダメージを与えると、2.5秒かけて<trueDamage>0の確定ダメージ</trueDamage>を追加で与える。自身がマークされたチャンピオンから受けるダメージは10%軽減される。<li><passive>狩人:</passive> 大型ジャングルモンスターをキルすると追加経験値を獲得する。<li><passive>リクープ:</passive> ジャングルまたは川にいる間は、減少マナに応じて最大で毎秒<scaleMana>0マナ</scaleMana>を回復する。<br><br><rules>このアイテムを<status>消費</status>するとアイテムのすべての効果を恒久的に獲得し、「スマイト」でモンスターに与えるダメージが増加する。ジャングルモンスターよりもミニオンから獲得したゴールドの方が多い場合は、ミニオンから得られるゴールドと経験値が大幅に低下する。範囲効果による攻撃でも回復量は減少しない。自身のレベルがその試合の全チャンピオンの平均レベルよりも2レベル低い場合は、モンスターをキルすると追加経験値を獲得する。 </rules><br><rules>「チャレンジ・スマイト」の炎上を適用するのは通常攻撃とスキルのみ。</rules></mainText>",
+    "colloq": "",
+    "plaintext": "",
+    "inStore": false,
+    "image": {
+      "full": "1035.png",
+      "sprite": "item0.png",
+      "group": "item",
+      "x": 48,
+      "y": 48,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 350,
+      "purchasable": false,
+      "total": 350,
+      "sell": 140
+    },
+    "tags": [
+      "LifeSteal",
+      "SpellVamp",
+      "Jungle"
+    ],
+    "maps": {
+      "11": false,
+      "12": false,
+      "21": false,
+      "22": false,
+      "30": false,
+      "33": false,
+      "35": false
+    },
+    "stats": {},
+    "effect": {
+      "Effect1Amount": "60",
+      "Effect2Amount": "25",
+      "Effect3Amount": "5",
+      "Effect4Amount": "8"
+    }
+  },
+  "1090": {
+    "name": "クエスト: トップ",
+    "description": "",
+    "colloq": "",
+    "plaintext": "",
+    "image": {
+      "full": "1090.png",
+      "sprite": "item0.png",
+      "group": "item",
+      "x": 384,
+      "y": 96,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 0,
+      "purchasable": true,
+      "total": 0,
+      "sell": 0
+    },
+    "tags": [
+      "Lane"
+    ],
+    "maps": {
+      "11": false,
+      "12": false,
+      "21": false,
+      "22": false,
+      "30": false,
+      "33": false,
+      "35": false
+    },
+    "stats": {}
+  },
+  "2003": {
+    "name": "体力ポーション",
+    "description": "<mainText><stats></stats><br><br><active>使用</active><br><healing>体力</healing>を15秒間かけて120回復する。</mainText>",
+    "colloq": ";Health Potion;あかぽ;れっど;へるす;らいふ;たいりょくぽーしょん;体力ポーション;tairyokupo-shonn;tairyokupo-syonn;tairyokuposhonn;tairyokuposyonn",
+    "plaintext": "消費して一定時間をかけて体力を回復",
+    "stacks": 5,
+    "consumed": true,
+    "image": {
+      "full": "2003.png",
+      "sprite": "item0.png",
+      "group": "item",
+      "x": 48,
+      "y": 432,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 50,
+      "purchasable": true,
+      "total": 50,
+      "sell": 20
+    },
+    "tags": [
+      "HealthRegen",
+      "Consumable",
+      "Lane",
+      "Jungle"
+    ],
+    "maps": {
+      "11": true,
+      "12": true,
+      "21": true,
+      "22": false,
+      "30": false,
+      "33": false,
+      "35": false
+    },
+    "stats": {}
+  },
+  "2512": {
+    "name": "フィーンドハンターの矢",
+    "description": "<mainText><stats>攻撃速度<attention>40%</attention><br>クリティカル率<attention>25%</attention><br>移動速度<attention>4%</attention></stats><br><br><passive>夜警</passive><br>アルティメットスキルヘイストが30増加する。<br><br><passive>連射</passive><br> アルティメットスキルを使用後、8秒間、次の3回の通常攻撃の<attackSpeed>攻撃速度が50%</attackSpeed>増加し、通常のクリティカルダメージの75%にあたるクリティカルダメージを与える。通常攻撃が元々クリティカルになる場合、代わりに<trueDamage>10%の追加確定ダメージ</trueDamage>を与える。</mainText>",
+    "colloq": "",
+    "plaintext": "",
+    "from": [
+      "3086",
+      "3144"
+    ],
+    "image": {
+      "full": "2512.png",
+      "sprite": "item3.png",
+      "group": "item",
+      "x": 96,
+      "y": 0,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 850,
+      "purchasable": true,
+      "total": 2650,
+      "sell": 1855
+    },
+    "tags": [
+      "CriticalStrike",
+      "AttackSpeed",
+      "NonbootsMovement",
+      "AbilityHaste"
+    ],
+    "maps": {
+      "11": true,
+      "12": true,
+      "21": true,
+      "22": false,
+      "30": false,
+      "33": false,
+      "35": false
+    },
+    "stats": {
+      "FlatCritChanceMod": 0.25,
+      "PercentAttackSpeedMod": 0.4,
+      "PercentMovementSpeedMod": 0.04
+    },
+    "depth": 3
+  },
+  "3031": {
+    "name": "インフィニティ エッジ",
+    "description": "<mainText><stats>攻撃力<attention>75</attention><br>クリティカル率<attention>25%</attention><br>クリティカルダメージ<attention>30%</attention></stats><br><br></mainText>",
+    "colloq": ";Infinity Edge;ie;あいいー;アイイー;えっぢ;いんふぃにてぃ・えっじ;インフィニティ エッジ;いんふぃにてぃえっじ;インフィニティエッジ;innfinitexiejji;innfiniteliezzi;infuiniteiejji;inhuiniteiezzi",
+    "plaintext": "クリティカルが大きく強化",
+    "from": [
+      "1038",
+      "1037",
+      "1018"
+    ],
+    "image": {
+      "full": "3031.png",
+      "sprite": "item3.png",
+      "group": "item",
+      "x": 288,
+      "y": 96,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 725,
+      "purchasable": true,
+      "total": 3500,
+      "sell": 2450
+    },
+    "tags": [
+      "CriticalStrike",
+      "Damage"
+    ],
+    "maps": {
+      "11": true,
+      "12": true,
+      "21": true,
+      "22": false,
+      "30": false,
+      "33": false,
+      "35": true
+    },
+    "stats": {
+      "FlatCritChanceMod": 0.25,
+      "FlatPhysicalDamageMod": 75
+    },
+    "depth": 2
+  },
+  "3078": {
+    "name": "トリニティ フォース",
+    "description": "<mainText><stats>攻撃力<attention>36</attention><br>攻撃速度<attention>30%</attention><br>体力<attention>333</attention><br>スキルヘイスト<attention>15</attention></stats><br><br><passive>追撃</passive><br>スキルを使った後、次の通常攻撃で<physicalDamage>追加物理ダメージ</physicalDamage> <OnHit>通常攻撃時効果</OnHit>を与える。<br><br><passive>加速</passive><br>通常攻撃で2秒間、<speed>移動速度が20</speed>増加する。</mainText>",
+    "colloq": ";Trinity Force;triforce;tons of damage;TF;てぃーえふ;ティーエフ;とりにてぃ・ふぉーす;トリニティ フォース;とりにてぃふぉーす;トリニティフォース;torinitexifo-su;torinitelifo-su;toriniteifuosu;toriniteihuosu",
+    "plaintext": "圧倒的ダメージ",
+    "from": [
+      "3057",
+      "3044",
+      "3051"
+    ],
+    "image": {
+      "full": "3078.png",
+      "sprite": "item3.png",
+      "group": "item",
+      "x": 192,
+      "y": 240,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 133,
+      "purchasable": true,
+      "total": 3333,
+      "sell": 2333
+    },
+    "tags": [
+      "Health",
+      "Damage",
+      "AttackSpeed",
+      "CooldownReduction",
+      "OnHit",
+      "NonbootsMovement",
+      "AbilityHaste"
+    ],
+    "maps": {
+      "11": true,
+      "12": true,
+      "21": true,
+      "22": false,
+      "30": false,
+      "33": false,
+      "35": true
+    },
+    "stats": {
+      "FlatHPPoolMod": 333,
+      "FlatPhysicalDamageMod": 36,
+      "PercentAttackSpeedMod": 0.3
+    },
+    "effect": {
+      "Effect1Amount": "25",
+      "Effect2Amount": "60",
+      "Effect3Amount": "2",
+      "Effect4Amount": "1.5",
+      "Effect5Amount": "1.5"
+    },
+    "depth": 3
+  },
+  "3153": {
+    "name": "ルインドキング ブレード",
+    "description": "<mainText><stats>攻撃力<attention>40</attention><br>攻撃速度<attention>25%</attention><br>ライフ スティール<attention>10%</attention></stats><br><br><passive>ミストエッジ</passive><br>通常攻撃が敵の現在体力の<physicalDamage>一定割合</physicalDamage>にあたる<physicalDamage>追加物理ダメージ</physicalDamage> <OnHit>通常攻撃時効果</OnHit>を与える。<br><br><passive>引き裂く影</passive><br>チャンピオンに3回通常攻撃を行うと、対象に1秒間、30%の<status>スロウ効果</status>を与える。</mainText>",
+    "colloq": ";Blade of the Ruined King;brk;bork;botrk;おうけん;るいんどきんぐ・ぶれーど;ルインドキング・ブレ―ド;るいんどきんぐ・ぶれいど;ルインドキング・ブレイド;るいんどきんぐぶれーど;ルインドキングブレ―ド;るいんどきんぐぶれいど;ルインドキングブレイド;オウケン;おーけん;オーケン;るーいん;ルーイン;ぶれきん;ブレキン;しっついのおうけん;失墜の王剣;shittsuinooukenn;sittuinooukenn",
+    "plaintext": "対象の体力を元にしたダメージを与え、移動速度を吸収",
+    "from": [
+      "1053",
+      "1043",
+      "1037"
+    ],
+    "image": {
+      "full": "3153.png",
+      "sprite": "item4.png",
+      "group": "item",
+      "x": 0,
+      "y": 0,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 725,
+      "purchasable": true,
+      "total": 3200,
+      "sell": 2240
+    },
+    "tags": [
+      "Damage",
+      "AttackSpeed",
+      "LifeSteal",
+      "Slow",
+      "OnHit"
+    ],
+    "maps": {
+      "11": true,
+      "12": true,
+      "21": true,
+      "22": false,
+      "30": false,
+      "33": false,
+      "35": true
+    },
+    "stats": {
+      "FlatPhysicalDamageMod": 40,
+      "PercentAttackSpeedMod": 0.25,
+      "PercentLifeStealMod": 0.1
+    },
+    "depth": 3
+  },
+  "3157": {
+    "name": "ゾーニャの砂時計",
+    "description": "<mainText><stats>魔力<attention>105</attention><br>物理防御 <attention>50</attention></stats><br><br><br><br><active>時間停止</active><br>2.5秒間<keyword>固有時停止</keyword>状態になる。</mainText>",
+    "colloq": ";Zhonya's Hourglass;zhg;zonyas;ぞにゃ;ゾニャ;ぴかーん;ピカーン;すなどけい;あわぐら;アワグラ;ぞーにゃのすなどけい;スナドケイ;あわーぐらす;アワーグラス;ゾーニャの砂時計;zo-nyanosunadokei;zonyanosunadokei",
+    "plaintext": "発動ですべての行動が不可になるが、一定時間無敵になる",
+    "from": [
+      "1058",
+      "2420"
+    ],
+    "image": {
+      "full": "3157.png",
+      "sprite": "item4.png",
+      "group": "item",
+      "x": 144,
+      "y": 0,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 450,
+      "purchasable": true,
+      "total": 3250,
+      "sell": 2275
+    },
+    "tags": [
+      "Armor",
+      "SpellDamage",
+      "Active"
+    ],
+    "maps": {
+      "11": true,
+      "12": true,
+      "21": true,
+      "22": false,
+      "30": false,
+      "33": false,
+      "35": true
+    },
+    "stats": {
+      "FlatMagicDamageMod": 105,
+      "FlatArmorMod": 50
+    },
+    "effect": {
+      "Effect1Amount": "0",
+      "Effect2Amount": "2.5",
+      "Effect3Amount": "120"
+    },
+    "depth": 3
+  },
+  "3508": {
+    "name": "エッセンス リーバー",
+    "description": "<mainText><stats>攻撃力<attention>55</attention><br>スキルヘイスト<attention>20</attention><br>クリティカル率<attention>25%</attention></stats><br><br><passive>追撃</passive><br>スキルを使用後、次の通常攻撃で<physicalDamage>追加物理ダメージ</physicalDamage>を与え、<scaleMana>マナ</scaleMana> <OnHit>通常攻撃時効果</OnHit>を回復する。</mainText>",
+    "colloq": "",
+    "plaintext": "",
+    "from": [
+      "3057",
+      "3133",
+      "1018"
+    ],
+    "image": {
+      "full": "3508.png",
+      "sprite": "item4.png",
+      "group": "item",
+      "x": 0,
+      "y": 288,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 350,
+      "purchasable": true,
+      "total": 2900,
+      "sell": 2030
+    },
+    "tags": [
+      "Damage",
+      "CriticalStrike",
+      "ManaRegen",
+      "CooldownReduction",
+      "OnHit",
+      "AbilityHaste"
+    ],
+    "maps": {
+      "11": true,
+      "12": true,
+      "21": true,
+      "22": false,
+      "30": false,
+      "33": false,
+      "35": true
+    },
+    "stats": {
+      "FlatCritChanceMod": 0.25,
+      "FlatPhysicalDamageMod": 55
+    },
+    "depth": 3
+  },
+  "4005": {
+    "name": "帝国の指令",
+    "description": "<mainText><stats>魔力<attention>60</attention><br>スキルヘイスト<attention>20</attention><br>基本マナ自動回復<attention>125%</attention></stats><br><br><passive>調整射撃</passive> 対象ごとに (0秒) <br>敵チャンピオンに<keyword>スロウ効果</keyword>または<keyword>移動不能効果</keyword>を与えた際、対象を5秒間マークする。味方チャンピオンがダメージを与えるとマークが爆発し、<magicDamage>現在体力の10%にあたる魔法ダメージ</magicDamage>を与える。 </mainText>",
+    "colloq": ";Imperial•Mandate;Zhonya's Foresight;ぞーにゃのみらいどけい;ゾーニャの未来時計;時計;とけい;帝国の指令;ていこくのしれい;テイコクノシレイ;zo-nyanomiraidokei;teikokunosirei",
+    "plaintext": "被ダメージを先送り",
+    "from": [
+      "3108",
+      "4642"
+    ],
+    "image": {
+      "full": "4005.png",
+      "sprite": "item4.png",
+      "group": "item",
+      "x": 288,
+      "y": 432,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 500,
+      "purchasable": true,
+      "total": 2250,
+      "sell": 1575
+    },
+    "tags": [
+      "SpellDamage",
+      "ManaRegen",
+      "CooldownReduction",
+      "AbilityHaste"
+    ],
+    "maps": {
+      "11": true,
+      "12": true,
+      "21": true,
+      "22": false,
+      "30": false,
+      "33": false,
+      "35": true
+    },
+    "stats": {
+      "FlatMagicDamageMod": 60
+    },
+    "depth": 3
+  },
+  "6672": {
+    "name": "クラーケン スレイヤー",
+    "description": "<mainText><stats>攻撃力<attention>45</attention><br>攻撃速度<attention>40%</attention><br>移動速度<attention>4%</attention></stats><br><br><passive>打倒</passive><br>通常攻撃が3回ごとに<physicalDamage>追加物理ダメージ</physicalDamage> <OnHit>通常攻撃時効果</OnHit>を与える。このダメージは減少体力に応じて増加する。</mainText>",
+    "colloq": "",
+    "plaintext": "",
+    "from": [
+      "6690",
+      "3051",
+      "1043"
+    ],
+    "image": {
+      "full": "6672.png",
+      "sprite": "item6.png",
+      "group": "item",
+      "x": 48,
+      "y": 48,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 325,
+      "purchasable": true,
+      "total": 3000,
+      "sell": 2100
+    },
+    "tags": [
+      "Damage",
+      "AttackSpeed",
+      "OnHit",
+      "NonbootsMovement"
+    ],
+    "maps": {
+      "11": true,
+      "12": true,
+      "21": true,
+      "22": false,
+      "30": false,
+      "33": false,
+      "35": true
+    },
+    "stats": {
+      "FlatPhysicalDamageMod": 45,
+      "PercentAttackSpeedMod": 0.4,
+      "PercentMovementSpeedMod": 0.04
+    },
+    "depth": 3
+  },
+  "224005": {
+    "name": "帝国の指令",
+    "description": "<mainText><stats>魔力<attention>60</attention><br>スキルヘイスト<attention>35</attention><br>基本マナ自動回復<attention>150%</attention></stats><br><br><passive>調整射撃</passive> 対象ごとに(0秒)<br>敵チャンピオンに<keyword>スロウ効果</keyword>または<keyword>移動不能効果</keyword>を付与すると対象を5秒間マークする。味方チャンピオンがダメージを与えるとマークが爆発し、<magicDamage>現在体力の20%にあたる魔法ダメージ</magicDamage>を与える。 </mainText>",
+    "colloq": "",
+    "plaintext": "",
+    "image": {
+      "full": "224005.png",
+      "sprite": "item2.png",
+      "group": "item",
+      "x": 384,
+      "y": 144,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 2500,
+      "purchasable": true,
+      "total": 2500,
+      "sell": 1250
+    },
+    "tags": [
+      "SpellDamage",
+      "ManaRegen",
+      "CooldownReduction",
+      "AbilityHaste"
+    ],
+    "maps": {
+      "11": false,
+      "12": false,
+      "21": false,
+      "22": false,
+      "30": true,
+      "33": false,
+      "35": false
+    },
+    "stats": {
+      "FlatMagicDamageMod": 60
+    }
+  },
+  "324005": {
+    "name": "帝国の指令",
+    "description": "<mainText><stats>魔力<attention>65</attention><br>スキルヘイスト<attention>20</attention><br>基本マナ自動回復<attention>150%</attention></stats><br><br><passive>調整射撃</passive> 対象ごとに (0秒) <br>敵チャンピオンに<keyword>スロウ効果</keyword>または<keyword>移動不能効果</keyword>を与えた際、対象を5秒間マークする。味方チャンピオンがダメージを与えるとマークが爆発し、<magicDamage>現在体力の10%にあたる魔法ダメージ</magicDamage>を与える。 </mainText>",
+    "colloq": "",
+    "plaintext": "",
+    "from": [
+      "3108",
+      "1052",
+      "4642"
+    ],
+    "image": {
+      "full": "324005.png",
+      "sprite": "item4.png",
+      "group": "item",
+      "x": 48,
+      "y": 192,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 600,
+      "purchasable": true,
+      "total": 2750,
+      "sell": 1925
+    },
+    "tags": [
+      "SpellDamage",
+      "ManaRegen",
+      "CooldownReduction",
+      "AbilityHaste"
+    ],
+    "maps": {
+      "11": true,
+      "12": false,
+      "21": false,
+      "22": false,
+      "30": false,
+      "33": false,
+      "35": false
+    },
+    "stats": {
+      "FlatMagicDamageMod": 65
+    },
+    "depth": 3
+  }
+}

@@ -33,15 +33,17 @@ export const Combobox: React.FC<ComboboxProps> = ({
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Initialize filter text based on selected value
-  useEffect(() => {
+  // 選択値が変わったらフィルタ文字列を同期（レンダー中のstate調整パターン）
+  const [prevValue, setPrevValue] = useState(value);
+  if (prevValue !== value) {
+    setPrevValue(value);
     if (value) {
       const selectedOption = options.find((opt) => opt.value === value);
       if (selectedOption) {
         setFilterText(selectedOption.label);
       }
     }
-  }, [value, options]);
+  }
 
   const filteredOptions = options.filter((opt) =>
     opt.label.toLowerCase().includes(filterText.toLowerCase())

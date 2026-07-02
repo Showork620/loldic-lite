@@ -1,21 +1,8 @@
-import { createContext, useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import type { ReactNode } from 'react';
 import { Snackbar } from './Snackbar';
+import { SnackbarContext, type Toast } from './SnackbarContext';
 import styles from './SnackbarProvider.module.css';
-
-interface Toast {
-  id: string;
-  message: string;
-  type: 'success' | 'error' | 'warning' | 'info';
-  duration: number;
-}
-
-interface SnackbarContextValue {
-  showSnackbar: (message: string, type: Toast['type'], duration?: number) => void;
-  hideSnackbar: (id: string) => void;
-}
-
-export const SnackbarContext = createContext<SnackbarContextValue | undefined>(undefined);
 
 interface SnackbarProviderProps {
   children: ReactNode;

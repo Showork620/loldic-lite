@@ -9,12 +9,21 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "pipeline:ingest": "tsx scripts/ingest-ddragon.ts",
+    "pipeline:fetch-note": "tsx scripts/fetch-patchnote.ts",
+    "pipeline:extract": "tsx scripts/extract-patchnote.ts",
+    "pipeline:propose": "tsx scripts/propose-changes.ts",
+    "pipeline:publish": "tsx scripts/publish.ts",
+    "pipeline:backfill": "tsx scripts/backfill.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.87.0",
+    "cheerio": "^1.2.0",
     "drizzle-orm": "^0.45.0",
     "lucide-react": "^0.559.0",
     "pg": "^8.16.3",
@@ -25,6 +34,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.1",
     "@types/node": "^24.10.1",
+    "@types/pg": "^8.20.0",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
@@ -35,8 +45,11 @@
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
     "prettier": "^3.7.4",
+    "sharp": "^0.35.3",
+    "tsx": "^4.22.5",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
-    "vite": "^7.2.4"
+    "vite": "^7.2.4",
+    "vitest": "^4.1.9"
   }
 }

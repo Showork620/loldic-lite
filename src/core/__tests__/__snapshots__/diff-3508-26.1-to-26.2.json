@@ -1,0 +1,29 @@
+[
+  {
+    "target": "priceTotal",
+    "targetLabel": "合計価格",
+    "before": 2900,
+    "after": 3050,
+    "direction": "down",
+    "source": "ddragon_diff",
+    "confidence": 1
+  },
+  {
+    "target": "priceSell",
+    "targetLabel": "売却価格",
+    "before": 2030,
+    "after": 2135,
+    "direction": "neutral",
+    "source": "ddragon_diff",
+    "confidence": 1
+  },
+  {
+    "target": "basicStats.攻撃力",
+    "targetLabel": "攻撃力",
+    "before": 55,
+    "after": 50,
+    "direction": "down",
+    "source": "ddragon_diff",
+    "confidence": 1
+  }
+]

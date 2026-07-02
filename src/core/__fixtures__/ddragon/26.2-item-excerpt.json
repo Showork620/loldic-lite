@@ -1,0 +1,283 @@
+{
+  "2001": {
+    "name": "リコール",
+    "description": "8秒間詠唱し、スタート位置へテレポートする。詠唱中にダメージを受けるとテレポートはキャンセルされる。",
+    "colloq": "",
+    "plaintext": "",
+    "stacks": 0,
+    "inStore": false,
+    "image": {
+      "full": "2001.png",
+      "sprite": "item0.png",
+      "group": "item",
+      "x": 0,
+      "y": 432,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 60,
+      "purchasable": false,
+      "total": 60,
+      "sell": 42
+    },
+    "tags": [],
+    "maps": {
+      "11": true,
+      "12": true,
+      "21": true,
+      "22": false,
+      "30": true,
+      "33": false,
+      "35": true
+    },
+    "stats": {}
+  },
+  "2512": {
+    "name": "フィーンドハンターの矢",
+    "description": "<mainText><stats>攻撃速度<attention>45%</attention><br>クリティカル率<attention>25%</attention><br>移動速度<attention>4%</attention></stats><br><br><passive>夜警</passive><br>アルティメットスキルヘイストが30増加する。<br><br><passive>連射</passive><br> アルティメットスキルを使用後、8秒間、次の3回の通常攻撃の<attackSpeed>攻撃速度が50%</attackSpeed>増加し、通常のクリティカルダメージの80%にあたるクリティカルダメージを与える。通常攻撃が元々クリティカルになる場合、代わりに<trueDamage>15%の追加確定ダメージ</trueDamage>を与える。</mainText>",
+    "colloq": "",
+    "plaintext": "",
+    "from": [
+      "3086",
+      "3144"
+    ],
+    "image": {
+      "full": "2512.png",
+      "sprite": "item3.png",
+      "group": "item",
+      "x": 240,
+      "y": 0,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 850,
+      "purchasable": true,
+      "total": 2650,
+      "sell": 1855
+    },
+    "tags": [
+      "CriticalStrike",
+      "AttackSpeed",
+      "NonbootsMovement",
+      "AbilityHaste"
+    ],
+    "maps": {
+      "11": true,
+      "12": true,
+      "21": true,
+      "22": false,
+      "30": false,
+      "33": false,
+      "35": false
+    },
+    "stats": {
+      "FlatCritChanceMod": 0.25,
+      "PercentAttackSpeedMod": 0.45,
+      "PercentMovementSpeedMod": 0.04
+    },
+    "depth": 3
+  },
+  "2524": {
+    "name": "バンドルパイプ",
+    "description": "<mainText><stats>体力<attention>200</attention><br>スキルヘイスト<attention>15</attention><br>物理防御 <attention>20</attention><br>魔法防御<attention>20</attention></stats><br><br><passive>ファンファーレ</passive><br>敵チャンピオンに<keyword>スロウ効果</keyword>または<keyword>移動不能効果</keyword>を付与すると、0秒間「ファンファーレ」を獲得する。「ファンファーレ」は<speed>移動速度を20</speed>増加させる。「ファンファーレ」を獲得中は、自身を含む周囲の味方の<attackSpeed>攻撃速度が0</attackSpeed>増加する。</mainText>",
+    "colloq": "",
+    "plaintext": "",
+    "from": [
+      "3067",
+      "1029",
+      "1033"
+    ],
+    "image": {
+      "full": "2524.png",
+      "sprite": "item3.png",
+      "group": "item",
+      "x": 0,
+      "y": 48,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 800,
+      "purchasable": true,
+      "total": 2300,
+      "sell": 1610
+    },
+    "tags": [
+      "Health",
+      "SpellBlock",
+      "Armor",
+      "AttackSpeed",
+      "NonbootsMovement",
+      "AbilityHaste"
+    ],
+    "maps": {
+      "11": true,
+      "12": true,
+      "21": true,
+      "22": false,
+      "30": false,
+      "33": false,
+      "35": false
+    },
+    "stats": {
+      "FlatSpellBlockMod": 20,
+      "FlatHPPoolMod": 200,
+      "FlatArmorMod": 20
+    },
+    "depth": 3
+  },
+  "3078": {
+    "name": "トリニティ フォース",
+    "description": "<mainText><stats>攻撃力<attention>36</attention><br>攻撃速度<attention>30%</attention><br>体力<attention>333</attention><br>スキルヘイスト<attention>15</attention></stats><br><br><passive>追撃</passive><br>スキルを使った後、次の通常攻撃で<physicalDamage>追加物理ダメージ</physicalDamage> <OnHit>通常攻撃時効果</OnHit>を与える。<br><br><passive>加速</passive><br>通常攻撃で2秒間、<speed>移動速度が20</speed>増加する。</mainText>",
+    "colloq": ";Trinity Force;triforce;tons of damage;TF;てぃーえふ;ティーエフ;とりにてぃ・ふぉーす;トリニティ フォース;とりにてぃふぉーす;トリニティフォース;torinitexifo-su;torinitelifo-su;toriniteifuosu;toriniteihuosu",
+    "plaintext": "圧倒的ダメージ",
+    "from": [
+      "3057",
+      "3044",
+      "3051"
+    ],
+    "image": {
+      "full": "3078.png",
+      "sprite": "item3.png",
+      "group": "item",
+      "x": 336,
+      "y": 240,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 133,
+      "purchasable": true,
+      "total": 3333,
+      "sell": 2333
+    },
+    "tags": [
+      "Health",
+      "Damage",
+      "AttackSpeed",
+      "CooldownReduction",
+      "OnHit",
+      "NonbootsMovement",
+      "AbilityHaste"
+    ],
+    "maps": {
+      "11": true,
+      "12": true,
+      "21": true,
+      "22": false,
+      "30": false,
+      "33": false,
+      "35": true
+    },
+    "stats": {
+      "FlatHPPoolMod": 333,
+      "FlatPhysicalDamageMod": 36,
+      "PercentAttackSpeedMod": 0.3
+    },
+    "effect": {
+      "Effect1Amount": "25",
+      "Effect2Amount": "60",
+      "Effect3Amount": "2",
+      "Effect4Amount": "1.5",
+      "Effect5Amount": "1.5"
+    },
+    "depth": 3
+  },
+  "3095": {
+    "name": "ストームレイザー",
+    "description": "<mainText><stats>攻撃力<attention>50</attention><br>攻撃速度<attention>20%</attention><br>クリティカル率<attention>25%</attention></stats><br><br><passive>エネルギー充填</passive><br>移動と通常攻撃で<keyword>エネルギー充填状態の通常攻撃</keyword>を行えるようになる。<br><br><passive>稲妻</passive><br><keyword>エネルギー充填状態の通常攻撃</keyword>が<magicDamage>0の追加魔法ダメージ</magicDamage>を与え、1.5秒間、<speed>移動速度を45%</speed>増加させる。<br></mainText>",
+    "colloq": ";Windblade;うぃんどぶれーど;ウィンドブレード;uxindobure-do;uxinndobure-do;ulindobure-do;ulinndobure-do;Stormrazor;ストームレイザー;すとーむれいざー;suto-mureiza-;sutomureiza",
+    "plaintext": "他のエネルギー充填状態の効果を大幅に強化する",
+    "from": [
+      "1038",
+      "1018",
+      "3144"
+    ],
+    "image": {
+      "full": "3095.png",
+      "sprite": "item3.png",
+      "group": "item",
+      "x": 336,
+      "y": 288,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 500,
+      "purchasable": true,
+      "total": 3000,
+      "sell": 2100
+    },
+    "tags": [
+      "Damage",
+      "CriticalStrike",
+      "AttackSpeed",
+      "NonbootsMovement"
+    ],
+    "maps": {
+      "11": false,
+      "12": false,
+      "21": false,
+      "22": false,
+      "30": false,
+      "33": false,
+      "35": false
+    },
+    "stats": {
+      "FlatCritChanceMod": 0.25,
+      "FlatPhysicalDamageMod": 50,
+      "PercentAttackSpeedMod": 0.2
+    },
+    "depth": 3
+  },
+  "3508": {
+    "name": "エッセンス リーバー",
+    "description": "<mainText><stats>攻撃力<attention>50</attention><br>スキルヘイスト<attention>20</attention><br>クリティカル率<attention>25%</attention></stats><br><br><passive>追撃</passive><br>スキルを使用後、次の通常攻撃で<physicalDamage>追加物理ダメージ</physicalDamage>を与え、<scaleMana>マナ</scaleMana> <OnHit>通常攻撃時効果</OnHit>を回復する。</mainText>",
+    "colloq": "",
+    "plaintext": "",
+    "from": [
+      "3057",
+      "3133",
+      "1018"
+    ],
+    "image": {
+      "full": "3508.png",
+      "sprite": "item4.png",
+      "group": "item",
+      "x": 144,
+      "y": 288,
+      "w": 48,
+      "h": 48
+    },
+    "gold": {
+      "base": 500,
+      "purchasable": true,
+      "total": 3050,
+      "sell": 2135
+    },
+    "tags": [
+      "Damage",
+      "CriticalStrike",
+      "ManaRegen",
+      "CooldownReduction",
+      "OnHit",
+      "AbilityHaste"
+    ],
+    "maps": {
+      "11": true,
+      "12": true,
+      "21": true,
+      "22": false,
+      "30": false,
+      "33": false,
+      "35": true
+    },
+    "stats": {
+      "FlatCritChanceMod": 0.25,
+      "FlatPhysicalDamageMod": 50
+    },
+    "depth": 3
+  }
+}

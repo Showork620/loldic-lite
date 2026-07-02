@@ -7,7 +7,7 @@ import type { NewItem } from '../db/schema';
 /**
  * Drizzleの型（camelCase）からSupabaseのカラム名（snake_case）に変換
  */
-export function toSnakeCase(item: Omit<NewItem, 'id' | 'createdAt'>): Record<string, any> {
+export function toSnakeCase(item: Omit<NewItem, 'id' | 'createdAt'>): Record<string, unknown> {
   return {
     riot_id: item.riotId,
     name_ja: item.nameJa,
@@ -34,7 +34,7 @@ export function toSnakeCase(item: Omit<NewItem, 'id' | 'createdAt'>): Record<str
 /**
  * Supabaseのレスポンス（snake_case）からDrizzleの型（camelCase）に変換
  */
-export function toCamelCase(data: Record<string, any>): any {
+export function toCamelCase(data: Record<string, unknown>): Record<string, unknown> {
   return {
     id: data.id,
     riotId: data.riot_id,
@@ -55,7 +55,7 @@ export function toCamelCase(data: Record<string, any>): any {
     buildFrom: data.build_from,
     buildInto: data.build_into,
     updatedPatch: data.updated_patch,
-    createdAt: new Date(data.created_at),
-    updatedAt: new Date(data.updated_at)
+    createdAt: new Date(data.created_at as string),
+    updatedAt: new Date(data.updated_at as string)
   };
 }

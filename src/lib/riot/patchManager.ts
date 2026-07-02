@@ -3,12 +3,7 @@
  */
 
 import { getLatestVersion } from './riotApi';
-import {
-  getPatchVersion,
-  updatePatchVersion,
-  saveItemsDiff
-} from '../supabase/patchData';
-import type { NewItem } from '../../db/schema';
+import { getPatchVersion, updatePatchVersion } from '../supabase/patchData';
 
 const RATE_LIMIT_MS = 60 * 1000; // 1分
 
@@ -82,71 +77,4 @@ export async function checkForUpdates(): Promise<{
       error: error instanceof Error ? error.message : 'Unknown error'
     };
   }
-}
-
-/**
- * 新しいパッチバージョンをDBに保存
- * @param newPatch 新しいパッチバージョン
- */
-export async function savePatchVersion(newPatch: string): Promise<{ success: boolean; error?: string }> {
-  return updatePatchVersion({
-    currentPatch: newPatch,
-    lastCheckedAt: new Date(),
-    updatedAt: new Date()
-  });
-}
-
-/**
- * 2つのアイテムデータセットを比較して差分を計算
- * @param baselineItems 基準アイテムデータ（v16.1.1）
- * @param newItems 新しいアイテムデータ
- * @param newPatchVersion 新しいパッチバージョン
- * @returns 差分アイテムの配列
- */
-export function calculateItemDiff(
-  baselineItems: Record<string, NewItem>,
-  newItems: Record<string, NewItem>,
-  newPatchVersion: string
-) {
-  const diffItems = [];
-
-  // 新規追加 or 変更されたアイテムを検出
-  for (const [riotId, newItem] of Object.entries(newItems)) {
-    const baselineItem = baselineItems[riotId];
-
-    if (!baselineItem) {
-      // 新規追加
-      diffItems.push({
-        patchVersion: newPatchVersion,
-        riotId,
-        itemData: newItem
-      });
-    } else {
-      // 変更検出（単純な文字列比較）
-      const hasChanged = JSON.stringify(baselineItem) !== JSON.stringify(newItem);
-      if (hasChanged) {
-        diffItems.push({
-          patchVersion: newPatchVersion,
-          riotId,
-          itemData: newItem
-        });
-      }
-    }
-  }
-
-  return diffItems;
-}
-
-/**
- * パッチアイテムの差分データをDBに保存
- * @param diffItems 差分アイテムデータ
- */
-export async function savePatchItemsDiff(
-  diffItems: { patchVersion: string; riotId: string; itemData: any }[]
-): Promise<{ success: boolean; error?: string }> {
-  if (diffItems.length === 0) {
-    return { success: true };
-  }
-
-  return saveItemsDiff(diffItems);
 }

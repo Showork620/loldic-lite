@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import styles from './Snackbar.module.css';
 
 export interface SnackbarProps {
@@ -12,6 +12,14 @@ export interface SnackbarProps {
 export function Snackbar({ message, type, duration = 3000, onClose }: SnackbarProps) {
   const [isExiting, setIsExiting] = useState(false);
   const [progress, setProgress] = useState(100);
+
+  const handleClose = useCallback(() => {
+    setIsExiting(true);
+    // アニメーション完了後にonCloseを呼ぶ
+    setTimeout(() => {
+      onClose?.();
+    }, 300); // CSSのアニメーション時間と同じ
+  }, [onClose]);
 
   useEffect(() => {
     // プログレスバーのアニメーション
@@ -31,15 +39,7 @@ export function Snackbar({ message, type, duration = 3000, onClose }: SnackbarPr
       clearInterval(progressInterval);
       clearTimeout(closeTimer);
     };
-  }, [duration]);
-
-  const handleClose = () => {
-    setIsExiting(true);
-    // アニメーション完了後にonCloseを呼ぶ
-    setTimeout(() => {
-      onClose?.();
-    }, 300); // CSSのアニメーション時間と同じ
-  };
+  }, [duration, handleClose]);
 
   const getIcon = () => {
     switch (type) {

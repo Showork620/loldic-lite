@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState } from 'react';
 import { getItemImagePublicUrl } from '../../lib/supabase/supabaseStorage';
 import { Icon } from './Icon';
 import styles from './ItemImage.module.css';
@@ -18,37 +18,27 @@ export const ItemImage: React.FC<ItemImageProps> = ({
   className = '',
   onError,
 }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string>('');
-
-  useEffect(() => {
-    if (!imagePath) {
-      setHasError(true);
-      setIsLoading(false);
-      return;
-    }
-
-    // Direct URL check
-    if (imagePath.startsWith('http')) {
-      setImageUrl(imagePath);
-      setHasError(false);
-      setIsLoading(true);
-      return;
-    }
-
+  const imageUrl = useMemo(() => {
+    if (!imagePath) return null;
+    if (imagePath.startsWith('http')) return imagePath;
     try {
-      // Get public URL from Supabase storage
-      const url = getItemImagePublicUrl(imagePath);
-      setImageUrl(url);
-      setHasError(false);
-      setIsLoading(true);
+      return getItemImagePublicUrl(imagePath);
     } catch (e) {
       console.error('Failed to get image URL:', e);
-      setHasError(true);
-      setIsLoading(false);
+      return null;
     }
   }, [imagePath]);
+
+  const [isLoading, setIsLoading] = useState(imageUrl !== null);
+  const [hasError, setHasError] = useState(imageUrl === null);
+  const [prevUrl, setPrevUrl] = useState(imageUrl);
+
+  // URLが変わったらロード状態をリセット（レンダー中のstate調整パターン）
+  if (prevUrl !== imageUrl) {
+    setPrevUrl(imageUrl);
+    setIsLoading(imageUrl !== null);
+    setHasError(imageUrl === null);
+  }
 
   const handleLoad = () => {
     setIsLoading(false);
@@ -74,7 +64,7 @@ export const ItemImage: React.FC<ItemImageProps> = ({
     >
       {isLoading && <div className={styles.loading} />}
 
-      {!hasError ? (
+      {!hasError && imageUrl ? (
         <img
           src={imageUrl}
           alt={alt}
