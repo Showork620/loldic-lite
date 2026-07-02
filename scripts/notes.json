@@ -1,0 +1,16 @@
+{
+  "_comment": "backfill用パッチノートURLマニフェスト。scripts/notes.json にコピーして使う。URLスラッグは不統一（patch-26-2-notes / league-of-legends-patch-26-10-notes）なので手動で管理する",
+  "26.1": "https://www.leagueoflegends.com/ja-jp/news/game-updates/patch-26-1-notes",
+  "26.2": "https://www.leagueoflegends.com/ja-jp/news/game-updates/patch-26-2-notes",
+  "26.3": "https://www.leagueoflegends.com/ja-jp/news/game-updates/patch-26-3-notes",
+  "26.4": "https://www.leagueoflegends.com/ja-jp/news/game-updates/league-of-legends-patch-26-4-notes",
+  "26.5": "https://www.leagueoflegends.com/ja-jp/news/game-updates/league-of-legends-patch-26-5-notes",
+  "26.6": "https://www.leagueoflegends.com/ja-jp/news/game-updates/league-of-legends-patch-26-6-notes",
+  "26.7": "https://www.leagueoflegends.com/ja-jp/news/game-updates/league-of-legends-patch-26-7-notes",
+  "26.8": "https://www.leagueoflegends.com/ja-jp/news/game-updates/league-of-legends-patch-26-8-notes",
+  "26.9": "https://www.leagueoflegends.com/ja-jp/news/game-updates/league-of-legends-patch-26-9-notes",
+  "26.10": "https://www.leagueoflegends.com/ja-jp/news/game-updates/league-of-legends-patch-26-10-notes",
+  "26.11": "https://www.leagueoflegends.com/ja-jp/news/game-updates/league-of-legends-patch-26-11-notes",
+  "26.12": "https://www.leagueoflegends.com/ja-jp/news/game-updates/league-of-legends-patch-26-12-notes",
+  "26.13": "https://www.leagueoflegends.com/ja-jp/news/game-updates/league-of-legends-patch-26-13-notes"
+}

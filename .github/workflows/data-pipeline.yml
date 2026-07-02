@@ -1,0 +1,80 @@
+# データパイプライン（手動実行＋新パッチ自動検知）
+#
+# - workflow_dispatch: 任意ステージを手動実行（publishは必ずここから）
+# - schedule: 毎日1回、DDragonの新バージョンを検知したらingestのみ自動実行
+#
+# 必要なSecrets:
+#   DATABASE_URL              Supabase Postgres接続文字列（session pooler, port 5432）
+#   SUPABASE_URL              SupabaseプロジェクトURL
+#   SUPABASE_SERVICE_ROLE_KEY Storage書き込み用サービスロールキー
+name: data-pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: 実行ステージ
+        type: choice
+        required: true
+        options: [ingest, fetch-note, extract, propose, publish, backfill]
+      patch:
+        description: パッチ名（例 26.13, hotfixは26.13b。backfill時は "26.1-26.13"）
+        type: string
+        required: true
+      url:
+        description: パッチノートURL（fetch-note時のみ）
+        type: string
+        required: false
+      flags:
+        description: 追加フラグ（例 --rerun, --force, --hotfix）
+        type: string
+        required: false
+  schedule:
+    - cron: '0 3 * * *' # JST 12:00
+
+jobs:
+  dispatch:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Run stage
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          STAGE="${{ inputs.stage }}"
+          PATCH="${{ inputs.patch }}"
+          URL="${{ inputs.url }}"
+          FLAGS="${{ inputs.flags }}"
+          if [ "$STAGE" = "backfill" ]; then
+            FROM="${PATCH%-*}"; TO="${PATCH#*-}"
+            npm run pipeline:backfill -- --from "$FROM" --to "$TO" --notes-manifest scripts/notes.json $FLAGS
+          elif [ "$STAGE" = "fetch-note" ]; then
+            npm run pipeline:fetch-note -- --patch "$PATCH" --url "$URL" $FLAGS
+          else
+            npm run "pipeline:$STAGE" -- --patch "$PATCH" $FLAGS
+          fi
+
+  watch:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Detect new patch and ingest
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: npx tsx scripts/watch-new-patch.ts
