@@ -1,0 +1,52 @@
+.container {
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--color-warning);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  background: rgba(200, 155, 60, 0.05);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 1rem;
+  align-items: start;
+}
+
+.info {
+  min-width: 0;
+}
+
+.name {
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.confidence {
+  font-size: 0.75rem;
+  color: var(--color-warning);
+  margin-left: 0.5rem;
+}
+
+.quote {
+  white-space: pre-wrap;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  border-left: 3px solid var(--color-gold-700);
+  padding-left: 0.75rem;
+  margin: 0.5rem 0 0;
+  font-family: inherit;
+}
+
+.linkControls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}

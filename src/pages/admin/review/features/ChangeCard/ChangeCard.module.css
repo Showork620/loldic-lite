@@ -1,0 +1,127 @@
+.card {
+  background: var(--color-navy-800);
+  border: 1px solid var(--color-navy-700);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.name {
+  font-weight: 700;
+  color: var(--color-text-primary);
+  display: block;
+}
+
+.riotId {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.reviewState {
+  font-size: 0.8125rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid;
+}
+
+.approved {
+  color: var(--color-success);
+  border-color: var(--color-success);
+}
+
+.rejected {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+.lowConfidence {
+  font-size: 0.8125rem;
+  color: var(--color-warning);
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.table td {
+  padding: 0.375rem 0.5rem;
+  border-top: 1px solid var(--color-navy-700);
+  vertical-align: top;
+}
+
+.labelCell {
+  color: var(--color-gold-300);
+  white-space: nowrap;
+  width: 220px;
+}
+
+.valueCell {
+  color: var(--color-text-primary);
+  word-break: break-word;
+}
+
+.arrowCell {
+  width: 2rem;
+  text-align: center;
+}
+
+.dir_up {
+  color: var(--color-success);
+}
+
+.dir_down {
+  color: var(--color-danger);
+}
+
+.dir_neutral {
+  color: var(--color-text-secondary);
+}
+
+.metaCell {
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  text-align: right;
+  width: 90px;
+}
+
+.unmapped {
+  background: rgba(200, 155, 60, 0.08);
+}
+
+.quote {
+  margin-top: 0.25rem;
+}
+
+.quoteText {
+  white-space: pre-wrap;
+  color: var(--color-text-secondary);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  border-left: 3px solid var(--color-gold-700);
+  padding-left: 0.75rem;
+  margin: 0;
+}

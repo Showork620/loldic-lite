@@ -8,7 +8,7 @@ import { FilterButtonGroup } from '../FilterButtonGroup/FilterButtonGroup';
 import { getLatestVersion } from '../../../../../lib/riot/riotApi';
 import { loadItemsForManagement, type ProcessedItem } from '../../../../../lib/riot/riotItemManager';
 import { useSnackbar } from '../../../../../components/ui/useSnackbar';
-import { supabase } from '../../../../../lib/supabase';
+import { saveManualSettings } from '../../../../../lib/supabase/manualSettings';
 import styles from './ExclusionManager.module.css';
 
 interface ListState {
@@ -165,64 +165,17 @@ export const ExclusionManager: React.FC = () => {
 
     setSaving(true);
     try {
-      // 1. 有効なアイテムをitemsテーブルに保存
-      // 有効なアイテム = lists.available + 手動で有効化されたアイテム
-      const manuallyEnabledItems = lists.manualSettings.filter(i => i.isManuallyAvailable === true);
-      const allAvailableItems = [...lists.available, ...manuallyEnabledItems];
+      // 手動設定のみ保存する。items テーブルへの反映（is_available の決定）は
+      // pipeline:publish が「手動設定 > 自動除外ルール」の優先順で行う
+      await saveManualSettings(
+        lists.manualSettings.map(item => ({
+          riotId: item.riotId,
+          isAvailable: item.isManuallyAvailable ?? false,
+          reason: item.reason ?? null,
+        }))
+      );
 
-      const itemsPayload = allAvailableItems.map(item => ({
-        riot_id: item.riotId,
-        name_ja: item.name,
-        is_available: true,
-        plaintext_ja: item.raw.plaintext || '',
-        price_total: item.raw.gold.total,
-        price_sell: item.raw.gold.sell,
-        image_path: item.imagePath,
-        maps: item.maps,
-        search_tags: item.autoTags, // 自動抽出されたタグ
-        basic_stats: item.basicStats, // 自動抽出されたステータス
-        // 他のフィールドはデフォルト値が使用される
-      }));
-
-      if (itemsPayload.length > 0) {
-        const { error: itemsError } = await supabase
-          .from('items')
-          .upsert(itemsPayload, { onConflict: 'riot_id', ignoreDuplicates: false });
-
-        if (itemsError) throw itemsError;
-      }
-
-      // 2. 手動設定アイテムをitem_manual_settingsに保存
-      const manualSettingsPayload = lists.manualSettings.map(item => ({
-        riot_id: item.riotId,
-        is_available: item.isManuallyAvailable ?? false,
-        reason: item.reason,
-      }));
-
-      if (manualSettingsPayload.length > 0) {
-        const { error } = await supabase
-          .from('item_manual_settings')
-          .upsert(manualSettingsPayload, { onConflict: 'riot_id' });
-
-        if (error) throw error;
-      }
-
-      // 3. 手動設定から削除されたアイテムをDBからも削除
-      const manualRiotIds = lists.manualSettings.map(i => i.riotId);
-      if (manualRiotIds.length > 0) {
-        await supabase.from('item_manual_settings').delete().not('riot_id', 'in', `(${manualRiotIds.join(',')})`);
-      } else {
-        await supabase.from('item_manual_settings').delete().neq('riot_id', '');
-      }
-
-      // 4. 有効でないアイテムをitemsテーブルから削除
-      // （手動除外されたアイテムと自動除外アイテム）
-      const availableRiotIds = allAvailableItems.map(i => i.riotId);
-      if (availableRiotIds.length > 0) {
-        await supabase.from('items').delete().not('riot_id', 'in', `(${availableRiotIds.join(',')})`);
-      }
-
-      showSnackbar('変更を保存しました', 'success');
+      showSnackbar('手動設定を保存しました（itemsへの反映はpublish実行時）', 'success');
       await loadData();
     } catch (error) {
       console.error('Save error:', error);

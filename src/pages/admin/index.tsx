@@ -13,26 +13,25 @@ export const AdminPage: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Link to="/admin/patches" className="p-6 border border-hextech-metal-600 bg-hextech-black-400/30 rounded-lg hover:border-hextech-gold-500/50 transition-colors group block">
+            <h3 className="text-xl font-bold text-hextech-gold-400 mb-2 group-hover:text-hextech-gold-300">パッチ管理</h3>
+            <p className="text-hextech-metal-400 text-sm">パッチの取り込み状況・パッチノートURL・公開状態の管理。</p>
+          </Link>
+
+          <Link to="/admin/review" className="p-6 border border-hextech-metal-600 bg-hextech-black-400/30 rounded-lg hover:border-hextech-gold-500/50 transition-colors group block">
+            <h3 className="text-xl font-bold text-hextech-gold-400 mb-2 group-hover:text-hextech-gold-300">変更レビュー</h3>
+            <p className="text-hextech-metal-400 text-sm">自動生成された変更提案の承認・修正・却下。</p>
+          </Link>
+
           <Link to="/admin/data-sync" className="p-6 border border-hextech-metal-600 bg-hextech-black-400/30 rounded-lg hover:border-hextech-gold-500/50 transition-colors group block">
             <h3 className="text-xl font-bold text-hextech-gold-400 mb-2 group-hover:text-hextech-gold-300">Data Sync</h3>
-            <p className="text-hextech-metal-400 text-sm">Update item images and manage exclusion rules.</p>
+            <p className="text-hextech-metal-400 text-sm">アイテム画像の更新と除外ルール（手動設定）の管理。</p>
           </Link>
 
           <Link to="/admin/tag-and-role-management" className="p-6 border border-hextech-metal-600 bg-hextech-black-400/30 rounded-lg hover:border-hextech-gold-500/50 transition-colors group block">
-            <h3 className="text-xl font-bold text-hextech-gold-400 mb-2 group-hover:text-hextech-gold-300">Tag & Role Management</h3>
-            <p className="text-hextech-metal-400 text-sm">Manage tags and role categories for finished items.</p>
+            <h3 className="text-xl font-bold text-hextech-gold-400 mb-2 group-hover:text-hextech-gold-300">タグ・ロール管理</h3>
+            <p className="text-hextech-metal-400 text-sm">追加タグとロール分類の登録・削除。</p>
           </Link>
-
-          <div className="p-6 border border-hextech-metal-600 bg-hextech-black-400/30 rounded-lg opacity-50 cursor-not-allowed">
-            <h3 className="text-xl font-bold text-hextech-metal-500 mb-2">Item Editor</h3>
-            <p className="text-hextech-metal-600 text-sm">Coming soon (Edit tags, roles, abilities)</p>
-          </div>
-        </div>
-
-        <div className="mt-8 p-4 bg-hextech-black-400/50 border border-hextech-gold-500/20 rounded">
-          <p className="text-center text-hextech-metal-400 italic">
-            Phase 3: Admin Features (Under Construction)
-          </p>
         </div>
       </div>
     </MainLayout>

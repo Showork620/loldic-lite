@@ -1,0 +1,49 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-gold-700);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.backLink {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.backLink:hover {
+  color: var(--color-gold-300);
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-hextech-blue-300);
+  margin-top: 0.25rem;
+}
+
+.note {
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+}
+
+.loading {
+  color: var(--color-text-secondary);
+  padding: 2rem;
+  text-align: center;
+}
+
+.sections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .sections {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,111 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.875rem 1.25rem;
+  background: var(--color-navy-800);
+  border: 1px solid var(--color-navy-700);
+  border-radius: 8px;
+}
+
+.versionCell {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  min-width: 220px;
+}
+
+.version {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.hotfix {
+  font-size: 0.75rem;
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+  border-radius: 4px;
+  padding: 0 0.375rem;
+}
+
+.ddragon {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.statusCell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.status {
+  font-size: 0.8125rem;
+  padding: 0.125rem 0.625rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-text-secondary);
+  color: var(--color-text-secondary);
+}
+
+.status_published {
+  border-color: var(--color-success);
+  color: var(--color-success);
+}
+
+.status_reviewed {
+  border-color: var(--color-hextech-blue-400);
+  color: var(--color-hextech-blue-300);
+}
+
+.status_ingested {
+  border-color: var(--color-warning);
+  color: var(--color-warning);
+}
+
+.pending {
+  font-size: 0.8125rem;
+  color: var(--color-warning);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.noteLink {
+  font-size: 0.8125rem;
+  color: var(--color-hextech-blue-300);
+}
+
+.empty {
+  color: var(--color-text-secondary);
+  padding: 2rem;
+  text-align: center;
+}
+
+.dialogBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dialogNote {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.dialogActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
